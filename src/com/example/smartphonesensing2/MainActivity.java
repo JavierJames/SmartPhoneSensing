@@ -1,5 +1,9 @@
 package com.example.smartphonesensing2;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,14 +16,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.smartphonesensing2.DB.ActivityTable;
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
 	
-	Sensor accelerometer;
-	SensorManager sm;
-	EditText acceleration;
+	private Sensor accelerometer;
+	private SensorManager sm;
+//	private EditText acceleration;
+	private String activity = "Stil";
 
 	private float mlastX, mlastY, mlastZ;
 	
@@ -29,6 +35,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	// ???
 	private final float NOISE = (float)2.0;
 	
+	private DB activityDB;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +44,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		setContentView(R.layout.activity_main);
 
 		mInitialized = false;
-		
+
 		
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
@@ -47,6 +55,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
+		activityDB = new DB(getApplicationContext());
 		//acceleration = (EditText) findViewById(R.id.acceleration);
 	}
 
@@ -161,11 +170,107 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			tvX.setText(Float.toString(deltaX));
 			tvY.setText(Float.toString(deltaY));
 			tvZ.setText(Float.toString(deltaZ));
-			
-			
+		}
+	}
+	
+	
+	public void onClick(View view){
+		TextView debug = (TextView) findViewById(R.id.debugView);
+		debug.setText("a");
+		storeCoordinates();
+		
+//		debug.setText("b");
+		
+//		showCoordinates();
+		
+//		debug.setText("c");
+	}
+	
+	
+	public void storeCoordinates(){
+		// debug view
+		TextView debug = (TextView) findViewById(R.id.debugView);
+		SQLiteDatabase db = null;
+		debug.setText("1");
+		
+		// Insert the values into the database
+		
+		try{
+			db = activityDB.getWritableDatabase();
+		}
+		catch(SQLException e){
+			debug.setText("\n\nErrror Store: "+ e.getMessage() +"\n\n");
 		}
 		
+
+		ContentValues values = new ContentValues();
+
+		//values.put(ActivityTable.ID, " ");
+		values.put(ActivityTable.X, Float.toString(mlastX));
+		values.put(ActivityTable.Y, Float.toString(mlastY));
+		values.put(ActivityTable.Z, Float.toString(mlastZ));
+		values.put(ActivityTable.ACTIVITY, activity);
+
+		long rowId;
+
+		rowId = db.insert(ActivityTable.NAME, null, values);
 		
+		debug.setText("rowId: "+ rowId);
+	}
+	
+	
+	public void showCoordinates(){
+		// Read values from database
+		
+		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
+		SQLiteDatabase db = null;
+		TextView debug = (TextView) findViewById(R.id.debugView);
+		
+		
+		try{
+			db = activityDB.getReadableDatabase();
+		}
+		catch(SQLException e){
+			debug.setText("\n\nErrror showCoordiantes: "+ e.getMessage() +"\n\n");
+		}
+		
+
+		String[] data = {
+				ActivityTable._ID,
+				ActivityTable.ACTIVITY,
+				ActivityTable.X,
+				ActivityTable.Y,
+				ActivityTable.Z
+		};
+
+		
+		String where = ActivityTable.X +" = "+ mlastX +" AND "+ 
+				ActivityTable.Y +" = "+ mlastY +" AND "+ 
+				ActivityTable.Z +" = "+ mlastZ;
+		
+
+		String orderBy = ActivityTable.ACTIVITY + " ASC";
+
+
+		Cursor c = db.query(ActivityTable.NAME,		// Name of the table 
+				data, 								// Fields to be fetched
+				where, 								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				orderBy								// orderBy
+				);
+
+		
+		// Read the values in each field
+		c.moveToFirst();
+		String dataX = c.getString(c.getColumnIndex(ActivityTable.X));
+		String dataY = c.getString(c.getColumnIndex(ActivityTable.Y));
+		String dataZ = c.getString(c.getColumnIndex(ActivityTable.Z));
+		
+		
+		// show the stored coordinates in db
+		showStoredCoordinates.setText("X: "+ dataX +"Y: "+ dataY +"Z: "+ dataZ);
 	}
 
 }

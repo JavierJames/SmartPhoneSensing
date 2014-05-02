@@ -16,6 +16,21 @@
         android:text="@string/hello_world"
         android:hint="@string/acceleration" />
 -->
+
+	<TextView
+        android:id="@+id/debugView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/debugView" />
+	
+    <Button
+        android:id="@+id/store"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:text="@string/buttonStore" />
+    
+    
     <TextView
         android:id="@+id/x_axis"
         android:layout_width="wrap_content"
@@ -36,5 +51,11 @@
         android:layout_height="wrap_content"
         android:text="@string/z_axis" />
     
+    
+    <TextView
+        android:id="@+id/showStoredCoodinates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/showStoredCoordinates" />
 
 </LinearLayout>
