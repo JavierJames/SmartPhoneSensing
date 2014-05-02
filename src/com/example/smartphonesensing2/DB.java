@@ -8,16 +8,15 @@ import android.provider.BaseColumns;
 public class DB extends SQLiteOpenHelper {
 
 	// If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "accelerometer.db";
     
     // query statements to create table
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
-    private static final String SQL_CREATE_ENTRIES =
+    private static final String SQL_CREATE_TABLE =
     	    "CREATE TABLE " + ActivityTable.TABLE_NAME + " (" +
-    	    ActivityTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-    	    ActivityTable.FIELD_ID + TEXT_TYPE + COMMA_SEP +
+			ActivityTable.FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     	    ActivityTable.FIELD_X + TEXT_TYPE + COMMA_SEP +
     	    ActivityTable.FIELD_Y + TEXT_TYPE + COMMA_SEP +
     	    ActivityTable.FIELD_Z + TEXT_TYPE + COMMA_SEP +
@@ -36,7 +35,7 @@ public class DB extends SQLiteOpenHelper {
     
     
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(SQL_CREATE_TABLE);
     }
     
     
@@ -56,7 +55,7 @@ public class DB extends SQLiteOpenHelper {
     /* Inner class that defines the table activity */
     public static abstract class ActivityTable implements BaseColumns {
         public static final String TABLE_NAME = "activity";
-        public static final String FIELD_ID = "id";
+        public static final String FIELD_ID = "_id";
         public static final String FIELD_X = "x";
         public static final String FIELD_Y = "y";
         public static final String FIELD_Z = "z";

@@ -77,6 +77,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 	
 	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		activityDB.close();
+	}
 	
 	
 	@Override
@@ -181,7 +186,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		
 //		debug.setText("b");
 		
-//		showCoordinates();
+		showCoordinates();
 		
 //		debug.setText("c");
 	}
@@ -205,15 +210,15 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
 		ContentValues values = new ContentValues();
 
-		//values.put(ActivityTable.ID, " ");
-		values.put(ActivityTable.X, Float.toString(mlastX));
-		values.put(ActivityTable.Y, Float.toString(mlastY));
-		values.put(ActivityTable.Z, Float.toString(mlastZ));
-		values.put(ActivityTable.ACTIVITY, activity);
+//		values.put(ActivityTable._ID, " ");
+		values.put(ActivityTable.FIELD_X, Float.toString(mlastX));
+		values.put(ActivityTable.FIELD_Y, Float.toString(mlastY));
+		values.put(ActivityTable.FIELD_Z, Float.toString(mlastZ));
+		values.put(ActivityTable.FIELD_ACTIVITY, activity);
 
 		long rowId;
 
-		rowId = db.insert(ActivityTable.NAME, null, values);
+		rowId = db.insert(ActivityTable.TABLE_NAME, null, values);
 		
 		debug.setText("rowId: "+ rowId);
 	}
@@ -236,41 +241,46 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		
 
 		String[] data = {
-				ActivityTable._ID,
-				ActivityTable.ACTIVITY,
-				ActivityTable.X,
-				ActivityTable.Y,
-				ActivityTable.Z
+				ActivityTable.FIELD_ID,
+				ActivityTable.FIELD_X,
+				ActivityTable.FIELD_Y,
+				ActivityTable.FIELD_Z,
+				ActivityTable.FIELD_ACTIVITY
 		};
 
 		
-		String where = ActivityTable.X +" = "+ mlastX +" AND "+ 
-				ActivityTable.Y +" = "+ mlastY +" AND "+ 
-				ActivityTable.Z +" = "+ mlastZ;
+		String where = ActivityTable.FIELD_X +" = "+ mlastX +" AND "+ 
+				ActivityTable.FIELD_Y +" = "+ mlastY +" AND "+ 
+				ActivityTable.FIELD_Z +" = "+ mlastZ;
 		
 
-		String orderBy = ActivityTable.ACTIVITY + " ASC";
+		String orderBy = ActivityTable.FIELD_ACTIVITY + " ASC";
 
 
-		Cursor c = db.query(ActivityTable.NAME,		// Name of the table 
+		Cursor c = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
 				data, 								// Fields to be fetched
-				where, 								// where-clause
+				null,								// where-clause
 				null, 								// arguments for the where-clause
 				null, 								// groupBy
 				null, 								// having
-				orderBy								// orderBy
+				null								// orderBy
 				);
 
 		
 		// Read the values in each field
 		c.moveToFirst();
-		String dataX = c.getString(c.getColumnIndex(ActivityTable.X));
-		String dataY = c.getString(c.getColumnIndex(ActivityTable.Y));
-		String dataZ = c.getString(c.getColumnIndex(ActivityTable.Z));
+		String dataX = c.getString(c.getColumnIndex(ActivityTable.FIELD_X));
+		String dataY = c.getString(c.getColumnIndex(ActivityTable.FIELD_Y));
+		String dataZ = c.getString(c.getColumnIndex(ActivityTable.FIELD_Z));
+		String dataActivity = c.getString(c.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
 		
 		
 		// show the stored coordinates in db
-		showStoredCoordinates.setText("X: "+ dataX +"Y: "+ dataY +"Z: "+ dataZ);
+		showStoredCoordinates.setText("X: "+ dataX +
+				" Y: "+ dataY +
+				" Z: "+ dataZ +
+				" Activity "+ dataActivity);
+		
 	}
 
 }
