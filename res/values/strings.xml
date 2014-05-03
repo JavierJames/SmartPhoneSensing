@@ -19,5 +19,13 @@
     
     <!-- Debug view -->
     <string name="debugView">0</string>
+    
+    
+    <!-- Training widgets -->
+    
+    <string name="sitButton">Start sitting</string>
+    <string name="walkButton">Start walking</string>
+    <string name="runButton">Start running</string>
+    <string name="testButton">Start testing</string>
 
 </resources>

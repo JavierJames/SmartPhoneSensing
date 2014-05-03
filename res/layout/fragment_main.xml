@@ -57,5 +57,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/showStoredCoordinates" />
+    
+    
+    <!-- Sit activity -->
+    <!--  
+    <TextView
+        android:id="@+id/sitView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/showStoredCoordinates" />
+    -->
+    
+    <Button
+        android:id="@+id/sitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="trainSitActivity"
+        android:text="@string/sitButton" />
+    
+    
+    <Button
+        android:id="@+id/walkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="trainWalkActivity"
+        android:text="@string/walkButton" />
+    
+    
+    <Button
+        android:id="@+id/runButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="trainRunActivity"
+        android:text="@string/runButton" />
+    
+    
+    <Button
+        android:id="@+id/testButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testActivity"
+        android:text="@string/testButton" />
 
 </LinearLayout>

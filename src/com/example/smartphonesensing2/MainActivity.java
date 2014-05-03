@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.smartphonesensing2.DB.ActivityTable;
@@ -179,7 +180,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 	
 	
-	public void onClick(View view){
+	public void trainSitActivity(View view){
 		TextView debug = (TextView) findViewById(R.id.debugView);
 		debug.setText("a");
 		storeCoordinates();
@@ -189,6 +190,91 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		showCoordinates();
 		
 //		debug.setText("c");
+		
+		Button b = (Button) view;
+		
+		if(b.getText().equals("Start sitting")) {
+			// When this button is pressed to start the variable activity
+			// is set to "sit" and the text shown in the button is changed to
+			// "Stop sitting"
+
+			activity = "sit";
+			b.setText("Stop sitting");
+		}
+		else {
+			// When this button is pressed to stop the variable activity
+			// is set to "none" and the text shown on the button is changed to
+			// "Start sitting"
+
+			activity = "none";
+			b.setText("Start sitting");
+		}
+	}
+	
+	
+	public void trainWalkActivity(View view) {
+		Button b = (Button) view;
+		
+		if(b.getText().equals("Start walking")){
+			// When this button is pressed to start the variable activity
+			// is set to "walk" and the text shown on the button is changed to
+			// "Stop walking"
+			
+			activity = "walk";
+			b.setText("Stop walking");
+		}
+		else {
+			// When this button is pressed to stop the variable activity
+			// is set to "none" and the text shown on the button is changed to
+			// "Start walking"
+			
+			activity = "none";
+			b.setText("Start walking");
+		}
+	}
+	
+	
+	public void trainRunActivity(View view) {
+		Button b = (Button) view;
+		
+		if(b.getText().equals("Start running")){
+			// When this button is pressed to start the variable activity
+			// is set to "run" and the text shown in the button is changed to
+			// "Stop running"
+			
+			activity = "run";
+			b.setText("Stop running");
+		}
+		else {
+			// When this button is pressed to stop the variable activity
+			// is set to "none" and the text shown on the button is changed to
+			// "Start running"
+			
+			activity = "none";
+			b.setText("Start running");
+		}
+	}
+	
+	
+	public void testActivity(View view) {
+		Button b = (Button) view;
+		
+		if(b.getText().equals("Start testing")){
+			// When this button is pressed to start the variable activity
+			// is set to "test" and the text shown in the button is changed to
+			// "Stop testing"
+			
+			activity = "test";
+			b.setText("Stop testing");
+		}
+		else {
+			// When this button is pressed to stop the variable activity
+			// is set to "none" and the text shown on the button is changed to
+			// "Start testing"
+			
+			activity = "none";
+			b.setText("Start testing");
+		}
 	}
 	
 	
