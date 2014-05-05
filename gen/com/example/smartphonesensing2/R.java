@@ -1025,7 +1025,7 @@ containing a value of this type.
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
-        public static final int runButton=0x7f050045;
+        public static final int runButton=0x7f050043;
         public static final int search_badge=0x7f050032;
         public static final int search_bar=0x7f050031;
         public static final int search_button=0x7f050033;
@@ -1039,23 +1039,23 @@ containing a value of this type.
         public static final int shortcut=0x7f05002e;
         public static final int showCustom=0x7f050007;
         public static final int showHome=0x7f050004;
-        public static final int showStoredCoodinates=0x7f050042;
+        public static final int showStoredCoodinates=0x7f050046;
         public static final int showTitle=0x7f050006;
-        public static final int sitButton=0x7f050043;
+        public static final int sitButton=0x7f050041;
         public static final int split_action_bar=0x7f05001e;
-        public static final int store=0x7f05003e;
         public static final int submit_area=0x7f050039;
         public static final int tabMode=0x7f050002;
-        public static final int testButton=0x7f050046;
+        public static final int testButton=0x7f050044;
         public static final int title=0x7f05002b;
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
         public static final int useLogo=0x7f050003;
-        public static final int walkButton=0x7f050044;
+        public static final int viewData=0x7f050045;
+        public static final int walkButton=0x7f050042;
         public static final int withText=0x7f05000c;
-        public static final int x_axis=0x7f05003f;
-        public static final int y_axis=0x7f050040;
-        public static final int z_axis=0x7f050041;
+        public static final int x_axis=0x7f05003e;
+        public static final int y_axis=0x7f05003f;
+        public static final int z_axis=0x7f050040;
     }
     public static final class integer {
         /**  The maximum number of action buttons that should be permitted within
@@ -1159,7 +1159,7 @@ containing a value of this type.
         public static final int app_name=0x7f0a000d;
         /**  Button to store coordinate values in db 
          */
-        public static final int buttonStore=0x7f0a0011;
+        public static final int buttonView=0x7f0a0011;
         /**  Debug view 
          */
         public static final int debugView=0x7f0a0016;

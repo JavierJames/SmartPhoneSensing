@@ -7,7 +7,7 @@
     <string name="acceleration">Acceleration</string>
     
     <!-- Button to store coordinate values in db -->
-    <string name="buttonStore">View</string>
+    <string name="buttonView">View</string>
     
     <!-- Coordinate labels -->
     <string name="x_axis">X</string>
@@ -15,10 +15,10 @@
     <string name="z_axis">Z</string>
     
     <!-- Label for the shown value stored in db -->
-    <string name="showStoredCoordinates">Stored:</string>
+    <string name="showStoredCoordinates"></string>
     
     <!-- Debug view -->
-    <string name="debugView">0</string>
+    <string name="debugView"></string>
     
     
     <!-- Training widgets -->

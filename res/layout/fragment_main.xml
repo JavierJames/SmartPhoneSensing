@@ -23,12 +23,6 @@
         android:layout_height="wrap_content"
         android:text="@string/debugView" />
 	
-    <Button
-        android:id="@+id/store"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClick"
-        android:text="@string/buttonStore" />
     
     
     <TextView
@@ -52,21 +46,8 @@
         android:text="@string/z_axis" />
     
     
-    <TextView
-        android:id="@+id/showStoredCoodinates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/showStoredCoordinates" />
-    
-    
     <!-- Sit activity -->
-    <!--  
-    <TextView
-        android:id="@+id/sitView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/showStoredCoordinates" />
-    -->
+    
     
     <Button
         android:id="@+id/sitButton"
@@ -98,5 +79,28 @@
         android:layout_height="wrap_content"
         android:onClick="testActivity"
         android:text="@string/testButton" />
+    
+    
+    <!-- By clicking this button the data stored in db will be shown -->
+    <Button
+        android:id="@+id/viewData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showRecords"
+        android:text="@string/buttonView" />
+    
+    
+    <!-- This view shows the data stored in the db -->
 
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+        
+	    <TextView
+	        android:id="@+id/showStoredCoodinates"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/showStoredCoordinates" />
+    
+    </ScrollView>
 </LinearLayout>

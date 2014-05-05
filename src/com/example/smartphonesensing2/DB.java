@@ -23,8 +23,8 @@ public class DB extends SQLiteOpenHelper {
     	    ActivityTable.FIELD_ACTIVITY + TEXT_TYPE +
     	    " );";
     
-    // query statement to delete entries
-    private static final String SQL_DELETE_ENTRIES =
+    // query statement to delete table
+    private static final String SQL_DELETE_TABLE =
     	    "DROP TABLE IF EXISTS " + ActivityTable.TABLE_NAME;
 
 
@@ -42,7 +42,7 @@ public class DB extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(SQL_DELETE_ENTRIES);
+        db.execSQL(SQL_DELETE_TABLE);
         onCreate(db);
     }
     

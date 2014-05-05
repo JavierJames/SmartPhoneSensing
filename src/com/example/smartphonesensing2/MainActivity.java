@@ -439,6 +439,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
 		rowId = db.insert(ActivityTable.TABLE_NAME, null, values);
 		
+		// close database
+		db.close();
+		
 //		debug.setText("rowId: "+ rowId);
 		}
 		catch(Exception e) {
@@ -485,6 +488,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 					null								// orderBy
 					);
 
+			// close db
+			db.close();
 			
 			// Read the values in each field
 			c.moveToFirst();
@@ -504,6 +509,87 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //			debug.setText("\n\nErrror showCoordiantes: "+ e.getMessage() +"\n\n");
 		}
 	}
+	
+	
+	/*
+	 * This function shows all records
+	 */
+	public void showRecords(View view) {
+		// This view shows the coordinates stored in db
+		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
+
+		SQLiteDatabase db = activityDB.getReadableDatabase();
+		
+		db = activityDB.getReadableDatabase();
+		
+		String[] data = {
+				ActivityTable.FIELD_ID,
+				ActivityTable.FIELD_X,
+				ActivityTable.FIELD_Y,
+				ActivityTable.FIELD_Z,
+				ActivityTable.FIELD_ACTIVITY
+		};
+
+		
+		String where = ActivityTable.FIELD_X +" = "+ mlastX +" AND "+ 
+				ActivityTable.FIELD_Y +" = "+ mlastY +" AND "+ 
+				ActivityTable.FIELD_Z +" = "+ mlastZ;
+		
+
+		String orderBy = ActivityTable.FIELD_ACTIVITY + " ASC";
+
+
+		Cursor c = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
+				data, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+		
+		
+		// Read the values in each field
+//		c.moveToFirst();
+		
+		String dataID;
+		String dataX;
+		String dataY;
+		String dataZ;
+		String dataActivity;
+		
+		if(c.moveToFirst()) {
+			showStoredCoordinates.setText("");
+			
+			do {
+				dataID = c.getString(c.getColumnIndex(ActivityTable._ID));
+				dataX = c.getString(c.getColumnIndex(ActivityTable.FIELD_X));
+				dataY = c.getString(c.getColumnIndex(ActivityTable.FIELD_Y));
+				dataZ = c.getString(c.getColumnIndex(ActivityTable.FIELD_Z));
+				dataActivity = c.getString(c.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
+				
+				
+				showStoredCoordinates.setText(showStoredCoordinates.getText()+
+						dataID + ":"+
+						" X: "+ dataX +
+						" Y: "+ dataY +
+						" Z: "+ dataZ +
+						" A: "+ dataActivity +"\n"
+						);
+			} while(c.moveToNext());
+		}
+		
+		
+		// show the stored coordinates in db
+		/*showStoredCoordinates.setText("X: "+ dataX +
+				" Y: "+ dataY +
+				" Z: "+ dataZ +
+				" Activity "+ dataActivity);*/
+		
+		db.close();
+	}
+	
 	
 	public void onClick(View view) {
 		TextView debug = (TextView) findViewById(R.id.debugView);
