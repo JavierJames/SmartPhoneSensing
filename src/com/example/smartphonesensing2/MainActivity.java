@@ -9,6 +9,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //	private EditText acceleration;
 	private String activity = "Stil";
 
+	// Variables to hold the values of the accelerometer
 	private float mlastX, mlastY, mlastZ;
 	
 	// ???
@@ -36,7 +39,17 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	// ???
 	private final float NOISE = (float)2.0;
 	
+	// Reference to the database
 	private DB activityDB;
+	
+	// Flags to keep track the mode the app is running
+	private boolean train, test;
+	
+	// The rate at which the input is sampled
+	private final static int SAMPLE_RATE = 1000;
+	
+	// This view is for debugging purposes
+	private TextView debug;
 	
 	
 	@Override
@@ -52,12 +65,16 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		
+		debug = (TextView) findViewById(R.id.debugView);
+		
 		sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 		accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
 		activityDB = new DB(getApplicationContext());
 		//acceleration = (EditText) findViewById(R.id.acceleration);
+		
+		 
 	}
 
 	
@@ -180,14 +197,17 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 	
 	
+	/*
+	 * This method trains the app for the sitting activity
+	 */
 	public void trainSitActivity(View view){
-		TextView debug = (TextView) findViewById(R.id.debugView);
+		debug = (TextView) findViewById(R.id.debugView);
 		debug.setText("a");
-		storeCoordinates();
+//		storeCoordinates();
 		
 //		debug.setText("b");
 		
-		showCoordinates();
+//		showCoordinates();
 		
 //		debug.setText("c");
 		
@@ -198,20 +218,27 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			// is set to "sit" and the text shown in the button is changed to
 			// "Stop sitting"
 
+			train = true;
 			activity = "sit";
 			b.setText("Stop sitting");
+			
+			trainApp();
 		}
 		else {
 			// When this button is pressed to stop the variable activity
 			// is set to "none" and the text shown on the button is changed to
 			// "Start sitting"
 
+			train = false;
 			activity = "none";
 			b.setText("Start sitting");
 		}
 	}
 	
 	
+	/*
+	 * This method trains the app for the walking activity
+	 */
 	public void trainWalkActivity(View view) {
 		Button b = (Button) view;
 		
@@ -220,20 +247,27 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			// is set to "walk" and the text shown on the button is changed to
 			// "Stop walking"
 			
+			train = true;
 			activity = "walk";
 			b.setText("Stop walking");
+			
+			trainApp();
 		}
 		else {
 			// When this button is pressed to stop the variable activity
 			// is set to "none" and the text shown on the button is changed to
 			// "Start walking"
 			
+			train = false;
 			activity = "none";
 			b.setText("Start walking");
 		}
 	}
 	
 	
+	/*
+	 * This method trains the app for the running activity
+	 */
 	public void trainRunActivity(View view) {
 		Button b = (Button) view;
 		
@@ -242,20 +276,27 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			// is set to "run" and the text shown in the button is changed to
 			// "Stop running"
 			
+			train = true;
 			activity = "run";
 			b.setText("Stop running");
+			
+			trainApp();
 		}
 		else {
 			// When this button is pressed to stop the variable activity
 			// is set to "none" and the text shown on the button is changed to
 			// "Start running"
 			
+			train = false;
 			activity = "none";
 			b.setText("Start running");
 		}
 	}
 	
 	
+	/*
+	 * This method tests the app for the activities: sit, walk, run.
+	 */
 	public void testActivity(View view) {
 		Button b = (Button) view;
 		
@@ -264,21 +305,110 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			// is set to "test" and the text shown in the button is changed to
 			// "Stop testing"
 			
+			test = true;
 			activity = "test";
 			b.setText("Stop testing");
+			
+			testApp();
 		}
 		else {
 			// When this button is pressed to stop the variable activity
 			// is set to "none" and the text shown on the button is changed to
 			// "Start testing"
 			
+			test = false;
 			activity = "none";
 			b.setText("Start testing");
 		}
 	}
 	
 	
+	/*
+	 * This method samples the input and stores them in the database.
+	 */
+	private void trainApp() {
+//		Handler handler = new Handler(Looper.getMainLooper());
+//		handler.post(new Runnable() {
+//			public void run() {
+//				try {
+//					while(train){
+//						storeCoordinates();
+//						showCoordinates();
+//						Thread.sleep(SAMPLE_RATE);
+//					}
+//				}
+//				catch(InterruptedException ie) {
+////					TextView debug = (TextView) findViewById(R.id.debugView);
+//					
+//					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
+//				}
+//			}
+//		});
+		
+		
+		debug.setText("MainActivity.trainApp()");
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				try {
+					while(train){
+						
+						storeCoordinates();
+						showCoordinates();
+						Thread.sleep(SAMPLE_RATE);
+					}
+				}
+				catch(InterruptedException ie) {
+//					TextView debug = (TextView) findViewById(R.id.debugView);
+					
+					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
+				}
+			}
+		};
+		
+		new Thread(runnable).start();
+	}
+	
+	
+	/*
+	 * This method samples the input and matches them with the content in the database.
+	 * The matching is done with the KNN algorithm.
+	 */
+	private void testApp() {
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				try {
+					while(test){
+						knn();
+						Thread.sleep(SAMPLE_RATE);
+					}
+				}
+				catch(InterruptedException ie) {
+//					TextView debug = (TextView) findViewById(R.id.debugView);
+					
+					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
+				}
+			}
+		};
+		
+	}
+	
+	
+	/*
+	 * This method matches the input samples against the data in the database
+	 * by applying KNN algorithm. 
+	 */
+	private void knn() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	public void storeCoordinates(){
+		try {
+			
+		
 		// debug view
 		TextView debug = (TextView) findViewById(R.id.debugView);
 		SQLiteDatabase db = null;
@@ -307,66 +437,69 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		rowId = db.insert(ActivityTable.TABLE_NAME, null, values);
 		
 		debug.setText("rowId: "+ rowId);
+		}
+		catch(Exception e) {
+			debug.setText("storeCoordinates() "+e.getMessage());
+		}
 	}
 	
 	
 	public void showCoordinates(){
-		// Read values from database
-		
-		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
-		SQLiteDatabase db = null;
-		TextView debug = (TextView) findViewById(R.id.debugView);
-		
-		
 		try{
+			// Read values from database
+			
+			TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
+			debug = (TextView) findViewById(R.id.debugView);
+			SQLiteDatabase db = null;
+//			TextView debug = (TextView) findViewById(R.id.debugView);
+			
+			
 			db = activityDB.getReadableDatabase();
+			
+			String[] data = {
+					ActivityTable.FIELD_ID,
+					ActivityTable.FIELD_X,
+					ActivityTable.FIELD_Y,
+					ActivityTable.FIELD_Z,
+					ActivityTable.FIELD_ACTIVITY
+			};
+
+			
+			String where = ActivityTable.FIELD_X +" = "+ mlastX +" AND "+ 
+					ActivityTable.FIELD_Y +" = "+ mlastY +" AND "+ 
+					ActivityTable.FIELD_Z +" = "+ mlastZ;
+			
+
+			String orderBy = ActivityTable.FIELD_ACTIVITY + " ASC";
+
+
+			Cursor c = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
+					data, 								// Fields to be fetched
+					null,								// where-clause
+					null, 								// arguments for the where-clause
+					null, 								// groupBy
+					null, 								// having
+					null								// orderBy
+					);
+
+			
+			// Read the values in each field
+			c.moveToFirst();
+			String dataX = c.getString(c.getColumnIndex(ActivityTable.FIELD_X));
+			String dataY = c.getString(c.getColumnIndex(ActivityTable.FIELD_Y));
+			String dataZ = c.getString(c.getColumnIndex(ActivityTable.FIELD_Z));
+			String dataActivity = c.getString(c.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
+			
+			
+			// show the stored coordinates in db
+			showStoredCoordinates.setText("X: "+ dataX +
+					" Y: "+ dataY +
+					" Z: "+ dataZ +
+					" Activity "+ dataActivity);
 		}
-		catch(SQLException e){
+		catch(Exception e){
 			debug.setText("\n\nErrror showCoordiantes: "+ e.getMessage() +"\n\n");
 		}
-		
-
-		String[] data = {
-				ActivityTable.FIELD_ID,
-				ActivityTable.FIELD_X,
-				ActivityTable.FIELD_Y,
-				ActivityTable.FIELD_Z,
-				ActivityTable.FIELD_ACTIVITY
-		};
-
-		
-		String where = ActivityTable.FIELD_X +" = "+ mlastX +" AND "+ 
-				ActivityTable.FIELD_Y +" = "+ mlastY +" AND "+ 
-				ActivityTable.FIELD_Z +" = "+ mlastZ;
-		
-
-		String orderBy = ActivityTable.FIELD_ACTIVITY + " ASC";
-
-
-		Cursor c = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
-				data, 								// Fields to be fetched
-				null,								// where-clause
-				null, 								// arguments for the where-clause
-				null, 								// groupBy
-				null, 								// having
-				null								// orderBy
-				);
-
-		
-		// Read the values in each field
-		c.moveToFirst();
-		String dataX = c.getString(c.getColumnIndex(ActivityTable.FIELD_X));
-		String dataY = c.getString(c.getColumnIndex(ActivityTable.FIELD_Y));
-		String dataZ = c.getString(c.getColumnIndex(ActivityTable.FIELD_Z));
-		String dataActivity = c.getString(c.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
-		
-		
-		// show the stored coordinates in db
-		showStoredCoordinates.setText("X: "+ dataX +
-				" Y: "+ dataY +
-				" Z: "+ dataZ +
-				" Activity "+ dataActivity);
-		
 	}
 
 }
