@@ -7,7 +7,7 @@
     <string name="acceleration">Acceleration</string>
     
     <!-- Button to store coordinate values in db -->
-    <string name="buttonStore">Store</string>
+    <string name="buttonStore">View</string>
     
     <!-- Coordinate labels -->
     <string name="x_axis">X</string>

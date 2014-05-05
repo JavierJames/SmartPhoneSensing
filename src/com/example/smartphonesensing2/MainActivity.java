@@ -49,7 +49,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	private final static int SAMPLE_RATE = 1000;
 	
 	// This view is for debugging purposes
-	private TextView debug;
+//	private TextView debug;
+	
+	// rowId of the last inserted data in db
+	private long rowId = 0;
 	
 	
 	@Override
@@ -65,7 +68,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		
-		debug = (TextView) findViewById(R.id.debugView);
+//		debug = (TextView) findViewById(R.id.debugView);
 		
 		sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 		accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -201,8 +204,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	 * This method trains the app for the sitting activity
 	 */
 	public void trainSitActivity(View view){
-		debug = (TextView) findViewById(R.id.debugView);
-		debug.setText("a");
+//		debug = (TextView) findViewById(R.id.debugView);
+//		debug.setText("a");
 //		storeCoordinates();
 		
 //		debug.setText("b");
@@ -346,7 +349,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //		});
 		
 		
-		debug.setText("MainActivity.trainApp()");
+//		debug.setText("MainActivity.trainApp()");
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
@@ -354,14 +357,14 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 					while(train){
 						
 						storeCoordinates();
-						showCoordinates();
+//						showCoordinates();
 						Thread.sleep(SAMPLE_RATE);
 					}
 				}
 				catch(InterruptedException ie) {
 //					TextView debug = (TextView) findViewById(R.id.debugView);
 					
-					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
+//					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
 				}
 			}
 		};
@@ -387,7 +390,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				catch(InterruptedException ie) {
 //					TextView debug = (TextView) findViewById(R.id.debugView);
 					
-					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
+//					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
 				}
 			}
 		};
@@ -410,9 +413,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			
 		
 		// debug view
-		TextView debug = (TextView) findViewById(R.id.debugView);
+//		TextView debug = (TextView) findViewById(R.id.debugView);
 		SQLiteDatabase db = null;
-		debug.setText("1");
+//		debug.setText("1");
 		
 		// Insert the values into the database
 		
@@ -420,7 +423,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			db = activityDB.getWritableDatabase();
 		}
 		catch(SQLException e){
-			debug.setText("\n\nErrror Store: "+ e.getMessage() +"\n\n");
+//			debug.setText("\n\nErrror Store: "+ e.getMessage() +"\n\n");
 		}
 		
 
@@ -432,14 +435,14 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		values.put(ActivityTable.FIELD_Z, Float.toString(mlastZ));
 		values.put(ActivityTable.FIELD_ACTIVITY, activity);
 
-		long rowId;
+		
 
 		rowId = db.insert(ActivityTable.TABLE_NAME, null, values);
 		
-		debug.setText("rowId: "+ rowId);
+//		debug.setText("rowId: "+ rowId);
 		}
 		catch(Exception e) {
-			debug.setText("storeCoordinates() "+e.getMessage());
+//			debug.setText("storeCoordinates() "+e.getMessage());
 		}
 	}
 	
@@ -449,7 +452,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			// Read values from database
 			
 			TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
-			debug = (TextView) findViewById(R.id.debugView);
+//			debug = (TextView) findViewById(R.id.debugView);
 			SQLiteDatabase db = null;
 //			TextView debug = (TextView) findViewById(R.id.debugView);
 			
@@ -498,8 +501,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 					" Activity "+ dataActivity);
 		}
 		catch(Exception e){
-			debug.setText("\n\nErrror showCoordiantes: "+ e.getMessage() +"\n\n");
+//			debug.setText("\n\nErrror showCoordiantes: "+ e.getMessage() +"\n\n");
 		}
+	}
+	
+	public void onClick(View view) {
+		TextView debug = (TextView) findViewById(R.id.debugView);
+		debug.setText("rowId: " +rowId);
 	}
 
 }
