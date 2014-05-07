@@ -158,12 +158,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
 		
-/*		acceleration.setHint("X: "+ event.values[0]
-				+"\nY: "+ event.values[1]
-				+"\nZ:"+ event.values[2]
-				);
-*/
-		
 		TextView tvX = (TextView)findViewById(R.id.x_axis);
 		TextView tvY = (TextView)findViewById(R.id.y_axis);
 		TextView tvZ = (TextView)findViewById(R.id.z_axis);
@@ -210,16 +204,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	 * This method trains the app for the sitting activity
 	 */
 	public void trainSitActivity(View view){
-//		debug = (TextView) findViewById(R.id.debugView);
-//		debug.setText("a");
-//		storeCoordinates();
-		
-//		debug.setText("b");
-		
-//		showCoordinates();
-		
-//		debug.setText("c");
-		
+	
 		Button b = (Button) view;
 		
 		if(b.getText().equals("Start sitting")) {
@@ -306,24 +291,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	 * This method samples the input and stores them in the database.
 	 */
 	private void trainApp() {
-//		Handler handler = new Handler(Looper.getMainLooper());
-//		handler.post(new Runnable() {
-//			public void run() {
-//				try {
-//					while(train){
-//						storeCoordinates();
-//						showCoordinates();
-//						Thread.sleep(SAMPLE_RATE);
-//					}
-//				}
-//				catch(InterruptedException ie) {
-////					TextView debug = (TextView) findViewById(R.id.debugView);
-//					
-//					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
-//				}
-//			}
-//		});
-		
+	
 		
 //		debug.setText("MainActivity.trainApp()");
 		Runnable runnable = new Runnable() {
@@ -349,11 +317,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 	
 	
-	
-	
-	
 	/*
 	 * This method tests the app for the activities: sit, walk, run.
+	 * While pressed the accelerometer coordinates is being saved in a new data based, 
+	 * to be processed later 
 	 */
 	public void testActivity(View view) {
 		Button b = (Button) view;
@@ -382,13 +349,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	
 	
 	
-	
-	
-	
-	
-	
-
-	
 	/*
 	 * This method samples the input and matches them with the content in the database.
 	 * The matching is done with the KNN algorithm.
@@ -399,8 +359,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			public void run() {
 				try {
 					while(test){
-					 //store data in new database
-						
+						storeTestDataCoordinates();
 						
 						Thread.sleep(SAMPLE_RATE);
 					}
@@ -484,13 +443,133 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		int trainingSetSize =8; //total amount of training instances
 		double [] K_neighbours = new double[K]; //save the closes K neighbours 
 		int r,t =0; 
-		 
 		
-		/* get database 1 */
+		//TODO get reference of Test Data Database and Training Data Database 
 		
-		/* get database 2 */
+	// TODO Auto-generated method stub
 		
-		/*apply knn for each record */
+		/*
+		 * 1) Fetch the records of both tables, training database and testing database
+		 * 2) Compare each record in the testing database with the training database
+		 * 3) Save the three closest neighbors
+		 * 4) The testing record will be classified as the activity which is saved the most 
+		 */
+		
+		// 1)
+		
+		SQLiteDatabase db = activityDB.getReadableDatabase();
+
+		String[] trainingData = {
+				ActivityTable.FIELD_ID,
+				ActivityTable.FIELD_X,
+				ActivityTable.FIELD_Y,
+				ActivityTable.FIELD_Z,
+				ActivityTable.FIELD_ACTIVITY
+		};
+		
+		
+		
+		String[] testingData = {
+				TestData.FIELD_ID,
+				TestData.FIELD_X,
+				TestData.FIELD_Y,
+				TestData.FIELD_Z
+		};
+		
+		
+		Cursor c1 = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
+				trainingData, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+
+		
+		Cursor c2 = db.query(TestData.TABLE_NAME,		// Name of the table 
+				testingData, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+		
+		String trainingDataID;
+		Float trainingDataX;
+		Float trainingDataY;
+		Float trainingDataZ;
+		String trainingDataActivity;
+		
+		
+		String testDataID;
+		Float testDataX;
+		Float testDataY;
+		Float testDataZ;
+		
+		
+		if(c1.moveToFirst() && c2.moveToFirst()) {
+			for(int i = 0; i < c1.getCount(); i++) { // ?? i <= c1.getCount() ??
+				
+				// fetch test data
+				testDataID = c2.getString(c2.getColumnIndex(ActivityTable._ID));
+				testDataX = c2.getFloat(c2.getColumnIndex(ActivityTable.FIELD_X));
+				testDataY = c2.getFloat(c2.getColumnIndex(ActivityTable.FIELD_Y));
+				testDataZ = c2.getFloat(c2.getColumnIndex(ActivityTable.FIELD_Z));
+				
+				
+				
+				for(int j = 0; j < c2.getCount(); j++) { // ?? j <= c2.getCount() ??
+					
+					// fetch training data
+					trainingDataID = c1.getString(c1.getColumnIndex(ActivityTable._ID));
+					trainingDataX = c1.getFloat(c1.getColumnIndex(ActivityTable.FIELD_X));
+					trainingDataY = c1.getFloat(c1.getColumnIndex(ActivityTable.FIELD_Y));
+					trainingDataZ = c1.getFloat(c1.getColumnIndex(ActivityTable.FIELD_Z));
+					trainingDataActivity = c1.getString(c1.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
+					
+					EuclideanDistance(trainingDataX, trainingDataY, trainingDataZ,
+							testDataX, testDataY, testDataZ
+							);
+					
+					//TODO iterate cursor 
+					c1.moveToPosition(j+1);
+				}
+				c2.moveToPosition(i+1);
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//TODO label each record	
 		for(r=0; r<recordSetSize; r++){
 			for(t=0; t<trainingSetSize; t++){
 				
@@ -515,7 +594,16 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		
 		
 	}
-      /* Calculate the Euclidean distance between two instance*/
+      private double EuclideanDistance(Float trainingDataX, Float trainingDataY,
+			Float trainingDataZ, Float testDataX, Float testDataY,
+			Float testDataZ) {
+		// TODO Auto-generated method stub
+    	  return Math.sqrt(Math.pow((trainingDataX-testDataX),2) + Math.pow((trainingDataY-testDataY),2) + Math.pow((trainingDataZ-testDataZ),2));
+		
+	}
+
+
+	/* Calculate the Euclidean distance between two instance*/
 	  private float knnDistance() {
 		// TODO Auto-generated method stub
 		  float e_distance =(float) 0.0;
@@ -531,12 +619,21 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		  return e_distance;
 		
 	}
-	  /* Determine the closest neighbour*/
-	  private void NearestNeighbour(float distance, String [] label)
+	  /* Determine the nearest K neighbours for a given object
+	   * save results 
+	   * 
+	   * Steps. 
+	   * 1. Get a record 
+	   * 2. Have a reference to the Training Data database 
+	   * 3. Calculate the Eucludean distance from record and all training data
+	   * 4. Sort the K-Nearest Neighbours 
+	   * */
+	  private void NearestNeighbours(float distance, String [] label)
 	  {
 		  
 		 float furthest_nn = 0; // keep track of the biggest distance of k-NN distances
 		  
+		 
 		 
 		  //store new distance only if valid 
 		// if(distance > furthest_nn ) // if data is bigger than biggest data do nothing 

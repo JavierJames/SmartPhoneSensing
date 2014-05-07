@@ -116,13 +116,6 @@
         android:onClick="showRecords"
         android:text="@string/buttonView" />
     
-     <Button
-        android:id="@+id/AnalyzeActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="AnalyzeData" 
-        android:text="@string/analyze_activity" />
-    
     
     
     
