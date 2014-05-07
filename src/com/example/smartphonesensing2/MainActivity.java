@@ -2,8 +2,10 @@ package com.example.smartphonesensing2;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.smartphonesensing2.DB.ActivityTable;
+import com.example.smartphonesensing2.DB.TestData;
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
 	
@@ -54,7 +58,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	// rowId of the last inserted data in db
 	private long rowId = 0;
 	
-	
+	// set accuracy of amount of neighbours
+	int K = 5;  
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -282,7 +288,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			train = true;
 			activity = "run";
 			b.setText("Stop running");
-			
 			trainApp();
 		}
 		else {
@@ -293,35 +298,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			train = false;
 			activity = "none";
 			b.setText("Start running");
-		}
-	}
-	
-	
-	/*
-	 * This method tests the app for the activities: sit, walk, run.
-	 */
-	public void testActivity(View view) {
-		Button b = (Button) view;
-		
-		if(b.getText().equals("Start testing")){
-			// When this button is pressed to start the variable activity
-			// is set to "test" and the text shown in the button is changed to
-			// "Stop testing"
-			
-			test = true;
-			activity = "test";
-			b.setText("Stop testing");
-			
-			testApp();
-		}
-		else {
-			// When this button is pressed to stop the variable activity
-			// is set to "none" and the text shown on the button is changed to
-			// "Start testing"
-			
-			test = false;
-			activity = "none";
-			b.setText("Start testing");
 		}
 	}
 	
@@ -373,6 +349,46 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 	
 	
+	
+	
+	
+	/*
+	 * This method tests the app for the activities: sit, walk, run.
+	 */
+	public void testActivity(View view) {
+		Button b = (Button) view;
+		
+		if(b.getText().equals("Start testing")){
+			// When this button is pressed to start the variable activity
+			// is set to "test" and the text shown in the button is changed to
+			// "Stop testing"
+			
+			test = true;
+			activity = "test";
+			b.setText("Stop testing");
+			
+			testApp();
+		}
+		else {
+			// When this button is pressed to stop the variable activity
+			// is set to "none" and the text shown on the button is changed to
+			// "Start testing"
+			
+			test = false;
+			activity = "none";
+			b.setText("Start testing");
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
 	/*
 	 * This method samples the input and matches them with the content in the database.
 	 * The matching is done with the KNN algorithm.
@@ -383,7 +399,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			public void run() {
 				try {
 					while(test){
-						knn();
+					 //store data in new database
+						
+						
 						Thread.sleep(SAMPLE_RATE);
 					}
 				}
@@ -394,20 +412,155 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				}
 			}
 		};
+		new Thread(runnable).start();
+	}
+	
+	/*Take each dataset for each activity, and append them together with only X,Y,Z,Label as attributes */
+/*	protected void create_model() {
+		// TODO Auto-generated method stub
+		//fetch and store activity Still 
+		//fetch and store activity Walking  
+		//fetch and store activity Running  
 		
+	}
+*/
+	
+
+	/*
+	 * This method tests the app for the activities: sit, walk, run.
+	 */
+	public void AnalyzeData(View view) {
+		Button b = (Button) view;
+		
+		if(b.getText().equals("Analyze")){
+			// When this button is pressed to start the variable activity
+			// is set to "test" and the text shown in the button is changed to
+			// "Stop testing"
+			
+			test = true;
+			activity = "test";
+			b.setText("Analyzing");
+			knn();
+			//get model in database 1 
+			
+			//get records in database 2 
+			
+			//for each record apply knn 
+		//	for(r=0; r<record_count; r++){
+				//for(t=0; t<training_count; t++){
+			//		knn();
+		
+				//}
+				
+				
+		//	} 
+			
+		
+		}
+		else {
+			// When this button is pressed to stop the variable activity
+			// is set to "none" and the text shown on the button is changed to
+			// "Start testing"
+			
+			test = false;
+			activity = "none";
+			b.setText("Analyze");
+			
+			//display results
+			
+		}
 	}
 	
 	
-	/*
+		/*
 	 * This method matches the input samples against the data in the database
 	 * by applying KNN algorithm. 
 	 */
+	
+	SQLiteDatabase mDatabase;
 	private void knn() {
 		// TODO Auto-generated method stub
+		int recordSetSize= 10; 
+		int trainingSetSize =8; //total amount of training instances
+		double [] K_neighbours = new double[K]; //save the closes K neighbours 
+		int r,t =0; 
+		 
+		
+		/* get database 1 */
+		
+		/* get database 2 */
+		
+		/*apply knn for each record */
+		for(r=0; r<recordSetSize; r++){
+			for(t=0; t<trainingSetSize; t++){
+				
+				knnDistance();
+			}
+			
+			
+		}
+		
+
+	//	 Cursor c = mDatabase.rawQuery("select * from activity",null);
+		// tvX.setText(Float.toString(mlastX));
+		// activity_now.setText("BLA BLA " );
+		 //activity_now.setText(" " +db_count);
+		 
+		 //calculate k-nn distance from all objects in database 
+		//save k-nn nearest in an array
+		
+		
+		
+		
+		
 		
 	}
+      /* Calculate the Euclidean distance between two instance*/
+	  private float knnDistance() {
+		// TODO Auto-generated method stub
+		  float e_distance =(float) 0.0;
+		  int i=0;
+		  
+		  for(i=0; i<K; i++)
+		  {
+			  //get K elements in Kspace instances in both training and test data set
+			  // e_distance = sqrt( enum[1:K](Ai-Bi) )
+			  e_distance += 5;//test summation
+			  
+		  }
+		  return e_distance;
+		
+	}
+	  /* Determine the closest neighbour*/
+	  private void NearestNeighbour(float distance, String [] label)
+	  {
+		  
+		 float furthest_nn = 0; // keep track of the biggest distance of k-NN distances
+		  
+		 
+		  //store new distance only if valid 
+		// if(distance > furthest_nn ) // if data is bigger than biggest data do nothing 
+			 //
+		// else if(distance< furthest_nn){ 
+			 
+			 
+		// }
+		 
+	  }
 
 
+	//knn function to count number of instances in database
+	// private long fetchPlacesCount() {
+	public long fetchPlacesCount() {
+	     String sql = "SELECT COUNT(*) FROM " + ActivityTable.TABLE_NAME;
+	     SQLiteStatement statement = mDatabase.compileStatement(sql);
+	     long count = statement.simpleQueryForLong();
+	     return count;
+	 }
+
+	
+	
+	
 	public void storeCoordinates(){
 		try {
 			
@@ -448,6 +601,48 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //			debug.setText("storeCoordinates() "+e.getMessage());
 		}
 	}
+	
+	/* Store coordinates of the test data */
+	public void storeTestDataCoordinates(){
+		try {
+			
+		
+		// debug view
+//		TextView debug = (TextView) findViewById(R.id.debugView);
+		SQLiteDatabase db = null;
+//		debug.setText("1");
+		
+		// Insert the values into the database
+		
+		try{
+			db = activityDB.getWritableDatabase();
+		}
+		catch(SQLException e){
+//			debug.setText("\n\nErrror Store: "+ e.getMessage() +"\n\n");
+		}
+		
+
+		ContentValues values = new ContentValues();
+
+//		values.put(ActivityTable._ID, " ");
+		values.put(TestData.FIELD_X, Float.toString(mlastX));
+		values.put(TestData.FIELD_Y, Float.toString(mlastY));
+		values.put(TestData.FIELD_Z, Float.toString(mlastZ));
+				
+
+		rowId = db.insert(TestData.TABLE_NAME, null, values);
+		
+		// close database
+		db.close();
+		
+//		debug.setText("rowId: "+ rowId);
+		}
+		catch(Exception e) {
+//			debug.setText("storeCoordinates() "+e.getMessage());
+		}
+	}
+	
+	
 	
 	
 	public void showCoordinates(){
@@ -511,84 +706,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 	
 	
-	/*
-	 * This function shows all records
-	 */
-	public void showRecords(View view) {
-		// This view shows the coordinates stored in db
-		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
-
-		SQLiteDatabase db = activityDB.getReadableDatabase();
-		
-		db = activityDB.getReadableDatabase();
-		
-		String[] data = {
-				ActivityTable.FIELD_ID,
-				ActivityTable.FIELD_X,
-				ActivityTable.FIELD_Y,
-				ActivityTable.FIELD_Z,
-				ActivityTable.FIELD_ACTIVITY
-		};
-
-		
-		String where = ActivityTable.FIELD_X +" = "+ mlastX +" AND "+ 
-				ActivityTable.FIELD_Y +" = "+ mlastY +" AND "+ 
-				ActivityTable.FIELD_Z +" = "+ mlastZ;
-		
-
-		String orderBy = ActivityTable.FIELD_ACTIVITY + " ASC";
-
-
-		Cursor c = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
-				data, 								// Fields to be fetched
-				null,								// where-clause
-				null, 								// arguments for the where-clause
-				null, 								// groupBy
-				null, 								// having
-				null								// orderBy
-				);
-
-		
-		
-		// Read the values in each field
-//		c.moveToFirst();
-		
-		String dataID;
-		String dataX;
-		String dataY;
-		String dataZ;
-		String dataActivity;
-		
-		if(c.moveToFirst()) {
-			showStoredCoordinates.setText("");
-			
-			do {
-				dataID = c.getString(c.getColumnIndex(ActivityTable._ID));
-				dataX = c.getString(c.getColumnIndex(ActivityTable.FIELD_X));
-				dataY = c.getString(c.getColumnIndex(ActivityTable.FIELD_Y));
-				dataZ = c.getString(c.getColumnIndex(ActivityTable.FIELD_Z));
-				dataActivity = c.getString(c.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
-				
-				
-				showStoredCoordinates.setText(showStoredCoordinates.getText()+
-						dataID + ":"+
-						" X: "+ dataX +
-						" Y: "+ dataY +
-						" Z: "+ dataZ +
-						" A: "+ dataActivity +"\n"
-						);
-			} while(c.moveToNext());
-		}
-		
-		
-		// show the stored coordinates in db
-		/*showStoredCoordinates.setText("X: "+ dataX +
-				" Y: "+ dataY +
-				" Z: "+ dataZ +
-				" Activity "+ dataActivity);*/
-		
-		db.close();
-	}
 	
 	
 	public void onClick(View view) {

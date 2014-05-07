@@ -28,4 +28,22 @@
     <string name="runButton">Start running</string>
     <string name="testButton">Start testing</string>
 
+    <string name="knn_1_x">Ng 1 X-axis</string>
+    <string name="knn_1_y">Ng 1 Y-axis</string>
+    <string name="knn_1_z">Ng 1 Z-axis</string>
+    
+    <string name="knn_2_x">Ng 2 X-axis</string>
+    <string name="knn_2_y">Ng 2 Y-axis</string>
+    <string name="knn_2_z">Ng 2 Z-axis</string>
+    
+   <string name="knn_3_x">Ng 3 X-axis</string>
+    <string name="knn_3_y">Ng 3 Y-axis</string>
+    <string name="knn_3_z">Ng 3 Z-axis</string>
+    
+    <string name="activityresult">Activity</string>
+    <string name="analyze_activity">Analyze</string>
+    
+    
+    
+    
 </resources>
