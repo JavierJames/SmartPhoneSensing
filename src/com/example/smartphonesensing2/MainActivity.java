@@ -405,6 +405,107 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	private void knn() {
 		// TODO Auto-generated method stub
 		
+		/*
+		 * 1) Fetch the records of both tables, training database and testing database
+		 * 2) Compare each record in the testing database with the training database
+		 * 3) Save the three closest neighbors
+		 * 4) The testing record will be classified as the activity which is saved the most 
+		 */
+		
+		// 1)
+		
+		SQLiteDatabase db = activityDB.getReadableDatabase();
+
+		db = activityDB.getReadableDatabase();
+
+		String[] trainingData = {
+				ActivityTable.FIELD_ID,
+				ActivityTable.FIELD_X,
+				ActivityTable.FIELD_Y,
+				ActivityTable.FIELD_Z,
+				ActivityTable.FIELD_ACTIVITY
+		};
+		
+		
+		
+		String[] testingData = {
+				TestData.FIELD_ID,
+				TestData.FIELD_X,
+				TestData.FIELD_Y,
+				TestData.FIELD_Z
+		};
+		
+		
+		Cursor c1 = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
+				trainingData, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+
+		
+		Cursor c2 = db.query(TestData.TABLE_NAME,		// Name of the table 
+				testingData, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+		
+		String trainingDataID;
+		double trainingDataX;
+		double trainingDataY;
+		double trainingDataZ;
+		String trainingDataActivity;
+		
+		
+		String testDataID;
+		double testDataX;
+		double testDataY;
+		double testDataZ;
+		
+		
+		if(c1.moveToFirst() && c2.moveToFirst()) {
+			for(int i = 0; i < c1.getCount(); i++) { // ?? c1.getCount() ??
+				
+				// fetch test data
+				testDataID = c2.getString(c2.getColumnIndex(ActivityTable._ID));
+				testDataX = c2.getDouble(c2.getColumnIndex(ActivityTable.FIELD_X));
+				testDataY = c2.getDouble(c2.getColumnIndex(ActivityTable.FIELD_Y));
+				testDataZ = c2.getDouble(c2.getColumnIndex(ActivityTable.FIELD_Z));
+				
+				
+				
+				for(int j = 0; j < c2.getCount(); j++) { // ?? j <= c2.getCount() ??
+					
+					// fetch training data
+					trainingDataID = c1.getString(c1.getColumnIndex(ActivityTable._ID));
+					trainingDataX = c1.getDouble(c1.getColumnIndex(ActivityTable.FIELD_X));
+					trainingDataY = c1.getDouble(c1.getColumnIndex(ActivityTable.FIELD_Y));
+					trainingDataZ = c1.getDouble(c1.getColumnIndex(ActivityTable.FIELD_Z));
+					trainingDataActivity = c1.getString(c1.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
+					
+					calculateDistance(trainingDataX, trainingDataY, trainingDataZ,
+							testDataX, testDataY, testDataZ
+							);
+				}
+			}
+		}
+		
+	}
+	
+	
+	private double calculateDistance(double x1, double y1, double z1, double x2, double y2, double z2) {
+		double distance = Math.sqrt(Math.pow(x1, 2) - Math.pow(x2, 2)) + 
+				Math.sqrt(Math.pow(y1, 2) - Math.pow(x2, 2)) + 
+				Math.sqrt(Math.pow(z1, 2) - Math.pow(z2, 2));
+		
+		return distance;
 	}
 
 
@@ -549,7 +650,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				);
 
 		
-		
 		// Read the values in each field
 //		c.moveToFirst();
 		
@@ -594,6 +694,28 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	public void onClick(View view) {
 		TextView debug = (TextView) findViewById(R.id.debugView);
 		debug.setText("rowId: " +rowId);
+	}
+	
+	
+	class Neighbour {
+		private double distance;
+		private String activity;
+		
+		public void setDistance(double d) {
+			this.distance = d;
+		}
+		
+		public double getDistance() {
+			return this.distance;
+		}
+		
+		public void setActivity(String a) {
+			this.activity = a;
+		}
+		
+		public String getActivity() {
+			return this.activity;
+		}
 	}
 
 }
