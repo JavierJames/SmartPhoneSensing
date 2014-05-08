@@ -2,8 +2,10 @@ package com.example.smartphonesensing2;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,6 +15,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.smartphonesensing2.DB.ActivityTable;
+import com.example.smartphonesensing2.DB.TestData;
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
 	
@@ -54,7 +58,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	// rowId of the last inserted data in db
 	private long rowId = 0;
 	
-	
+	// set accuracy of amount of neighbours
+	int K = 5;  
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -152,12 +158,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
 		
-/*		acceleration.setHint("X: "+ event.values[0]
-				+"\nY: "+ event.values[1]
-				+"\nZ:"+ event.values[2]
-				);
-*/
-		
 		TextView tvX = (TextView)findViewById(R.id.x_axis);
 		TextView tvY = (TextView)findViewById(R.id.y_axis);
 		TextView tvZ = (TextView)findViewById(R.id.z_axis);
@@ -204,16 +204,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	 * This method trains the app for the sitting activity
 	 */
 	public void trainSitActivity(View view){
-//		debug = (TextView) findViewById(R.id.debugView);
-//		debug.setText("a");
-//		storeCoordinates();
-		
-//		debug.setText("b");
-		
-//		showCoordinates();
-		
-//		debug.setText("c");
-		
+	
 		Button b = (Button) view;
 		
 		if(b.getText().equals("Start sitting")) {
@@ -282,7 +273,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			train = true;
 			activity = "run";
 			b.setText("Stop running");
-			
 			trainApp();
 		}
 		else {
@@ -298,7 +288,39 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	
 	
 	/*
+	 * This method samples the input and stores them in the database.
+	 */
+	private void trainApp() {
+	
+		
+//		debug.setText("MainActivity.trainApp()");
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				try {
+					while(train){
+						
+						storeCoordinates();
+//						showCoordinates();
+						Thread.sleep(SAMPLE_RATE);
+					}
+				}
+				catch(InterruptedException ie) {
+//					TextView debug = (TextView) findViewById(R.id.debugView);
+					
+//					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
+				}
+			}
+		};
+		
+		new Thread(runnable).start();
+	}
+	
+	
+	/*
 	 * This method tests the app for the activities: sit, walk, run.
+	 * While pressed the accelerometer coordinates is being saved in a new data based, 
+	 * to be processed later 
 	 */
 	public void testActivity(View view) {
 		Button b = (Button) view;
@@ -326,52 +348,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 	
 	
-	/*
-	 * This method samples the input and stores them in the database.
-	 */
-	private void trainApp() {
-//		Handler handler = new Handler(Looper.getMainLooper());
-//		handler.post(new Runnable() {
-//			public void run() {
-//				try {
-//					while(train){
-//						storeCoordinates();
-//						showCoordinates();
-//						Thread.sleep(SAMPLE_RATE);
-//					}
-//				}
-//				catch(InterruptedException ie) {
-////					TextView debug = (TextView) findViewById(R.id.debugView);
-//					
-//					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
-//				}
-//			}
-//		});
-		
-		
-//		debug.setText("MainActivity.trainApp()");
-		Runnable runnable = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					while(train){
-						
-						storeCoordinates();
-//						showCoordinates();
-						Thread.sleep(SAMPLE_RATE);
-					}
-				}
-				catch(InterruptedException ie) {
-//					TextView debug = (TextView) findViewById(R.id.debugView);
-					
-//					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
-				}
-			}
-		};
-		
-		new Thread(runnable).start();
-	}
-	
 	
 	/*
 	 * This method samples the input and matches them with the content in the database.
@@ -383,7 +359,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			public void run() {
 				try {
 					while(test){
-						knn();
+						storeTestDataCoordinates();
+						
 						Thread.sleep(SAMPLE_RATE);
 					}
 				}
@@ -394,16 +371,252 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				}
 			}
 		};
+		new Thread(runnable).start();
+	}
+	
+	/*Take each dataset for each activity, and append them together with only X,Y,Z,Label as attributes */
+/*	protected void create_model() {
+		// TODO Auto-generated method stub
+		//fetch and store activity Still 
+		//fetch and store activity Walking  
+		//fetch and store activity Running  
 		
+	}
+*/
+	
+
+	/*
+	 * This method tests the app for the activities: sit, walk, run.
+	 */
+	public void AnalyzeData(View view) {
+		Button b = (Button) view;
+		
+		if(b.getText().equals("Analyze")){
+			// When this button is pressed to start the variable activity
+			// is set to "test" and the text shown in the button is changed to
+			// "Stop testing"
+			
+			test = true;
+			activity = "test";
+			b.setText("Analyzing");
+			knn();
+			//get model in database 1 
+			
+			//get records in database 2 
+			
+			//for each record apply knn 
+		//	for(r=0; r<record_count; r++){
+				//for(t=0; t<training_count; t++){
+			//		knn();
+		
+				//}
+				
+				
+		//	} 
+			
+		
+		}
+		else {
+			// When this button is pressed to stop the variable activity
+			// is set to "none" and the text shown on the button is changed to
+			// "Start testing"
+			
+			test = false;
+			activity = "none";
+			b.setText("Analyze");
+			
+			//display results
+			
+		}
 	}
 	
 	
-	/*
+		/*
 	 * This method matches the input samples against the data in the database
 	 * by applying KNN algorithm. 
 	 */
+	
+	SQLiteDatabase mDatabase;
 	private void knn() {
 		// TODO Auto-generated method stub
+		int recordSetSize= 10; 
+		int trainingSetSize =8; //total amount of training instances
+		double [] K_neighbours = new double[K]; //save the closes K neighbours 
+		int r,t =0; 
+		
+		//TODO get reference of Test Data Database and Training Data Database 
+		
+	// TODO Auto-generated method stub
+		
+		/*
+		 * 1) Fetch the records of both tables, training database and testing database
+		 * 2) Compare each record in the testing database with the training database
+		 * 3) Save the three closest neighbors
+		 * 4) The testing record will be classified as the activity which is saved the most 
+		 */
+		
+		// 1)
+		
+		SQLiteDatabase db = activityDB.getReadableDatabase();
+
+		String[] trainingData = {
+				ActivityTable.FIELD_ID,
+				ActivityTable.FIELD_X,
+				ActivityTable.FIELD_Y,
+				ActivityTable.FIELD_Z,
+				ActivityTable.FIELD_ACTIVITY
+		};
+		
+		
+		
+		String[] testingData = {
+				TestData.FIELD_ID,
+				TestData.FIELD_X,
+				TestData.FIELD_Y,
+				TestData.FIELD_Z
+		};
+		
+		
+		Cursor c1 = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
+				trainingData, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+
+		
+		Cursor c2 = db.query(TestData.TABLE_NAME,		// Name of the table 
+				testingData, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+		
+		String trainingDataID;
+		Float trainingDataX;
+		Float trainingDataY;
+		Float trainingDataZ;
+		String trainingDataActivity;
+		
+		
+		String testDataID;
+		Float testDataX;
+		Float testDataY;
+		Float testDataZ;
+		
+		
+		if(c1.moveToFirst() && c2.moveToFirst()) {
+			for(int i = 0; i < c1.getCount(); i++) { // ?? i <= c1.getCount() ??
+				
+				// fetch test data
+				testDataID = c2.getString(c2.getColumnIndex(ActivityTable._ID));
+				testDataX = c2.getFloat(c2.getColumnIndex(ActivityTable.FIELD_X));
+				testDataY = c2.getFloat(c2.getColumnIndex(ActivityTable.FIELD_Y));
+				testDataZ = c2.getFloat(c2.getColumnIndex(ActivityTable.FIELD_Z));
+				
+				
+				
+				for(int j = 0; j < c2.getCount(); j++) { // ?? j <= c2.getCount() ??
+					
+					// fetch training data
+					trainingDataID = c1.getString(c1.getColumnIndex(ActivityTable._ID));
+					trainingDataX = c1.getFloat(c1.getColumnIndex(ActivityTable.FIELD_X));
+					trainingDataY = c1.getFloat(c1.getColumnIndex(ActivityTable.FIELD_Y));
+					trainingDataZ = c1.getFloat(c1.getColumnIndex(ActivityTable.FIELD_Z));
+					trainingDataActivity = c1.getString(c1.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
+					
+					EuclideanDistance(trainingDataX, trainingDataY, trainingDataZ,
+							testDataX, testDataY, testDataZ
+							);
+					
+					//TODO iterate cursor 
+					c1.moveToPosition(j+1);
+				}
+				c2.moveToPosition(i+1);
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//TODO label each record	
+		for(r=0; r<recordSetSize; r++){
+			for(t=0; t<trainingSetSize; t++){
+				
+				knnDistance();
+			}
+			
+			
+		}
+		
+
+	//	 Cursor c = mDatabase.rawQuery("select * from activity",null);
+		// tvX.setText(Float.toString(mlastX));
+		// activity_now.setText("BLA BLA " );
+		 //activity_now.setText(" " +db_count);
+		 
+		 //calculate k-nn distance from all objects in database 
+		//save k-nn nearest in an array
+		
+		
+		
+		
+		
+		
+	}
+      private double EuclideanDistance(Float trainingDataX, Float trainingDataY,
+			Float trainingDataZ, Float testDataX, Float testDataY,
+			Float testDataZ) {
+		// TODO Auto-generated method stub
+    	  return Math.sqrt(Math.pow((trainingDataX-testDataX),2) + Math.pow((trainingDataY-testDataY),2) + Math.pow((trainingDataZ-testDataZ),2));
+		
+	}
+
+
+	/* Calculate the Euclidean distance between two instance*/
+	  private float knnDistance() {
+		// TODO Auto-generated method stub
+		  float e_distance =(float) 0.0;
+		  int i=0;
+		  
+		  for(i=0; i<K; i++)
+		  {
+			  //get K elements in Kspace instances in both training and test data set
+			  // e_distance = sqrt( enum[1:K](Ai-Bi) )
+			  e_distance += 5;//test summation
+			  
+		  }
+		  return e_distance;
 		
 		/*
 		 * 1) Fetch the records of both tables, training database and testing database
@@ -507,8 +720,45 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		
 		return distance;
 	}
+	  /* Determine the nearest K neighbours for a given object
+	   * save results 
+	   * 
+	   * Steps. 
+	   * 1. Get a record 
+	   * 2. Have a reference to the Training Data database 
+	   * 3. Calculate the Eucludean distance from record and all training data
+	   * 4. Sort the K-Nearest Neighbours 
+	   * */
+	  private void NearestNeighbours(float distance, String [] label)
+	  {
+		  
+		 float furthest_nn = 0; // keep track of the biggest distance of k-NN distances
+		  
+		 
+		 
+		  //store new distance only if valid 
+		// if(distance > furthest_nn ) // if data is bigger than biggest data do nothing 
+			 //
+		// else if(distance< furthest_nn){ 
+			 
+			 
+		// }
+		 
+	  }
 
 
+	//knn function to count number of instances in database
+	// private long fetchPlacesCount() {
+	public long fetchPlacesCount() {
+	     String sql = "SELECT COUNT(*) FROM " + ActivityTable.TABLE_NAME;
+	     SQLiteStatement statement = mDatabase.compileStatement(sql);
+	     long count = statement.simpleQueryForLong();
+	     return count;
+	 }
+
+	
+	
+	
 	public void storeCoordinates(){
 		try {
 			
@@ -549,6 +799,48 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //			debug.setText("storeCoordinates() "+e.getMessage());
 		}
 	}
+	
+	/* Store coordinates of the test data */
+	public void storeTestDataCoordinates(){
+		try {
+			
+		
+		// debug view
+//		TextView debug = (TextView) findViewById(R.id.debugView);
+		SQLiteDatabase db = null;
+//		debug.setText("1");
+		
+		// Insert the values into the database
+		
+		try{
+			db = activityDB.getWritableDatabase();
+		}
+		catch(SQLException e){
+//			debug.setText("\n\nErrror Store: "+ e.getMessage() +"\n\n");
+		}
+		
+
+		ContentValues values = new ContentValues();
+
+//		values.put(ActivityTable._ID, " ");
+		values.put(TestData.FIELD_X, Float.toString(mlastX));
+		values.put(TestData.FIELD_Y, Float.toString(mlastY));
+		values.put(TestData.FIELD_Z, Float.toString(mlastZ));
+				
+
+		rowId = db.insert(TestData.TABLE_NAME, null, values);
+		
+		// close database
+		db.close();
+		
+//		debug.setText("rowId: "+ rowId);
+		}
+		catch(Exception e) {
+//			debug.setText("storeCoordinates() "+e.getMessage());
+		}
+	}
+	
+	
 	
 	
 	public void showCoordinates(){
@@ -612,6 +904,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 	
 	
+<<<<<<< HEAD
 	/*
 	 * This function shows all records
 	 */
@@ -689,6 +982,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		
 		db.close();
 	}
+=======
+>>>>>>> aefb60826c5e216a19cb78feab2224abab491b16
 	
 	
 	public void onClick(View view) {

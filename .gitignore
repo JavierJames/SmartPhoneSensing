@@ -1,0 +1,14 @@
+bin/
+.project
+.metadata
+.gradle
+tmp/
+*.tmp
+*.swp
+*.bak
+local.properties 
+.loadpath
+*.launch
+.externalToolBuilders/
+.cproject 
+.buildpath
