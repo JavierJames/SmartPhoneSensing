@@ -2,7 +2,6 @@ package com.example.smartphonesensing2;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -11,11 +10,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,8 +20,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.smartphonesensing2.DB.ActivityTable;
-import com.example.smartphonesensing2.DB.TestData;
+import com.example.smartphonesensing2.db.TestingTable;
+import com.example.smartphonesensing2.db.TestingTable.TestingField;
+import com.example.smartphonesensing2.db.TrainingTable;
+import com.example.smartphonesensing2.db.TrainingTable.TrainingField;
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
 	
@@ -43,8 +41,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	// ???
 	private final float NOISE = (float)2.0;
 	
-	// Reference to the database
-	private DB activityDB;
+	// Reference to training table
+	private TrainingTable trainingTable;
+	
+	// Reference to testing table
+	private TestingTable testingTable;
 	
 	// Flags to keep track the mode the app is running
 	private boolean train, test;
@@ -80,7 +81,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
-		activityDB = new DB(getApplicationContext());
+		trainingTable = new TrainingTable(getApplicationContext());
 		//acceleration = (EditText) findViewById(R.id.acceleration);
 		
 		 
@@ -107,7 +108,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-		activityDB.close();
+		trainingTable.close();
 	}
 	
 	
@@ -457,27 +458,27 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		
 		// 1)
 		
-		SQLiteDatabase db = activityDB.getReadableDatabase();
+		SQLiteDatabase db = trainingTable.getReadableDatabase();
 
 		String[] trainingData = {
-				ActivityTable.FIELD_ID,
-				ActivityTable.FIELD_X,
-				ActivityTable.FIELD_Y,
-				ActivityTable.FIELD_Z,
-				ActivityTable.FIELD_ACTIVITY
+				TrainingField.FIELD_ID,
+				TrainingField.FIELD_X,
+				TrainingField.FIELD_Y,
+				TrainingField.FIELD_Z,
+				TrainingField.FIELD_ACTIVITY
 		};
 		
 		
 		
 		String[] testingData = {
-				TestData.FIELD_ID,
-				TestData.FIELD_X,
-				TestData.FIELD_Y,
-				TestData.FIELD_Z
+				TestingField.FIELD_ID,
+				TestingField.FIELD_X,
+				TestingField.FIELD_Y,
+				TestingField.FIELD_Z
 		};
 		
 		
-		Cursor c1 = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
+		Cursor c1 = db.query(TrainingField.TABLE_NAME,		// Name of the table 
 				trainingData, 								// Fields to be fetched
 				null,								// where-clause
 				null, 								// arguments for the where-clause
@@ -488,7 +489,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
 
 		
-		Cursor c2 = db.query(TestData.TABLE_NAME,		// Name of the table 
+		Cursor c2 = db.query(TestingField.TABLE_NAME,		// Name of the table 
 				testingData, 								// Fields to be fetched
 				null,								// where-clause
 				null, 								// arguments for the where-clause
@@ -515,21 +516,21 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			for(int i = 0; i < c1.getCount(); i++) { // ?? i <= c1.getCount() ??
 				
 				// fetch test data
-				testDataID = c2.getString(c2.getColumnIndex(ActivityTable._ID));
-				testDataX = c2.getFloat(c2.getColumnIndex(ActivityTable.FIELD_X));
-				testDataY = c2.getFloat(c2.getColumnIndex(ActivityTable.FIELD_Y));
-				testDataZ = c2.getFloat(c2.getColumnIndex(ActivityTable.FIELD_Z));
+				testDataID = c2.getString(c2.getColumnIndex(TrainingField._ID));
+				testDataX = c2.getFloat(c2.getColumnIndex(TrainingField.FIELD_X));
+				testDataY = c2.getFloat(c2.getColumnIndex(TrainingField.FIELD_Y));
+				testDataZ = c2.getFloat(c2.getColumnIndex(TrainingField.FIELD_Z));
 				
 				
 				
 				for(int j = 0; j < c2.getCount(); j++) { // ?? j <= c2.getCount() ??
 					
 					// fetch training data
-					trainingDataID = c1.getString(c1.getColumnIndex(ActivityTable._ID));
-					trainingDataX = c1.getFloat(c1.getColumnIndex(ActivityTable.FIELD_X));
-					trainingDataY = c1.getFloat(c1.getColumnIndex(ActivityTable.FIELD_Y));
-					trainingDataZ = c1.getFloat(c1.getColumnIndex(ActivityTable.FIELD_Z));
-					trainingDataActivity = c1.getString(c1.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
+					trainingDataID = c1.getString(c1.getColumnIndex(TrainingField._ID));
+					trainingDataX = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_X));
+					trainingDataY = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_Y));
+					trainingDataZ = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_Z));
+					trainingDataActivity = c1.getString(c1.getColumnIndex(TrainingField.FIELD_ACTIVITY));
 					
 					EuclideanDistance(trainingDataX, trainingDataY, trainingDataZ,
 							testDataX, testDataY, testDataZ
@@ -540,43 +541,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				}
 				c2.moveToPosition(i+1);
 			}
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		//TODO label each record	
-		for(r=0; r<recordSetSize; r++){
-			for(t=0; t<trainingSetSize; t++){
-				
-				knnDistance();
-			}
-			
-			
 		}
 		
 
@@ -599,116 +563,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			Float testDataZ) {
 		// TODO Auto-generated method stub
     	  return Math.sqrt(Math.pow((trainingDataX-testDataX),2) + Math.pow((trainingDataY-testDataY),2) + Math.pow((trainingDataZ-testDataZ),2));
-		
-	}
-
-
-	/* Calculate the Euclidean distance between two instance*/
-	  private float knnDistance() {
-		// TODO Auto-generated method stub
-		  float e_distance =(float) 0.0;
-		  int i=0;
-		  
-		  for(i=0; i<K; i++)
-		  {
-			  //get K elements in Kspace instances in both training and test data set
-			  // e_distance = sqrt( enum[1:K](Ai-Bi) )
-			  e_distance += 5;//test summation
-			  
-		  }
-		  return e_distance;
-		
-		/*
-		 * 1) Fetch the records of both tables, training database and testing database
-		 * 2) Compare each record in the testing database with the training database
-		 * 3) Save the three closest neighbors
-		 * 4) The testing record will be classified as the activity which is saved the most 
-		 */
-		
-		// 1)
-		
-		SQLiteDatabase db = activityDB.getReadableDatabase();
-
-		db = activityDB.getReadableDatabase();
-
-		String[] trainingData = {
-				ActivityTable.FIELD_ID,
-				ActivityTable.FIELD_X,
-				ActivityTable.FIELD_Y,
-				ActivityTable.FIELD_Z,
-				ActivityTable.FIELD_ACTIVITY
-		};
-		
-		
-		
-		String[] testingData = {
-				TestData.FIELD_ID,
-				TestData.FIELD_X,
-				TestData.FIELD_Y,
-				TestData.FIELD_Z
-		};
-		
-		
-		Cursor c1 = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
-				trainingData, 								// Fields to be fetched
-				null,								// where-clause
-				null, 								// arguments for the where-clause
-				null, 								// groupBy
-				null, 								// having
-				null								// orderBy
-				);
-
-
-		
-		Cursor c2 = db.query(TestData.TABLE_NAME,		// Name of the table 
-				testingData, 								// Fields to be fetched
-				null,								// where-clause
-				null, 								// arguments for the where-clause
-				null, 								// groupBy
-				null, 								// having
-				null								// orderBy
-				);
-
-		
-		String trainingDataID;
-		double trainingDataX;
-		double trainingDataY;
-		double trainingDataZ;
-		String trainingDataActivity;
-		
-		
-		String testDataID;
-		double testDataX;
-		double testDataY;
-		double testDataZ;
-		
-		
-		if(c1.moveToFirst() && c2.moveToFirst()) {
-			for(int i = 0; i < c1.getCount(); i++) { // ?? c1.getCount() ??
-				
-				// fetch test data
-				testDataID = c2.getString(c2.getColumnIndex(ActivityTable._ID));
-				testDataX = c2.getDouble(c2.getColumnIndex(ActivityTable.FIELD_X));
-				testDataY = c2.getDouble(c2.getColumnIndex(ActivityTable.FIELD_Y));
-				testDataZ = c2.getDouble(c2.getColumnIndex(ActivityTable.FIELD_Z));
-				
-				
-				
-				for(int j = 0; j < c2.getCount(); j++) { // ?? j <= c2.getCount() ??
-					
-					// fetch training data
-					trainingDataID = c1.getString(c1.getColumnIndex(ActivityTable._ID));
-					trainingDataX = c1.getDouble(c1.getColumnIndex(ActivityTable.FIELD_X));
-					trainingDataY = c1.getDouble(c1.getColumnIndex(ActivityTable.FIELD_Y));
-					trainingDataZ = c1.getDouble(c1.getColumnIndex(ActivityTable.FIELD_Z));
-					trainingDataActivity = c1.getString(c1.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
-					
-					calculateDistance(trainingDataX, trainingDataY, trainingDataZ,
-							testDataX, testDataY, testDataZ
-							);
-				}
-			}
-		}
 		
 	}
 	
@@ -750,7 +604,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	//knn function to count number of instances in database
 	// private long fetchPlacesCount() {
 	public long fetchPlacesCount() {
-	     String sql = "SELECT COUNT(*) FROM " + ActivityTable.TABLE_NAME;
+	     String sql = "SELECT COUNT(*) FROM " + TrainingField.TABLE_NAME;
 	     SQLiteStatement statement = mDatabase.compileStatement(sql);
 	     long count = statement.simpleQueryForLong();
 	     return count;
@@ -771,7 +625,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		// Insert the values into the database
 		
 		try{
-			db = activityDB.getWritableDatabase();
+			db = trainingTable.getWritableDatabase();
 		}
 		catch(SQLException e){
 //			debug.setText("\n\nErrror Store: "+ e.getMessage() +"\n\n");
@@ -780,15 +634,15 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
 		ContentValues values = new ContentValues();
 
-//		values.put(ActivityTable._ID, " ");
-		values.put(ActivityTable.FIELD_X, Float.toString(mlastX));
-		values.put(ActivityTable.FIELD_Y, Float.toString(mlastY));
-		values.put(ActivityTable.FIELD_Z, Float.toString(mlastZ));
-		values.put(ActivityTable.FIELD_ACTIVITY, activity);
+//		values.put(TrainingField._ID, " ");
+		values.put(TrainingField.FIELD_X, Float.toString(mlastX));
+		values.put(TrainingField.FIELD_Y, Float.toString(mlastY));
+		values.put(TrainingField.FIELD_Z, Float.toString(mlastZ));
+		values.put(TrainingField.FIELD_ACTIVITY, activity);
 
 		
 
-		rowId = db.insert(ActivityTable.TABLE_NAME, null, values);
+		rowId = db.insert(TrainingField.TABLE_NAME, null, values);
 		
 		// close database
 		db.close();
@@ -813,7 +667,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		// Insert the values into the database
 		
 		try{
-			db = activityDB.getWritableDatabase();
+			db = trainingTable.getWritableDatabase();
 		}
 		catch(SQLException e){
 //			debug.setText("\n\nErrror Store: "+ e.getMessage() +"\n\n");
@@ -822,13 +676,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
 		ContentValues values = new ContentValues();
 
-//		values.put(ActivityTable._ID, " ");
-		values.put(TestData.FIELD_X, Float.toString(mlastX));
-		values.put(TestData.FIELD_Y, Float.toString(mlastY));
-		values.put(TestData.FIELD_Z, Float.toString(mlastZ));
+//		values.put(TrainingField._ID, " ");
+		values.put(TrainingField.FIELD_X, Float.toString(mlastX));
+		values.put(TrainingField.FIELD_Y, Float.toString(mlastY));
+		values.put(TrainingField.FIELD_Z, Float.toString(mlastZ));
 				
 
-		rowId = db.insert(TestData.TABLE_NAME, null, values);
+		rowId = db.insert(TrainingField.TABLE_NAME, null, values);
 		
 		// close database
 		db.close();
@@ -853,26 +707,26 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //			TextView debug = (TextView) findViewById(R.id.debugView);
 			
 			
-			db = activityDB.getReadableDatabase();
+			db = trainingTable.getReadableDatabase();
 			
 			String[] data = {
-					ActivityTable.FIELD_ID,
-					ActivityTable.FIELD_X,
-					ActivityTable.FIELD_Y,
-					ActivityTable.FIELD_Z,
-					ActivityTable.FIELD_ACTIVITY
+					TrainingField.FIELD_ID,
+					TrainingField.FIELD_X,
+					TrainingField.FIELD_Y,
+					TrainingField.FIELD_Z,
+					TrainingField.FIELD_ACTIVITY
 			};
 
 			
-			String where = ActivityTable.FIELD_X +" = "+ mlastX +" AND "+ 
-					ActivityTable.FIELD_Y +" = "+ mlastY +" AND "+ 
-					ActivityTable.FIELD_Z +" = "+ mlastZ;
+			String where = TrainingField.FIELD_X +" = "+ mlastX +" AND "+ 
+					TrainingField.FIELD_Y +" = "+ mlastY +" AND "+ 
+					TrainingField.FIELD_Z +" = "+ mlastZ;
 			
 
-			String orderBy = ActivityTable.FIELD_ACTIVITY + " ASC";
+			String orderBy = TrainingField.FIELD_ACTIVITY + " ASC";
 
 
-			Cursor c = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
+			Cursor c = db.query(TrainingField.TABLE_NAME,		// Name of the table 
 					data, 								// Fields to be fetched
 					null,								// where-clause
 					null, 								// arguments for the where-clause
@@ -886,10 +740,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			
 			// Read the values in each field
 			c.moveToFirst();
-			String dataX = c.getString(c.getColumnIndex(ActivityTable.FIELD_X));
-			String dataY = c.getString(c.getColumnIndex(ActivityTable.FIELD_Y));
-			String dataZ = c.getString(c.getColumnIndex(ActivityTable.FIELD_Z));
-			String dataActivity = c.getString(c.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
+			String dataX = c.getString(c.getColumnIndex(TrainingField.FIELD_X));
+			String dataY = c.getString(c.getColumnIndex(TrainingField.FIELD_Y));
+			String dataZ = c.getString(c.getColumnIndex(TrainingField.FIELD_Z));
+			String dataActivity = c.getString(c.getColumnIndex(TrainingField.FIELD_ACTIVITY));
 			
 			
 			// show the stored coordinates in db
@@ -904,7 +758,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 	
 	
-<<<<<<< HEAD
+
 	/*
 	 * This function shows all records
 	 */
@@ -912,28 +766,28 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		// This view shows the coordinates stored in db
 		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
 
-		SQLiteDatabase db = activityDB.getReadableDatabase();
+		SQLiteDatabase db = trainingTable.getReadableDatabase();
 		
-		db = activityDB.getReadableDatabase();
+		db = trainingTable.getReadableDatabase();
 		
 		String[] data = {
-				ActivityTable.FIELD_ID,
-				ActivityTable.FIELD_X,
-				ActivityTable.FIELD_Y,
-				ActivityTable.FIELD_Z,
-				ActivityTable.FIELD_ACTIVITY
+				TrainingField.FIELD_ID,
+				TrainingField.FIELD_X,
+				TrainingField.FIELD_Y,
+				TrainingField.FIELD_Z,
+				TrainingField.FIELD_ACTIVITY
 		};
 
 		
-		String where = ActivityTable.FIELD_X +" = "+ mlastX +" AND "+ 
-				ActivityTable.FIELD_Y +" = "+ mlastY +" AND "+ 
-				ActivityTable.FIELD_Z +" = "+ mlastZ;
+		String where = TrainingField.FIELD_X +" = "+ mlastX +" AND "+ 
+				TrainingField.FIELD_Y +" = "+ mlastY +" AND "+ 
+				TrainingField.FIELD_Z +" = "+ mlastZ;
 		
 
-		String orderBy = ActivityTable.FIELD_ACTIVITY + " ASC";
+		String orderBy = TrainingField.FIELD_ACTIVITY + " ASC";
 
 
-		Cursor c = db.query(ActivityTable.TABLE_NAME,		// Name of the table 
+		Cursor c = db.query(TrainingField.TABLE_NAME,		// Name of the table 
 				data, 								// Fields to be fetched
 				null,								// where-clause
 				null, 								// arguments for the where-clause
@@ -956,11 +810,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			showStoredCoordinates.setText("");
 			
 			do {
-				dataID = c.getString(c.getColumnIndex(ActivityTable._ID));
-				dataX = c.getString(c.getColumnIndex(ActivityTable.FIELD_X));
-				dataY = c.getString(c.getColumnIndex(ActivityTable.FIELD_Y));
-				dataZ = c.getString(c.getColumnIndex(ActivityTable.FIELD_Z));
-				dataActivity = c.getString(c.getColumnIndex(ActivityTable.FIELD_ACTIVITY));
+				dataID = c.getString(c.getColumnIndex(TrainingField._ID));
+				dataX = c.getString(c.getColumnIndex(TrainingField.FIELD_X));
+				dataY = c.getString(c.getColumnIndex(TrainingField.FIELD_Y));
+				dataZ = c.getString(c.getColumnIndex(TrainingField.FIELD_Z));
+				dataActivity = c.getString(c.getColumnIndex(TrainingField.FIELD_ACTIVITY));
 				
 				
 				showStoredCoordinates.setText(showStoredCoordinates.getText()+
@@ -982,8 +836,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		
 		db.close();
 	}
-=======
->>>>>>> aefb60826c5e216a19cb78feab2224abab491b16
 	
 	
 	public void onClick(View view) {
