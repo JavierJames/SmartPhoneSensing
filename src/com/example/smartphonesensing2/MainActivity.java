@@ -437,7 +437,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	 * by applying KNN algorithm. 
 	 */
 	
-	SQLiteDatabase mDatabase;
+//	SQLiteDatabase mDatabase;
 	private void knn() {
 		// TODO Auto-generated method stub
 		int recordSetSize= 10; 
@@ -445,9 +445,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		double [] K_neighbours = new double[K]; //save the closes K neighbours 
 		int r,t =0; 
 		
-		//TODO get reference of Test Data Database and Training Data Database 
-		
-	// TODO Auto-generated method stub
 		
 		/*
 		 * 1) Fetch the records of both tables, training database and testing database
@@ -558,16 +555,16 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		
 		
 	}
-      private double EuclideanDistance(Float trainingDataX, Float trainingDataY,
-			Float trainingDataZ, Float testDataX, Float testDataY,
-			Float testDataZ) {
-		// TODO Auto-generated method stub
-    	  return Math.sqrt(Math.pow((trainingDataX-testDataX),2) + Math.pow((trainingDataY-testDataY),2) + Math.pow((trainingDataZ-testDataZ),2));
-		
-	}
+//      private double EuclideanDistance(Float trainingDataX, Float trainingDataY,
+//			Float trainingDataZ, Float testDataX, Float testDataY,
+//			Float testDataZ) {
+//		// TODO Auto-generated method stub
+//    	  return Math.sqrt(Math.pow((trainingDataX-testDataX),2) + Math.pow((trainingDataY-testDataY),2) + Math.pow((trainingDataZ-testDataZ),2));
+//		
+//	}
 	
 	
-	private double calculateDistance(double x1, double y1, double z1, double x2, double y2, double z2) {
+	private double EuclideanDistance(double x1, double y1, double z1, double x2, double y2, double z2) {
 		double distance = Math.sqrt(Math.pow(x1, 2) - Math.pow(x2, 2)) + 
 				Math.sqrt(Math.pow(y1, 2) - Math.pow(x2, 2)) + 
 				Math.sqrt(Math.pow(z1, 2) - Math.pow(z2, 2));
