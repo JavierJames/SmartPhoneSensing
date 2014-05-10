@@ -301,7 +301,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				try {
 					while(train){
 						
-						storeCoordinates();
+						storeTrainDataCoordinates();
 //						showCoordinates();
 						Thread.sleep(SAMPLE_RATE);
 					}
@@ -600,20 +600,15 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
 	//knn function to count number of instances in database
 	// private long fetchPlacesCount() {
-	public long fetchPlacesCount() {
-	     String sql = "SELECT COUNT(*) FROM " + TrainingField.TABLE_NAME;
-	     SQLiteStatement statement = mDatabase.compileStatement(sql);
-	     long count = statement.simpleQueryForLong();
-	     return count;
-	 }
+//	public long fetchPlacesCount() {
+//	     String sql = "SELECT COUNT(*) FROM " + TrainingField.TABLE_NAME;
+//	     SQLiteStatement statement = mDatabase.compileStatement(sql);
+//	     long count = statement.simpleQueryForLong();
+//	     return count;
+//	 }
 
 	
-	
-	
-	public void storeCoordinates(){
-		try {
-			
-		
+	public void storeTrainDataCoordinates(){
 		// debug view
 //		TextView debug = (TextView) findViewById(R.id.debugView);
 		SQLiteDatabase db = null;
@@ -645,50 +640,41 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		db.close();
 		
 //		debug.setText("rowId: "+ rowId);
-		}
-		catch(Exception e) {
-//			debug.setText("storeCoordinates() "+e.getMessage());
-		}
+		
 	}
 	
 	/* Store coordinates of the test data */
 	public void storeTestDataCoordinates(){
-		try {
-			
-		
 		// debug view
 //		TextView debug = (TextView) findViewById(R.id.debugView);
-		SQLiteDatabase db = null;
+			SQLiteDatabase db = null;
 //		debug.setText("1");
 		
 		// Insert the values into the database
 		
-		try{
-			db = trainingTable.getWritableDatabase();
-		}
-		catch(SQLException e){
-//			debug.setText("\n\nErrror Store: "+ e.getMessage() +"\n\n");
-		}
-		
+			try{
+				db = testingTable.getWritableDatabase();
+			}
+			catch(SQLException e){
+				//			debug.setText("\n\nErrror Store: "+ e.getMessage() +"\n\n");
+			}
 
-		ContentValues values = new ContentValues();
 
-//		values.put(TrainingField._ID, " ");
-		values.put(TrainingField.FIELD_X, Float.toString(mlastX));
-		values.put(TrainingField.FIELD_Y, Float.toString(mlastY));
-		values.put(TrainingField.FIELD_Z, Float.toString(mlastZ));
-				
+			ContentValues values = new ContentValues();
 
-		rowId = db.insert(TrainingField.TABLE_NAME, null, values);
+			//		values.put(TrainingField._ID, " ");
+			values.put(TestingField.FIELD_X, Float.toString(mlastX));
+			values.put(TestingField.FIELD_Y, Float.toString(mlastY));
+			values.put(TestingField.FIELD_Z, Float.toString(mlastZ));
+
+
+			rowId = db.insert(TestingField.TABLE_NAME, null, values);
+
+			// close database
+			db.close();
+
+			//		debug.setText("rowId: "+ rowId);
 		
-		// close database
-		db.close();
-		
-//		debug.setText("rowId: "+ rowId);
-		}
-		catch(Exception e) {
-//			debug.setText("storeCoordinates() "+e.getMessage());
-		}
 	}
 	
 	
