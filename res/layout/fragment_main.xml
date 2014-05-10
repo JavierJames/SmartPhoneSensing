@@ -68,8 +68,8 @@
         android:id="@+id/sitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="trainSitActivity"
-        android:text="@string/sitButton" />
+        android:onClick="trainStillActivity"
+        android:text="@string/stillButton" />
          
          <Button
         android:id="@+id/walkButton"
@@ -110,17 +110,24 @@
     
     <!-- By clicking this button the data stored in db will be shown -->
     <Button
-        android:id="@+id/viewData"
+        android:id="@+id/viewTrainData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="showRecords"
-        android:text="@string/buttonView" />
+        android:onClick="showTrainRecords"
+        android:text="@string/buttonViewTrainData" />
+    
+    <Button
+        android:id="@+id/viewTestData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showTestRecords"
+        android:text="@string/buttonViewTestData" />
     
      <Button
         android:id="@+id/AnalyzeActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="AnalyzeData" 
+        android:onClick="analyzeData" 
         android:text="@string/analyze_activity" />
     
     
