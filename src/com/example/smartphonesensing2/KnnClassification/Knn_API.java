@@ -16,19 +16,9 @@ public class Knn_API {
     private ArrayBuff [] TestingData2 ;
     private Neighbour [][] Kneighbours2 ;
 	
-	/* constructor */
-    public Knn_API(){
-    	K = 3;
-    	TrainingDataSize =4; 
-    	TestingDataSize =2;
-    	num_activities = 2;
+	private String [] Classified_activity;
+	
 
-    	TrainingData2 = new ArrayBuff [TrainingDataSize]; //training dataset
-    	TestingData2 = new ArrayBuff [TestingDataSize];  //testing dataset
-    	Kneighbours2 = new Neighbour [TestingData2.length][K]; //fetch K closes neighbours for each testingdata
-
-    
-    }
      
     /* KNN API */
     public Knn_API(int K,  ArrayBuff[] TrainingData, ArrayBuff[] TestingData){
@@ -44,48 +34,34 @@ public class Knn_API {
     	//TrainingData2 = new ArrayBuff [TrainingDataSize]; //training dataset
     	//TestingData2 = new ArrayBuff [TestingDataSize];  //testing dataset
     	Kneighbours2 = new Neighbour [TestingData2.length][K]; //fetch K closes neighbours for each testingdata
- 	
+
+
+    	knnMethod();
+		
+    	
     	
     }
     
     
-    
-    
+    /* return the list of activities for each record */
+     public String [] get_activities(){
+    	 return Classified_activity;
+     }
 	
-	
-	//public static void main(String args[]) {
-	public void knn_main(){
-			 /*Create and Initialize array of Object  */
-		    for(int i1=0; i1<TrainingDataSize; i1++)
-	        {	
-	        	TrainingData2[i1]= new ArrayBuff();
-	        }
-			   
-			   for(int i1=0; i1< TestingDataSize; i1++)
-	        {	
-	        	TestingData2[i1]= new ArrayBuff();
-	        }
-		   
-		   //for(int t=0; t<TrainingData2.length; t++){
-			for(int t=0; t<TestingData2.length; t++){   
-	        	for(int m=0; m<K; m++)	
-	        	{	
-	        		Kneighbours2[t][m]= new Neighbour();
-	        	}
-		   }  
-	        
-   				knnMethod();
-				
-			      
-		     		      
-	 }//end of main
-	
-	
-
-				
-			private void knnMethod() {
+					
+	   private void knnMethod() {
 				// TODO Auto-generated method stub
 				double distance=0;
+				
+				for(int t=0; t<TestingData2.length; t++){   
+		        	for(int m=0; m<K; m++)	
+		        	{	
+		        		Kneighbours2[t][m]= new Neighbour();
+		        	}
+			   }  		
+				
+				
+				
 				Neighbour [][] TestingData_KnnBuff_sorted = new Neighbour [TestingData2.length][K];	
 				
 				/* new today mon*/
@@ -123,9 +99,9 @@ public class Knn_API {
 				
 					
 					/*classify Testingdata sample from sorted KNeighbours */
-					String Classified_activity=null;
-					Classified_activity= ClassifySample(TestingData_KnnBuff_sorted[i]); 
-					System.out.println("Record #:"+ i + "\t"+ "Classified label:" +"\t" + Classified_activity );
+					Classified_activity[i]= new String(ClassifySample(TestingData_KnnBuff_sorted[i])); 
+					
+					//System.out.println("Record #:"+ i + "\t"+ "Classified label:" +"\t" + Classified_activity );
 			
 				/*	System.out.println("~~~BubbleSort return array ~~~");
 					for(int j=0; j<TestingData_KnnBuff_sorted[i].length; j++){
