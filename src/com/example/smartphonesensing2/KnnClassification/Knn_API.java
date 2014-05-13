@@ -14,7 +14,7 @@ public class Knn_API {
 
     private ArrayBuff [] TrainingData2 ;
     private ArrayBuff [] TestingData2 ;
-    private Neighbour [][] Kneighbours2 ;
+    //private Neighbour [][] Kneighbours2 ;
 	
 	private String [] Classified_activity;
 	
@@ -33,7 +33,7 @@ public class Knn_API {
     	
     	//TrainingData2 = new ArrayBuff [TrainingDataSize]; //training dataset
     	//TestingData2 = new ArrayBuff [TestingDataSize];  //testing dataset
-    	Kneighbours2 = new Neighbour [TestingData2.length][K]; //fetch K closes neighbours for each testingdata
+    	//Kneighbours2 = new Neighbour [TestingData2.length][K]; //fetch K closes neighbours for each testingdata
 
 
     	knnMethod();
@@ -53,13 +53,13 @@ public class Knn_API {
 				// TODO Auto-generated method stub
 				double distance=0;
 				
-				for(int t=0; t<TestingData2.length; t++){   
+			/*	for(int t=0; t<TestingData2.length; t++){   
 		        	for(int m=0; m<K; m++)	
 		        	{	
 		        		Kneighbours2[t][m]= new Neighbour();
 		        	}
 			   }  		
-				
+			*/	
 				
 				
 				Neighbour [][] TestingData_KnnBuff_sorted = new Neighbour [TestingData2.length][K];	
@@ -68,7 +68,7 @@ public class Knn_API {
 				for(int t=0; t<TestingData2.length; t++){   
 		        	for(int m=0; m<K; m++)	
 		        	{	
-		        		TestingData_KnnBuff_sorted[t][m]= new Neighbour();
+		        		TestingData_KnnBuff_sorted[t][m]= new Neighbour(); //smelly
 		        	}
 			   }  
 				
@@ -88,10 +88,10 @@ public class Knn_API {
 				
 						
 						/*import and sort Knearest neigbour with new distance  */
-						if(distance < Neighbour.getMaxDistance()){ 
+						//if(distance < Neighbour.getMaxDistance()){ 
 							TestingData_KnnBuff_sorted [i] = BubbleSort(distance, TrainingData2[j].getActivity(),TestingData_KnnBuff_sorted [i]); //store distance and activity of training data
 							
-						}
+						//}
 						
 											
 					} //end TrainingData loop
