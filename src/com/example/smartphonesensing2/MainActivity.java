@@ -19,12 +19,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.smartphonesensing2.KnnClassification.App;
-import com.example.smartphonesensing2.KnnClassification.ArrayBuff;
+
+
+/* Database libraries */
+
 import com.example.smartphonesensing2.db.TestingTable;
 import com.example.smartphonesensing2.db.TestingTable.TestingField;
 import com.example.smartphonesensing2.db.TrainingTable;
 import com.example.smartphonesensing2.db.TrainingTable.TrainingField;
+
+/* KNN Classification libraries */
+import com.example.smartphonesensing2.KnnClassification.App;
+import com.example.smartphonesensing2.KnnClassification.ArrayBuff;
+import com.example.smartphonesensing2.KnnClassification.Knn_Classification;
+import com.example.smartphonesensing2.KnnClassification.Neighbour;
+
+ 
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
 	
