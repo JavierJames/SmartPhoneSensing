@@ -184,9 +184,9 @@ public class Knn_API {
 				}
 					
 				/* list of all activities to classify by*/
-				activity_counter[0].setActivity("Happy");
-				activity_counter[1].setActivity("Sad");
-				
+				activity_counter[0].setActivity("run");
+				activity_counter[1].setActivity("still");
+				activity_counter[1].setActivity("walk");
 				
 				/*search through array , for each activity, and count */
 				for(int j=0; j<activity_counter.length; j++){
