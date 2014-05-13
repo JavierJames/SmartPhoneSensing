@@ -35,9 +35,12 @@ public class Knn_API {
     	//TestingData2 = new ArrayBuff [TestingDataSize];  //testing dataset
     	Kneighbours2 = new Neighbour [TestingData2.length][K]; //fetch K closes neighbours for each testingdata
 
+    	Classified_activity = new String[TestingData.length];
 
     	knnMethod();
 		
+    	
+    	
     	
     	
     }
@@ -88,10 +91,10 @@ public class Knn_API {
 				
 						
 						/*import and sort Knearest neigbour with new distance  */
-						if(distance < Neighbour.getMaxDistance()){ 
+					//	if(distance < Neighbour.getMaxDistance()){ 
 							TestingData_KnnBuff_sorted [i] = BubbleSort(distance, TrainingData2[j].getActivity(),TestingData_KnnBuff_sorted [i]); //store distance and activity of training data
 							
-						}
+		//				}
 						
 											
 					} //end TrainingData loop
