@@ -19,7 +19,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+
+
 /* Database libraries */
+
 import com.example.smartphonesensing2.db.TestingTable;
 import com.example.smartphonesensing2.db.TestingTable.TestingField;
 import com.example.smartphonesensing2.db.TrainingTable;
@@ -67,7 +70,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	private long rowId = 0;
 	
 	// set accuracy of amount of neighbours
-	int K = 5;  
+	int K = 5;
+	
+	private ArrayBuff[] trainingDataset, testingDataset;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -416,9 +422,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			
 			test = true;
 			activity = "test";
-			b.setText("Analyzing");
-		//	knn();
-			
+
+			getData();
+			Knn_API app = new Knn_API(K,trainingDataset, testingDataset);
+
 			
 			//get model in database 1 
 			
@@ -457,12 +464,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	 */
 	
 //	SQLiteDatabase mDatabase;
-	private void knn() {
+	private void getData() {
 		// TODO Auto-generated method stub
-		int recordSetSize= 10; 
-		int trainingSetSize =8; //total amount of training instances
-		double [] K_neighbours = new double[K]; //save the closes K neighbours 
-		int r,t =0; 
+//		int recordSetSize= 10; 
+//		int trainingSetSize =8; //total amount of training instances
+//		double [] K_neighbours = new double[K]; //save the closes K neighbours 
+//		int r,t =0; 
+		
 		
 		
 		/*
@@ -517,17 +525,17 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				);
 
 		
-		String trainDataID;
-		Float trainDataX;
-		Float trainDataY;
-		Float trainDataZ;
-		String trainDataActivity;
+		String trainDataID = "";
+		float trainDataX = 0;
+		float trainDataY = 0;
+		float trainDataZ = 0;
+		String trainDataActivity = "";
 		
 		
-		String testDataID;
-		Float testDataX;
-		Float testDataY;
-		Float testDataZ;
+		String testDataID = "";
+		float testDataX = 0;
+		float testDataY = 0;
+		float testDataZ = 0;
 		
 		TextView debugView = (TextView) findViewById(R.id.showStoredCoodinates);
 		double distance = 0;
@@ -545,6 +553,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				testDataY = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_Y));
 				testDataZ = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_Z));
 				
+				testingDataset[i] = new ArrayBuff(i, trainDataX, trainDataY, trainDataZ, "");
 				
 				for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
 					
@@ -558,8 +567,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 					trainDataZ = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_Z));
 					trainDataActivity = c1.getString(c1.getColumnIndex(TrainingField.FIELD_ACTIVITY));
 					
-					distance = EuclideanDistance(trainDataX, trainDataY, trainDataZ,
-							testDataX, testDataY, testDataZ);
+//					distance = EuclideanDistance(trainDataX, trainDataY, trainDataZ,
+//							testDataX, testDataY, testDataZ);
 					
 					
 					debugView.setText(debugView.getText() + "\n"+
@@ -567,10 +576,14 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 							"Test: X: " +testDataX+ " Y: "+ testDataY+ " Z: " +testDataZ+ "\n"+
 							"Distance: " +distance);
 					
+					trainingDataset[j] = new ArrayBuff(j, trainDataX, trainDataY, trainDataZ, trainDataActivity);
+					
 				}
 			}
 		}
 		db.close();
+		
+		// App a = new App(c)
 
 	//	 Cursor c = mDatabase.rawQuery("select * from activity",null);
 		// tvX.setText(Float.toString(mlastX));
@@ -594,9 +607,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	
 	
 	private double EuclideanDistance(double x1, double y1, double z1, double x2, double y2, double z2) {
-		double distance = Math.sqrt(Math.pow(x1, 2) - Math.pow(x2, 2)) + 
-				Math.sqrt(Math.pow(y1, 2) - Math.pow(x2, 2)) + 
-				Math.sqrt(Math.pow(z1, 2) - Math.pow(z2, 2));
+		double distance = Math.sqrt(Math.pow(x1-x2, 2) + 
+				Math.pow(y1-y2, 2) + 
+				Math.pow(z1-z2, 2));
 		
 		return distance;
 	}
