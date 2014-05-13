@@ -419,9 +419,18 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			
 			test = true;
 			activity = "test";
+			TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
+			showStoredCoordinates.setText("");
 
 			getData();
-			Knn_API app = new Knn_API(K,trainingDataset, testingDataset);
+			Knn_API knn = new Knn_API(K,trainingDataset, testingDataset);
+			String[] activities = knn.get_activities();
+			
+			for(int i = 0; i < activities.length; i++) {
+				showStoredCoordinates.setText(showStoredCoordinates.getText()+ "\n"+
+						activities[i]
+						);
+			}
 
 			
 			//get model in database 1 
