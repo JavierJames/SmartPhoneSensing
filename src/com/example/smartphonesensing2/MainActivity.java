@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -27,11 +26,10 @@ import com.example.smartphonesensing2.db.TrainingTable;
 import com.example.smartphonesensing2.db.TrainingTable.TrainingField;
 
 /* KNN Classification libraries */
-import com.example.smartphonesensing2.KnnClassification.App;
-import com.example.smartphonesensing2.KnnClassification.ArrayBuff;
-import com.example.smartphonesensing2.KnnClassification.Knn_Classification;
 import com.example.smartphonesensing2.KnnClassification.Neighbour;
-
+import com.example.smartphonesensing2.KnnClassification.ArrayBuff;
+import com.example.smartphonesensing2.KnnClassification.Knn_API;
+import com.example.smartphonesensing2.KnnClassification.Knn_Classification;
  
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
@@ -403,6 +401,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	public void analyzeData(View view) {
 		Button b = (Button) view;
 		
+		/*fetch data TraningData and store in arrayBuff*/
+		
+		/*fetch data TestingData and store in arrayBuff*/
+		
+		
+		//App knn_app = new App(K, trainin, testing);
 		
 		
 		if(b.getText().equals("Analyze")){
@@ -413,7 +417,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			test = true;
 			activity = "test";
 			b.setText("Analyzing");
-			knn();
+		//	knn();
 			
 			
 			//get model in database 1 

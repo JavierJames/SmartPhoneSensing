@@ -3,20 +3,58 @@ package com.example.smartphonesensing2.KnnClassification;
 import java.util.Arrays;
 
 
-public class App {
+public class Knn_API {
     /* Classification settings*/
-	final static int K = 3;
-	static int TrainingDataSize =4; 
-	static int TestingDataSize =2;
-	static int num_activities = 2;
+	//final static int K = 3;
+    private int K = 3;
+    private int TrainingDataSize; 
+    private int TestingDataSize;
+    private int num_activities ;
 	
 
-	static ArrayBuff [] TrainingData2 = new ArrayBuff [TrainingDataSize]; //training dataset
-	static ArrayBuff [] TestingData2 = new ArrayBuff [TestingDataSize];  //testing dataset
-	static Neighbour [][] Kneighbours2 = new Neighbour [TestingData2.length][K]; //fetch K closes neighbours for each testingdata
+    private ArrayBuff [] TrainingData2 ;
+    private ArrayBuff [] TestingData2 ;
+    private Neighbour [][] Kneighbours2 ;
+	
+	/* constructor */
+    public Knn_API(){
+    	K = 3;
+    	TrainingDataSize =4; 
+    	TestingDataSize =2;
+    	num_activities = 2;
 
-		   public static void main(String args[]) {
+    	TrainingData2 = new ArrayBuff [TrainingDataSize]; //training dataset
+    	TestingData2 = new ArrayBuff [TestingDataSize];  //testing dataset
+    	Kneighbours2 = new Neighbour [TestingData2.length][K]; //fetch K closes neighbours for each testingdata
 
+    
+    }
+     
+    /* KNN API */
+    public Knn_API(int K,  ArrayBuff[] TrainingData, ArrayBuff[] TestingData){
+    
+    	this.K = K;
+    	this.num_activities = 3; 
+        this.TrainingDataSize = TrainingData.length;
+        TrainingData2=TrainingData;
+    	this.TestingDataSize = TestingData.length ;
+    	TestingData2= TestingData;
+    		
+    	
+    	//TrainingData2 = new ArrayBuff [TrainingDataSize]; //training dataset
+    	//TestingData2 = new ArrayBuff [TestingDataSize];  //testing dataset
+    	Kneighbours2 = new Neighbour [TestingData2.length][K]; //fetch K closes neighbours for each testingdata
+ 	
+    	
+    }
+    
+    
+    
+    
+	
+	
+	//public static void main(String args[]) {
+	public void knn_main(){
 			 /*Create and Initialize array of Object  */
 		    for(int i1=0; i1<TrainingDataSize; i1++)
 	        {	
@@ -36,41 +74,16 @@ public class App {
 	        	}
 		   }  
 	        
-   			
-		        TrainMethod();
-				TestMethod();
-				knnMethod();
+   				knnMethod();
 				
 			      
 		     		      
-		   }//end of main
+	 }//end of main
 	
 	
 
-		public static void TrainMethod(){
-
-			   /* store training data */
-			   TrainingData2[0].setRecord(0, 3, 3, 0, "Happy ");
-				TrainingData2[1].setRecord(1, -1, -4, 0, "Sad ");
-				TrainingData2[2].setRecord(2, 2, 3, 0, "Happy ");
-				TrainingData2[3].setRecord(3, 0, -5, 0, "Sad ");
 				
-				return;
-			}	    
-	
-
-			public static	void TestMethod(){
-				
-				/* store testing data*/
-				TestingData2[0].setRecord(0, 3, 4, 0, "Unknown ");
-				TestingData2[1].setRecord(1,3, 3, 0, "Unknown ");
-				
-					return;
-				
-				
-			}
-			
-			private static void knnMethod() {
+			private void knnMethod() {
 				// TODO Auto-generated method stub
 				double distance=0;
 				Neighbour [][] TestingData_KnnBuff_sorted = new Neighbour [TestingData2.length][K];	
@@ -131,7 +144,7 @@ public class App {
 			}   
 		    
 			/*Sort array of K Objects by rank order */
-			   private static Neighbour[] BubbleSort(double new_distance, String new_activity,  Neighbour [] KNN_array) {
+			   private Neighbour[] BubbleSort(double new_distance, String new_activity,  Neighbour [] KNN_array) {
 				// TODO Auto-generated method stub
 				Neighbour [] temp = new Neighbour [KNN_array.length+1]; //buffer to hold old + new neighbour
 				
@@ -165,7 +178,7 @@ public class App {
 
 			   		   
 
-			private static double EuclideanDistance(float trainingDataX, float trainingDataY,
+			private double EuclideanDistance(float trainingDataX, float trainingDataY,
 						float trainingDataZ, float testDataX, float testDataY,
 						float testDataZ) {
 					// TODO Auto-generated method stub
@@ -174,7 +187,7 @@ public class App {
 				}
 		    
 			
-			private static String ClassifySample(Neighbour[] K_neighbours)
+			private String ClassifySample(Neighbour[] K_neighbours)
 			{
 				int array_length = K_neighbours.length;
 				
