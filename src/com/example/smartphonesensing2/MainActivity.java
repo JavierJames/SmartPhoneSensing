@@ -546,6 +546,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		TextView debugView = (TextView) findViewById(R.id.showStoredCoodinates);
 		double distance = 0;
 		
+		trainingDataset = new ArrayBuff[c1.getCount()];
+		testingDataset = new ArrayBuff[c2.getCount()];
 		
 		if(c1.moveToFirst() && c2.moveToFirst()) {
 			for(int i = 0; i < c2.getCount(); i++) { // ?? i <= c1.getCount() ??
@@ -577,10 +579,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //							testDataX, testDataY, testDataZ);
 					
 					
-					debugView.setText(debugView.getText() + "\n"+
-							"Train: X: " +trainDataX+ " Y: "+ trainDataY+ " Z: " +trainDataZ+ "\n"+
-							"Test: X: " +testDataX+ " Y: "+ testDataY+ " Z: " +testDataZ+ "\n"+
-							"Distance: " +distance);
+//					debugView.setText(debugView.getText() + "\n"+
+//							"Train: X: " +trainDataX+ " Y: "+ trainDataY+ " Z: " +trainDataZ+ "\n"+
+//							"Test: X: " +testDataX+ " Y: "+ testDataY+ " Z: " +testDataZ+ "\n"+
+//							"Distance: " +distance);
 					
 					trainingDataset[j] = new ArrayBuff(j, trainDataX, trainDataY, trainDataZ, trainDataActivity);
 					
