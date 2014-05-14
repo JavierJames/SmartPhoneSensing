@@ -55,6 +55,7 @@ public class TrainingTable extends SQLiteOpenHelper {
     }
     
     
+    
     /* Inner class that defines the table activity */
     public static abstract class TrainingField implements BaseColumns {
         public static final String TABLE_NAME = "train";

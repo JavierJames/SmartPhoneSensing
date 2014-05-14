@@ -116,12 +116,30 @@
         android:onClick="showTrainRecords"
         android:text="@string/buttonViewTrainData" />
     
+    
+    <Button
+        android:id="@+id/resetTrainData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="deleteTrainRecords"
+        android:text="@string/buttonResetTrainData" />
+    
+    
     <Button
         android:id="@+id/viewTestData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="showTestRecords"
         android:text="@string/buttonViewTestData" />
+    
+    
+    <Button
+        android:id="@+id/resetTestData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="deleteTestRecords"
+        android:text="@string/buttonResetTestData" />
+    
     
      <Button
         android:id="@+id/AnalyzeActivity"

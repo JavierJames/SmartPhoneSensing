@@ -11,7 +11,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,11 +21,10 @@ import android.widget.TextView;
 
 import com.example.smartphonesensing2.KnnClassification.ArrayBuff;
 import com.example.smartphonesensing2.KnnClassification.Knn_API;
-import com.example.smartphonesensing2.db.TrainingTable;
-
 /* Database libraries */
 import com.example.smartphonesensing2.db.TestingTable;
 import com.example.smartphonesensing2.db.TestingTable.TestingField;
+import com.example.smartphonesensing2.db.TrainingTable;
 import com.example.smartphonesensing2.db.TrainingTable.TrainingField;
 /* KNN Classification libraries */
  
@@ -797,6 +795,32 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 	
 	
+	// Delete all records of the training table
+	public void deleteTrainRecords(View view) {
+		SQLiteDatabase db = trainingTable.getWritableDatabase();
+		
+		int n = db.delete(TrainingField.TABLE_NAME, 
+				null, 
+				null);
+		
+		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
+		
+		showStoredCoordinates.setText("Deleted " +n+ "records");
+	}
+	
+	
+	// Delete all records of the testing table
+	public void deleteTestRecords(View view) {
+		SQLiteDatabase db = testingTable.getWritableDatabase();
+		
+		int n = db.delete(TestingField.TABLE_NAME, 
+				null, 
+				null);
+		
+		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
+		
+		showStoredCoordinates.setText("Deleted " +n+ "records");
+	}
 
 
 }
