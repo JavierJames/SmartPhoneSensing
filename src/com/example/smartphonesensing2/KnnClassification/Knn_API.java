@@ -1,7 +1,7 @@
 package com.example.smartphonesensing2.KnnClassification;
 
 import java.util.Arrays;
-
+import android.util.Log;
 
 public class Knn_API {
     private int K = 3;
