@@ -1,5 +1,7 @@
 package com.example.smartphonesensing2;
 
+import java.io.FileWriter;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -399,6 +401,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			showStoredCoordinates.setText("");
 
 			getData();
+			
+			/*store data in internal memory for debugging */
+			
 			Knn_API knn = new Knn_API(K,trainingDataset, testingDataset);
 			String[] activities = knn.get_activities();
 			
@@ -823,4 +828,61 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	}
 
 
+	
+	
+	 private static void generateCsvFile(String sFileName, ArrayBuff[] Data)
+	   {
+		try
+		{
+		    FileWriter writer = new FileWriter(sFileName);
+	 
+		    writer.append("ID");
+		    writer.append(',');
+		    writer.append("X");
+		    writer.append(',');
+		    writer.append("Y");
+		    writer.append(',');
+		    writer.append("Z");
+		    writer.append(',');
+		    writer.append("Activity");
+		    writer.append('\n');
+	
+		    /* 
+		     *   ID, X, Y, Z, Activity
+		     * */
+		    for(int i=0; i<Data.length; i++){
+		    
+		    writer.append(""+ i);
+		    writer.append(',');
+		    writer.append(""+Data[i].getX());
+		    writer.append(',');
+		    writer.append(""+Data[i].getY());
+		    writer.append(',');
+		    writer.append(""+Data[i].getZ());
+		    writer.append(',');
+		    writer.append(""+Data[i].getActivity());   
+		    writer.append('\n');
+	 	    
+		    }
+		    //generate whatever data you want
+	 
+		    writer.flush();
+		    writer.close();
+		}
+		catch(IOException e)
+		{
+		     e.printStackTrace();
+		} 
+	    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
