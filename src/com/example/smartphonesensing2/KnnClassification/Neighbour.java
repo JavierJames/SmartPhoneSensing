@@ -11,7 +11,7 @@ public class Neighbour implements Comparable<Neighbour>{
 		
 	public Neighbour(){
 		distance =500; 
-		activity ="Unknown";
+		activity ="Not Working";
 	//	max_distance = 10000; //maybe this causing the problem
 		
 	}
