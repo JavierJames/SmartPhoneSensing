@@ -501,7 +501,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		
 		if(c1.moveToFirst() && c2.moveToFirst()) {
 			
-for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
+			for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
 				
 				// move to next record of TestingTable
 				c1.moveToPosition(j);
@@ -515,7 +515,6 @@ for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
 				
 				
 				trainingDataset[j] = new ArrayBuff(j, trainDataX, trainDataY, trainDataZ, trainDataActivity);
-				
 			}
 			
 			for(int i = 0; i < c2.getCount(); i++) { // ?? i <= c1.getCount() ??
@@ -529,8 +528,7 @@ for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
 				testDataY = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_Y));
 				testDataZ = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_Z));
 				
-				testingDataset[i] = new ArrayBuff(i, testDataX, testDataY, testDataZ, "");	
-				
+				testingDataset[i] = new ArrayBuff(i, testDataX, testDataY, testDataZ, "");
 			}
 			
 			
@@ -823,7 +821,7 @@ for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
 		
 		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
 		
-		showStoredCoordinates.setText("Deleted " +n+ "records");
+		showStoredCoordinates.setText("Deleted " +n+ " records");
 	}
 	
 	
@@ -837,7 +835,7 @@ for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
 		
 		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
 		
-		showStoredCoordinates.setText("Deleted " +n+ "records");
+		showStoredCoordinates.setText("Deleted " +n+ " records");
 	}
 
 
