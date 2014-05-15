@@ -1,6 +1,7 @@
 package com.example.smartphonesensing2;
 
 import java.io.FileWriter;
+import java.io.IOException;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -873,8 +874,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		{
 		     e.printStackTrace();
 		} 
+	  
+	    
 	    }
-	
 	
 	
 	
