@@ -500,6 +500,24 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 		testingDataset = new ArrayBuff[c2.getCount()];
 		
 		if(c1.moveToFirst() && c2.moveToFirst()) {
+			
+for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
+				
+				// move to next record of TestingTable
+				c1.moveToPosition(j);
+				
+				// fetch training data
+				trainDataID = c1.getString(c1.getColumnIndex(TrainingField._ID));
+				trainDataX = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_X));
+				trainDataY = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_Y));
+				trainDataZ = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_Z));
+				trainDataActivity = c1.getString(c1.getColumnIndex(TrainingField.FIELD_ACTIVITY));
+				
+				
+				trainingDataset[j] = new ArrayBuff(j, trainDataX, trainDataY, trainDataZ, trainDataActivity);
+				
+			}
+			
 			for(int i = 0; i < c2.getCount(); i++) { // ?? i <= c1.getCount() ??
 				
 				// move to next record of TrainingTable
@@ -511,25 +529,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				testDataY = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_Y));
 				testDataZ = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_Z));
 				
-				testingDataset[i] = new ArrayBuff(i, testDataX, testDataY, testDataZ, "");
+				testingDataset[i] = new ArrayBuff(i, testDataX, testDataY, testDataZ, "");	
 				
-				for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
-					
-					// move to next record of TestingTable
-					c1.moveToPosition(j);
-					
-					// fetch training data
-					trainDataID = c1.getString(c1.getColumnIndex(TrainingField._ID));
-					trainDataX = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_X));
-					trainDataY = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_Y));
-					trainDataZ = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_Z));
-					trainDataActivity = c1.getString(c1.getColumnIndex(TrainingField.FIELD_ACTIVITY));
-					
-					
-					trainingDataset[j] = new ArrayBuff(j, trainDataX, trainDataY, trainDataZ, trainDataActivity);
-					
-				}
 			}
+			
+			
 		}
 		
 		if(isExternalStorageWritable()) {
@@ -881,7 +885,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 			}
 			//generate whatever data you want
 
-			writer.flush();
+			if(Data.length > 0)
+				writer.flush();
+			
 			writer.close();
 		}
 		catch(IOException e)
