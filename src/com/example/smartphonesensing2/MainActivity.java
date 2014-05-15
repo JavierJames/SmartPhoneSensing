@@ -1,5 +1,6 @@
 package com.example.smartphonesensing2;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -12,6 +13,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -414,7 +416,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 						);
 			}
 
-
 		}
 		else {
 			
@@ -530,10 +531,17 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				}
 			}
 		}
+		
+		if(isExternalStorageWritable()) {
+			generateCsvFile("TrainData.txt", trainingDataset);
+			generateCsvFile("TestData.txt", testingDataset);
+		}
+		else {
+			debugView.setText("MainActivity.getData (540):Cannot create file!");
+		}
+		
+		
 		db.close();
-		
-		
-		
 	}
 	
 	public void storeTrainDataCoordinates(){
@@ -831,60 +839,83 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
 	
 	
-	 private static void generateCsvFile(String sFileName, ArrayBuff[] Data)
-	   {
+	 private static void generateCsvFile(String sFileName, ArrayBuff[] Data) {
 		try
 		{
-		    FileWriter writer = new FileWriter(sFileName);
-	 
-		    writer.append("ID");
-		    writer.append(',');
-		    writer.append("X");
-		    writer.append(',');
-		    writer.append("Y");
-		    writer.append(',');
-		    writer.append("Z");
-		    writer.append(',');
-		    writer.append("Activity");
-		    writer.append('\n');
-	
-		    /* 
-		     *   ID, X, Y, Z, Activity
-		     * */
-		    for(int i=0; i<Data.length; i++){
-		    
-		    writer.append(""+ i);
-		    writer.append(',');
-		    writer.append(""+Data[i].getX());
-		    writer.append(',');
-		    writer.append(""+Data[i].getY());
-		    writer.append(',');
-		    writer.append(""+Data[i].getZ());
-		    writer.append(',');
-		    writer.append(""+Data[i].getActivity());   
-		    writer.append('\n');
-	 	    
-		    }
-		    //generate whatever data you want
-	 
-		    writer.flush();
-		    writer.close();
+			File path = Environment.getExternalStoragePublicDirectory(
+		            Environment.DIRECTORY_DOWNLOADS);
+
+			path.mkdirs();
+			
+			File file = new File(path, sFileName);
+
+			FileWriter writer = new FileWriter(file);
+
+			writer.append("ID");
+			writer.append(',');
+			writer.append("X");
+			writer.append(',');
+			writer.append("Y");
+			writer.append(',');
+			writer.append("Z");
+			writer.append(',');
+			writer.append("Activity");
+			writer.append('\n');
+
+			/* 
+			 *   ID, X, Y, Z, Activity
+			 * */
+			for(int i=0; i<Data.length; i++){
+
+				writer.append(""+ i);
+				writer.append(',');
+				writer.append(""+Data[i].getX());
+				writer.append(',');
+				writer.append(""+Data[i].getY());
+				writer.append(',');
+				writer.append(""+Data[i].getZ());
+				writer.append(',');
+				writer.append(""+Data[i].getActivity());   
+				writer.append('\n');
+
+			}
+			//generate whatever data you want
+
+			writer.flush();
+			writer.close();
 		}
 		catch(IOException e)
 		{
-		     e.printStackTrace();
+			e.printStackTrace();
 		} 
 	  
 	    
 	    }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	 
+	 
+	 /* Checks if external storage is available for read and write */
+	 public boolean isExternalStorageWritable() {
+	     String state = Environment.getExternalStorageState();
+	     if (Environment.MEDIA_MOUNTED.equals(state)) {
+	         return true;
+	       	       
+	     }
+	     return false;
+	 }
+	 
+
+	 /* Checks if external storage is available to at least read */
+	 public boolean isExternalStorageReadable() {
+	     String state = Environment.getExternalStorageState();
+	     if (Environment.MEDIA_MOUNTED.equals(state) ||
+	         Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+	         return true;
+	     }
+	     return false;
+	 }
+	 
+	 
+	 
+	 
+	 
 }
