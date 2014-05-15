@@ -511,7 +511,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 				testDataY = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_Y));
 				testDataZ = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_Z));
 				
-				testingDataset[i] = new ArrayBuff(i, trainDataX, trainDataY, trainDataZ, "");
+				testingDataset[i] = new ArrayBuff(i, testDataX, testDataY, testDataZ, "");
 				
 				for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
 					
