@@ -141,14 +141,26 @@
         android:text="@string/buttonResetTestData" />
     
     
-     <Button
-        android:id="@+id/AnalyzeActivity"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="analyzeData" 
-        android:text="@string/analyze_activity" />
+         android:orientation="horizontal" >
     
-    
+	     <Button
+	         android:id="@+id/AnalyzeActivity"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:onClick="analyzeData"
+	         android:text="@string/analyze_activity" />
+	
+	     <Button
+	         android:id="@+id/rssi"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:onClick="rssi"
+	         android:text="@string/rssi" />
+     
+     </LinearLayout>
     
     
     <!-- This view shows the data stored in the db -->

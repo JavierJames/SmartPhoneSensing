@@ -984,7 +984,7 @@ containing a value of this type.
         public static final int ic_launcher=0x7f020057;
     }
     public static final class id {
-        public static final int AnalyzeActivity=0x7f050049;
+        public static final int AnalyzeActivity=0x7f05004b;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001b;
@@ -996,14 +996,15 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f05004c;
+        public static final int action_settings=0x7f05004f;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
+        public static final int apList=0x7f05003e;
         public static final int beginning=0x7f050011;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
         public static final int container=0x7f05003c;
-        public static final int debugView=0x7f05003d;
+        public static final int debugView=0x7f05003f;
         public static final int default_activity_button=0x7f050028;
         public static final int dialog=0x7f05000e;
         public static final int disableHome=0x7f050008;
@@ -1026,9 +1027,11 @@ containing a value of this type.
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
-        public static final int resetTestData=0x7f050048;
-        public static final int resetTrainData=0x7f050046;
-        public static final int runButton=0x7f050043;
+        public static final int resetTestData=0x7f05004a;
+        public static final int resetTrainData=0x7f050048;
+        public static final int rssi=0x7f05004c;
+        public static final int runButton=0x7f050045;
+        public static final int scanRssi=0x7f05003d;
         public static final int search_badge=0x7f050032;
         public static final int search_bar=0x7f050031;
         public static final int search_button=0x7f050033;
@@ -1042,25 +1045,25 @@ containing a value of this type.
         public static final int shortcut=0x7f05002e;
         public static final int showCustom=0x7f050007;
         public static final int showHome=0x7f050004;
-        public static final int showStoredCoodinates=0x7f05004b;
+        public static final int showStoredCoodinates=0x7f05004e;
         public static final int showTitle=0x7f050006;
-        public static final int sitButton=0x7f050041;
+        public static final int sitButton=0x7f050043;
         public static final int split_action_bar=0x7f05001e;
         public static final int submit_area=0x7f050039;
         public static final int tabMode=0x7f050002;
-        public static final int testButton=0x7f050044;
-        public static final int textView1=0x7f05004a;
+        public static final int testButton=0x7f050046;
+        public static final int textView1=0x7f05004d;
         public static final int title=0x7f05002b;
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
         public static final int useLogo=0x7f050003;
-        public static final int viewTestData=0x7f050047;
-        public static final int viewTrainData=0x7f050045;
-        public static final int walkButton=0x7f050042;
+        public static final int viewTestData=0x7f050049;
+        public static final int viewTrainData=0x7f050047;
+        public static final int walkButton=0x7f050044;
         public static final int withText=0x7f05000c;
-        public static final int x_axis=0x7f05003e;
-        public static final int y_axis=0x7f05003f;
-        public static final int z_axis=0x7f050040;
+        public static final int x_axis=0x7f050040;
+        public static final int y_axis=0x7f050041;
+        public static final int z_axis=0x7f050042;
     }
     public static final class integer {
         /**  The maximum number of action buttons that should be permitted within
@@ -1112,8 +1115,9 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f030015;
         public static final int abc_search_view=0x7f030016;
         public static final int activity_main=0x7f030017;
-        public static final int fragment_main=0x7f030018;
-        public static final int support_simple_spinner_dropdown_item=0x7f030019;
+        public static final int fragment_localization=0x7f030018;
+        public static final int fragment_main=0x7f030019;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001a;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;
@@ -1172,6 +1176,7 @@ containing a value of this type.
          */
         public static final int activityresult=0x7f0a0021;
         public static final int analyze_activity=0x7f0a0022;
+        public static final int aplist=0x7f0a0025;
         public static final int app_name=0x7f0a000d;
         public static final int buttonResetTestData=0x7f0a0014;
         public static final int buttonResetTrainData=0x7f0a0012;
@@ -1186,7 +1191,11 @@ containing a value of this type.
         public static final int knn_1_x=0x7f0a001e;
         public static final int knn_1_y=0x7f0a001f;
         public static final int knn_1_z=0x7f0a0020;
+        public static final int rssi=0x7f0a0023;
         public static final int runButton=0x7f0a001c;
+        /**  Location activity 
+         */
+        public static final int scanRssi=0x7f0a0024;
         /**  Label for the shown value stored in db 
          */
         public static final int showStoredCoordinates=0x7f0a0018;

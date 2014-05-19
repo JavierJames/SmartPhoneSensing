@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -26,7 +28,7 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="com.example.smartphonesensing2.Localization"></activity>
+        <activity android:name="com.example.smartphonesensing2.localization.Localization"></activity>
         
     </application>
     

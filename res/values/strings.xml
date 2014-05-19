@@ -46,7 +46,11 @@
     <string name="activityresult">Activity</string>
     <string name="analyze_activity">Analyze</string>
     
+    <string name="rssi">RSSI</string>
     
+    <!-- Location activity -->
     
+    <string name="scanRssi">Rssi list</string>
+    <string name="aplist">Rssi list</string>
     
 </resources>

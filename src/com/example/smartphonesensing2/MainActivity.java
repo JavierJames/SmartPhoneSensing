@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,6 +32,7 @@ import com.example.smartphonesensing2.db.TestingTable;
 import com.example.smartphonesensing2.db.TestingTable.TestingField;
 import com.example.smartphonesensing2.db.TrainingTable;
 import com.example.smartphonesensing2.db.TrainingTable.TrainingField;
+import com.example.smartphonesensing2.localization.Localization;
 /* KNN Classification libraries */
  
 
@@ -919,7 +921,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 	 }
 	 
 	 
-	 
+	 public void rssi(View view) {
+		 Intent intent = new Intent(getApplicationContext(), Localization.class);
+		 
+		 intent.putExtra("rssi", true);
+		 startActivity(intent);
+		 
+	 }
 	 
 	 
 }
