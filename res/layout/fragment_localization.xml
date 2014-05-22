@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:onClick="scanRssi"
         android:text="@string/scanRssi" />
- 
+--> 
 	
 	<ScrollView
         android:layout_width="wrap_content"
@@ -54,6 +54,6 @@
         	android:text="@string/aplist" />
 	
 	</ScrollView>
--->    
+
 
 </LinearLayout>
