@@ -22,11 +22,14 @@ public class Localization extends ActionBarActivity {
 
 	// sample rate at which to sample
 	private final static int SAMPLE_RATE = 3000;
-	private final static int DURATION = 4000; //in ms 
+	private final static int DURATION = 120000; //in ms 
 	
 	// keep tracking of scanning time
 	private long start, stop; 
 		
+	// keep track of sample number 
+	private int id_sample=0; 
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +107,7 @@ public class Localization extends ActionBarActivity {
 						WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 						List<ScanResult> rssiList = wm.getScanResults();
 						
+						id_sample ++;
 						for(int i = 0; i < rssiList.size(); i++) {
 							
 							writeToFile(
@@ -170,7 +174,8 @@ public class Localization extends ActionBarActivity {
 			long size = file.length();
 			
 			if(size <= 0) {
-				
+				writer.append("SampleID ");
+				writer.append(",");
 				writer.append("SSID");
 				writer.append(",");
 				writer.append("BSSID");
@@ -184,7 +189,8 @@ public class Localization extends ActionBarActivity {
 				writer.append("describeContents");
 				writer.append("\n");
 			}
-
+			writer.append(""+id_sample);
+			writer.append(",");
 			writer.append(SSID);
 			writer.append(",");
 			writer.append(BSSID);
@@ -197,7 +203,7 @@ public class Localization extends ActionBarActivity {
 			writer.append(",");
 			writer.append(""+content);
 			writer.append("\n\n");
-			writer.append("------------------------------------------------------------------------------------------------\n\n");
+			//writer.append("------------------------------------------------------------------------------------------------\n\n");
 
 
 //			writer.flush();
