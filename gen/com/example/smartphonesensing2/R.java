@@ -999,8 +999,8 @@ containing a value of this type.
         public static final int action_settings=0x7f05004f;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
-        public static final int apList=0x7f05003e;
         public static final int beginning=0x7f050011;
+        public static final int cell_name=0x7f05003d;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
         public static final int container=0x7f05003c;
@@ -1031,7 +1031,7 @@ containing a value of this type.
         public static final int resetTrainData=0x7f050048;
         public static final int rssi=0x7f05004c;
         public static final int runButton=0x7f050045;
-        public static final int scanRssi=0x7f05003d;
+        public static final int scanCell=0x7f05003e;
         public static final int search_badge=0x7f050032;
         public static final int search_bar=0x7f050031;
         public static final int search_button=0x7f050033;
@@ -1184,6 +1184,8 @@ containing a value of this type.
         /**  Button to store coordinate values in db 
          */
         public static final int buttonViewTrainData=0x7f0a0011;
+        public static final int cell_hint=0x7f0a0028;
+        public static final int cell_name=0x7f0a0027;
         /**  Debug view 
          */
         public static final int debugView=0x7f0a0019;
@@ -1193,6 +1195,7 @@ containing a value of this type.
         public static final int knn_1_z=0x7f0a0020;
         public static final int rssi=0x7f0a0023;
         public static final int runButton=0x7f0a001c;
+        public static final int scanCell=0x7f0a0026;
         /**  Location activity 
          */
         public static final int scanRssi=0x7f0a0024;
