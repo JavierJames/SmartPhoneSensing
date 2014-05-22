@@ -3,7 +3,6 @@ package com.example.smartphonesensing2.localization;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
@@ -23,6 +22,7 @@ public class Localization extends ActionBarActivity {
 
 	// sample rate at which to sample
 	private final static int SAMPLE_RATE = 3000;
+	private final static int DURATION = 4; //in seconds
 	
 	// keep tracking of scanning time
 	private int start, stop; 
@@ -71,61 +71,94 @@ public class Localization extends ActionBarActivity {
 	 */
 	public void scanCell(View view) {
 		Button b = (Button) view;
-		b.setEnabled(false);	
-		scanningCell();
+//		b.setEnabled(false);	
+		scanningCell(b);
+
+//		b.setEnabled(true);
 	}
 	
 	
 	/*
 	 * Scan cell
 	 */
-	private void scanningCell() {
-//		Calendar c = Calendar.getInstance();
-		
-		
+	private void scanningCell(final Button button) {
+
 		Runnable runnable = new Runnable() {
 			Time t = new Time();
 			
-			
+
 			@Override
 			public void run() {
 				t.setToNow();
 				start = t.second;
 				stop = t.second;
-				try {
-					while((stop - start) < 120){
-						WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-						List<ScanResult> rssiList = wm.getScanResults();
+
+				
+			   	runOnUiThread(new Runnable () {
+		    		@Override 
+		    		public void run(){
+		    			//Button b = (Button) findViewById(R.id.scanCell);
+		    				//		b.setEnabled(false);
+		    			button.setEnabled(false);
+		    		}
+		    	});
+
+				
+				
+				
+				
+			try {
+				while((stop - start) < DURATION){
+					WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+					List<ScanResult> rssiList = wm.getScanResults();
+					
+					for(int i = 0; i < rssiList.size(); i++) {
 						
-						for(int i = 0; i < rssiList.size(); i++) {
-							
-							writeToFile(
-									rssiList.get(i).SSID,
-									rssiList.get(i).BSSID,
-									rssiList.get(i).level,
-									rssiList.get(i).frequency,
-									rssiList.get(i).capabilities,
-									rssiList.get(i).describeContents()
-									);
-						}
-						
-						
-						
-						Thread.sleep(SAMPLE_RATE);
-						
-						t.setToNow();
-						stop = t.second;
+						writeToFile(
+								rssiList.get(i).SSID,
+								rssiList.get(i).BSSID,
+								rssiList.get(i).level,
+								rssiList.get(i).frequency,
+								rssiList.get(i).capabilities,
+								rssiList.get(i).describeContents()
+								);
 					}
 					
-					Button b = (Button) findViewById(R.id.scanCell);
-					b.setEnabled(true);
-				}
-				catch(InterruptedException ie) {}
-			}
-		};
+					
+					
+					Thread.sleep(SAMPLE_RATE);
+					
+					t.setToNow();
+					stop = t.second;
+					
+
+					
+			
+				} 
+			   	runOnUiThread(new Runnable () {
+		    		@Override 
+		    		public void run(){
+		    			//Button b = (Button) findViewById(R.id.scanCell);
+		    				//		b.setEnabled(false);
+		    			button.setEnabled(true);
+		    		}
+		    	});
+
+				
+				
+		   	}//end of try
+			catch(InterruptedException ie) {}
 		
-		new Thread(runnable).start();
-	}
+		
+		}
+
+	
+	
+	
+	};
+	
+	new Thread(runnable).start();
+}
 	
 	
 	/*
