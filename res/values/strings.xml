@@ -53,4 +53,9 @@
     <string name="scanRssi">Rssi list</string>
     <string name="aplist">Rssi list</string>
     
+    <string name="scanCell">Scan cell</string>
+    <string name="cell_name">Enter cell name</string>
+    <string name="cell_hint">Enter cell name</string>
+    
+    
 </resources>

@@ -6,8 +6,26 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context="com.example.smartphonesensing2.MainActivity$PlaceholderFragment" >
+    
+    
+    <EditText
+        	android:id="@+id/cell_name"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/cell_name" 
+        	android:hint="@string/cell_hint" />
+    
+    
+    <Button
+        android:id="@+id/scanCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="scanCell"
+        android:text="@string/scanCell" />
+    
+    
 <!-- 
     <EditText
         android:id="@+id/acceleration"
@@ -16,13 +34,14 @@
         android:text="@string/hello_world"
         android:hint="@string/acceleration" />
 -->
+<!-- 
 	<Button
         android:id="@+id/scanRssi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="scanRssi"
         android:text="@string/scanRssi" />
-
+ 
 	
 	<ScrollView
         android:layout_width="wrap_content"
@@ -35,6 +54,6 @@
         	android:text="@string/aplist" />
 	
 	</ScrollView>
-    
+-->    
 
 </LinearLayout>
