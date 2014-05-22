@@ -42,11 +42,11 @@ public class Localization extends ActionBarActivity {
 			apList.setText(apList.getText() +""
 					+i+": "+
 					rssiList.get(i).BSSID +" | "+
-//					rssiList.get(i).capabilities +" | "+
-//					rssiList.get(i).frequency +" | "+
-//					rssiList.get(i).level +" | "+
+					rssiList.get(i).capabilities +" | "+
+					rssiList.get(i).frequency +" | "+
+					rssiList.get(i).level +" | "+
 					rssiList.get(i).SSID +" | "+
-//					rssiList.get(i).describeContents() +
+					rssiList.get(i).describeContents() +
 					"\n");
 		}
 	}
