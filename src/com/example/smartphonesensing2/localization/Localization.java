@@ -25,7 +25,7 @@ public class Localization extends ActionBarActivity {
 	private final static int DURATION = 4; //in seconds
 	
 	// keep tracking of scanning time
-	private int start, stop; 
+	private long start, stop; 
 		
 	
 	@Override
@@ -71,10 +71,8 @@ public class Localization extends ActionBarActivity {
 	 */
 	public void scanCell(View view) {
 		Button b = (Button) view;
-//		b.setEnabled(false);	
 		scanningCell(b);
 
-//		b.setEnabled(true);
 	}
 	
 	
@@ -90,6 +88,7 @@ public class Localization extends ActionBarActivity {
 			@Override
 			public void run() {
 				t.setToNow();
+<<<<<<< HEAD
 				start = t.second;
 				stop = t.second;
 
@@ -148,6 +147,44 @@ public class Localization extends ActionBarActivity {
 				
 		   	}//end of try
 			catch(InterruptedException ie) {}
+=======
+				start = System.currentTimeMillis();
+				stop = System.currentTimeMillis();
+				
+				long subtraction = 0;
+				try {
+					while((stop - start) < 12000){ // change to 120
+						WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+						List<ScanResult> rssiList = wm.getScanResults();
+						
+						for(int i = 0; i < rssiList.size(); i++) {
+							
+							writeToFile(
+									rssiList.get(i).SSID,
+									rssiList.get(i).BSSID,
+									rssiList.get(i).level,
+									rssiList.get(i).frequency,
+									rssiList.get(i).capabilities,
+									rssiList.get(i).describeContents()
+									);
+						}
+						
+						
+						
+						Thread.sleep(SAMPLE_RATE);
+						
+						stop = System.currentTimeMillis();
+						
+						subtraction = stop - start;
+					}
+					
+					/*Button b = (Button) findViewById(R.id.scanCell);
+					b.setEnabled(true);*/
+				}
+				catch(InterruptedException ie) {}
+			}
+		};
+>>>>>>> ea689283262bad2a3462096df771947476ce0c32
 		
 		
 		}
@@ -181,40 +218,61 @@ public class Localization extends ActionBarActivity {
 			
 			File file = new File(path, cell_name+".txt");
 
-			FileWriter writer = new FileWriter(file);
+			FileWriter writer = new FileWriter(file, true);
 
-			if(!file.exists()) {
+			long size = file.length();
+			
+			if(size <= 0) {
 				
 				writer.append("SSID");
-				writer.append(',');
+				writer.append(",");
 				writer.append("BSSID");
-				writer.append(',');
+				writer.append(",");
 				writer.append("level");
-				writer.append(',');
+				writer.append(",");
 				writer.append("frequency");
-				writer.append(',');
+				writer.append(",");
 				writer.append("Capabilities");
+				writer.append(",");
 				writer.append("describeContents");
-				writer.append('\n');
+				writer.append("\n");
 			}
 
 			writer.append(SSID);
-			writer.append(',');
+			writer.append(",");
 			writer.append(BSSID);
-			writer.append(',');
+			writer.append(",");
 			writer.append(""+level);
-			writer.append(',');
+			writer.append(",");
 			writer.append(""+frequency);
-			writer.append(',');
+			writer.append(",");
 			writer.append(capabilities);
-			writer.append(',');
+			writer.append(",");
 			writer.append(""+content);
-			writer.append('\n');
+			writer.append("\n\n");
+			writer.append("------------------------------------------------------------------------------------------------\n\n");
 
 
-			writer.flush();
+//			writer.flush();
 			
 			writer.close();
+			
+			////////////// debug ///////////////////////////
+			
+//			TextView debug = (TextView) findViewById(R.id.apList);
+//			
+//			debug.setText(debug.getText()+
+//					SSID +
+//					BSSID +
+//					""+level +
+//					""+frequency +
+//					capabilities +
+//					""+content +
+//					"\n"
+//					);
+//			
+			///////////////////////////////////////////////
+			
 		}
 		catch(IOException e){
 			e.printStackTrace();
