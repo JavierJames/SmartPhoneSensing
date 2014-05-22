@@ -22,7 +22,7 @@ public class Localization extends ActionBarActivity {
 
 	// sample rate at which to sample
 	private final static int SAMPLE_RATE = 3000;
-	private final static int DURATION = 4; //in seconds
+	private final static int DURATION = 4000; //in ms 
 	
 	// keep tracking of scanning time
 	private long start, stop; 
@@ -87,73 +87,20 @@ public class Localization extends ActionBarActivity {
 
 			@Override
 			public void run() {
-				t.setToNow();
-<<<<<<< HEAD
-				start = t.second;
-				stop = t.second;
-
 				
 			   	runOnUiThread(new Runnable () {
 		    		@Override 
 		    		public void run(){
-		    			//Button b = (Button) findViewById(R.id.scanCell);
-		    				//		b.setEnabled(false);
 		    			button.setEnabled(false);
 		    		}
 		    	});
 
-				
-				
-				
-				
-			try {
-				while((stop - start) < DURATION){
-					WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-					List<ScanResult> rssiList = wm.getScanResults();
-					
-					for(int i = 0; i < rssiList.size(); i++) {
-						
-						writeToFile(
-								rssiList.get(i).SSID,
-								rssiList.get(i).BSSID,
-								rssiList.get(i).level,
-								rssiList.get(i).frequency,
-								rssiList.get(i).capabilities,
-								rssiList.get(i).describeContents()
-								);
-					}
-					
-					
-					
-					Thread.sleep(SAMPLE_RATE);
-					
-					t.setToNow();
-					stop = t.second;
-					
 
-					
-			
-				} 
-			   	runOnUiThread(new Runnable () {
-		    		@Override 
-		    		public void run(){
-		    			//Button b = (Button) findViewById(R.id.scanCell);
-		    				//		b.setEnabled(false);
-		    			button.setEnabled(true);
-		    		}
-		    	});
-
-				
-				
-		   	}//end of try
-			catch(InterruptedException ie) {}
-=======
 				start = System.currentTimeMillis();
 				stop = System.currentTimeMillis();
 				
-				long subtraction = 0;
 				try {
-					while((stop - start) < 12000){ // change to 120
+					while((stop - start) < DURATION){ // change to 120
 						WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 						List<ScanResult> rssiList = wm.getScanResults();
 						
@@ -175,25 +122,25 @@ public class Localization extends ActionBarActivity {
 						
 						stop = System.currentTimeMillis();
 						
-						subtraction = stop - start;
 					}
 					
-					/*Button b = (Button) findViewById(R.id.scanCell);
-					b.setEnabled(true);*/
-				}
-				catch(InterruptedException ie) {}
-			}
-		};
->>>>>>> ea689283262bad2a3462096df771947476ce0c32
-		
-		
-		}
+					
+					
+				   	runOnUiThread(new Runnable () {
+			    		@Override 
+			    		public void run(){
+			    			button.setEnabled(true);
+			    		}
+			    	});
 
-	
-	
-	
-	};
-	
+					
+				}//end of try
+				catch(InterruptedException ie) {}
+			}//end of run
+		};
+		
+		
+
 	new Thread(runnable).start();
 }
 	
