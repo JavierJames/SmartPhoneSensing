@@ -74,8 +74,9 @@ public class Localization extends ActionBarActivity {
 	 */
 	public void scanCell(View view) {
 		Button b = (Button) view;
+		id_sample = 0;
+		
 		scanningCell(b);
-
 	}
 	
 	
