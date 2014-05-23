@@ -21,8 +21,8 @@ import com.example.smartphonesensing2.R;
 public class Localization extends ActionBarActivity {
 
 	// sample rate at which to sample
-	private final static int SAMPLE_RATE = 3000;
-	private final static int DURATION = 120000; //in ms 
+	private final static int SAMPLE_RATE = 1000;
+	private final static int DURATION = 180000; //in ms 
 	
 	// keep tracking of scanning time
 	private long start, stop; 
