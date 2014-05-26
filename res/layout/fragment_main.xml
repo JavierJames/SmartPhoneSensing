@@ -51,24 +51,27 @@
 
     <!-- Sit activity -->
 
-
-    <!--
-         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" >
-        </LinearLayout>
-
-    </LinearLayout>
-    -->
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+         android:orientation="horizontal" >
+    
+     <!--      android:layout_width="match_parent" -->
+     
+    
+         <Button
+        android:id="@+id/sitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="trainStillActivity"
+        android:text="@string/stillButton" />
+         
+         <Button
+        android:id="@+id/walkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="trainWalkActivity"
+        android:text="@string/walkButton" />
 
         
 

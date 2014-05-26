@@ -1048,10 +1048,10 @@ containing a value of this type.
         public static final int showHome=0x7f050004;
         public static final int showStoredCoodinates=0x7f050052;
         public static final int showTitle=0x7f050006;
-        public static final int sitButton=0x7f050045;
+        public static final int sitButton=0x7f050044;
         public static final int split_action_bar=0x7f05001e;
         public static final int submit_area=0x7f050039;
-        public static final int tab1=0x7f050044;
+        public static final int tab1=0x7f050046;
         public static final int tab2=0x7f050048;
         public static final int tab3=0x7f05004a;
         public static final int tabMode=0x7f050002;
@@ -1063,7 +1063,7 @@ containing a value of this type.
         public static final int useLogo=0x7f050003;
         public static final int viewTestData=0x7f05004d;
         public static final int viewTrainData=0x7f05004b;
-        public static final int walkButton=0x7f050046;
+        public static final int walkButton=0x7f050045;
         public static final int withText=0x7f05000c;
         public static final int x_axis=0x7f050041;
         public static final int y_axis=0x7f050042;
