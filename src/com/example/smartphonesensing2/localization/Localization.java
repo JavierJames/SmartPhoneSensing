@@ -22,7 +22,7 @@ public class Localization extends ActionBarActivity {
 
 	// sample rate at which to sample
 	private final static int SAMPLE_RATE = 1000;
-	private final static int DURATION = 180000; //in ms 
+	private final static int DURATION = 300000; //in ms: 5 min
 	
 	// keep tracking of scanning time
 	private long start, stop; 
@@ -104,7 +104,7 @@ public class Localization extends ActionBarActivity {
 				stop = System.currentTimeMillis();
 				
 				try {
-					while((stop - start) < DURATION){ // change to 120
+					while((stop - start) < DURATION){
 						WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 						List<ScanResult> rssiList = wm.getScanResults();
 						
