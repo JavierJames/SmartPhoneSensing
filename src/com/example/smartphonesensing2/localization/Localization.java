@@ -20,9 +20,14 @@ import com.example.smartphonesensing2.R;
 
 public class Localization extends ActionBarActivity {
 
+	private final static int TWO_MINUTES = 180000;
+	private final static int THREE_MINUTES = 180000;
+	private final static int FIVE_MINUTES = 300000;
+	
 	// sample rate at which to sample
 	private final static int SAMPLE_RATE = 1000;
-	private final static int DURATION = 180000; //in ms 
+	//private final static int DURATION = 180000; //in ms 
+	private final static int DURATION = TWO_MINUTES/2; //in ms 
 	
 	// keep tracking of scanning time
 	private long start, stop; 
@@ -103,8 +108,12 @@ public class Localization extends ActionBarActivity {
 				stop = System.currentTimeMillis();
 				
 				try {
-					while((stop - start) < DURATION){ // change to 120
-						WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+					WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE); //new
+					
+					while((stop - start) < DURATION){ 
+					//	WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+						wm.startScan();
+						
 						List<ScanResult> rssiList = wm.getScanResults();
 						
 						id_sample ++;
@@ -125,6 +134,8 @@ public class Localization extends ActionBarActivity {
 						Thread.sleep(SAMPLE_RATE);
 						
 						stop = System.currentTimeMillis();
+						
+						
 						
 					}
 					
