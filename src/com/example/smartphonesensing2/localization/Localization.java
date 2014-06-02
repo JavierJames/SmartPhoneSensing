@@ -31,9 +31,7 @@ public class Localization extends ActionBarActivity {
 	
 	// sample rate at which to sample
 	private final static int SAMPLE_RATE = 1000;
-
-	private final static int DURATION = TWO_MINUTES; //in ms: 5 min
-
+	private final static int DURATION = FIVE_MINUTES; 
 	
 	// keep tracking of scanning time
 	private long start, stop; 
