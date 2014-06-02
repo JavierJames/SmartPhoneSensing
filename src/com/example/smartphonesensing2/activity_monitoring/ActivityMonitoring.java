@@ -1,7 +1,20 @@
-package com.example.smartphonesensing2;
+package com.example.smartphonesensing2.activity_monitoring;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -9,16 +22,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.example.smartphonesensing2.activity_monitoring.ActivityMonitoring;
+import com.example.smartphonesensing2.R;
+import com.example.smartphonesensing2.KnnClassification.ArrayBuff;
+import com.example.smartphonesensing2.KnnClassification.Knn_API;
+import com.example.smartphonesensing2.db.TestingTable;
+import com.example.smartphonesensing2.db.TestingTable.TestingField;
+import com.example.smartphonesensing2.db.TrainingTable;
+import com.example.smartphonesensing2.db.TrainingTable.TrainingField;
 import com.example.smartphonesensing2.localization.Localization;
-/* Database libraries */
-/* KNN Classification libraries */
- 
 
-public class MainActivity extends ActionBarActivity {
-	
-	/*private Sensor accelerometer;
+public class ActivityMonitoring extends ActionBarActivity implements SensorEventListener{
+	private Sensor accelerometer;
 	private SensorManager sm;
 	private String activity = "Stil";
 
@@ -53,14 +70,14 @@ public class MainActivity extends ActionBarActivity {
 	int K = 5;
 	
 	private ArrayBuff[] trainingDataset, testingDataset;
-*/	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-//		mInitialized = false;
+		mInitialized = false;
 
 		
 		if (savedInstanceState == null) {
@@ -68,14 +85,14 @@ public class MainActivity extends ActionBarActivity {
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 		
-		/*
+		
 		sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 		accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
 		
 		testingTable = new TestingTable(getApplicationContext());
-		trainingTable = new TrainingTable(getApplicationContext());*/
+		trainingTable = new TrainingTable(getApplicationContext());
 		 
 	}
 
@@ -83,7 +100,7 @@ public class MainActivity extends ActionBarActivity {
 	protected void onResume(){
 		
 		super.onResume();
-//		sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
 		
 	}
@@ -91,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
 	protected void onPause(){
 		
 		super.onPause();
-//		sm.unregisterListener(this);
+		sm.unregisterListener(this);
 		
 		
 	}
@@ -100,7 +117,7 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public void onDestroy(){
 		super.onDestroy();
-//		trainingTable.close();
+		trainingTable.close();
 	}
 	
 	
@@ -140,31 +157,7 @@ public class MainActivity extends ActionBarActivity {
 			return rootView;
 		}
 	}
-	
-	
-	/*
-	 * This function opens the activity monitoring activity
-	 */
-	public void activityMonitoring(View view) {
-		Intent intent = new Intent(getApplicationContext(), ActivityMonitoring.class);
-		 
-		 intent.putExtra("activity", true);
-		 startActivity(intent);
-	}
-	
-	
-	/*
-	 * This function opens the indoor localisation activity
-	 */
-	public void indoorLocalisation(View view) {
-		Intent intent = new Intent(getApplicationContext(), Localization.class);
-		 
-		 intent.putExtra("localisation", true);
-		 startActivity(intent);
-	}
-	
-	
-/*
+
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
@@ -217,9 +210,9 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	
-	
+	/*
 	 * This method trains the app for the still activity
-	 
+	 */
 	public void trainStillActivity(View view){
 	
 		Button b = (Button) view;
@@ -247,9 +240,9 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	
-	
+	/*
 	 * This method trains the app for the walking activity
-	 
+	 */
 	public void trainWalkActivity(View view) {
 		Button b = (Button) view;
 		
@@ -276,9 +269,9 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	
-	
+	/*
 	 * This method trains the app for the running activity
-	 
+	 */
 	public void trainRunActivity(View view) {
 		Button b = (Button) view;
 		
@@ -304,9 +297,9 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	
-	
+	/*
 	 * This method samples the input and stores them in the database.
-	 
+	 */
 	private void trainApp() {
 	
 		
@@ -334,11 +327,11 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	
-	
+	/*
 	 * This method tests the app for the activities: still, walk, run.
 	 * While pressed the accelerometer coordinates is being saved in a new data based, 
 	 * to be processed later 
-	 
+	 */
 	public void testActivity(View view) {
 		Button b = (Button) view;
 		
@@ -366,10 +359,10 @@ public class MainActivity extends ActionBarActivity {
 	
 	
 	
-	
+	/*
 	 * This method samples the input and matches them with the content in the database.
 	 * The matching is done with the KNN algorithm.
-	 
+	 */
 	private void testApp() {
 		
 		Runnable runnable = new Runnable() {
@@ -393,9 +386,9 @@ public class MainActivity extends ActionBarActivity {
 		new Thread(runnable).start();
 	}
 
-	
+	/*
 	 * This method tests the app for the activities: still, walk, run.
-	 
+	 */
 	public void analyzeData(View view) {
 		Button b = (Button) view;
 		
@@ -411,7 +404,7 @@ public class MainActivity extends ActionBarActivity {
 
 			getData();
 			
-			store data in internal memory for debugging 
+			/*store data in internal memory for debugging */
 			
 			Knn_API knn = new Knn_API(K,trainingDataset, testingDataset);
 			String[] activities = knn.get_activities();
@@ -434,10 +427,10 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	
-		
+		/*
 	 * This method matches the input samples against the data in the database
 	 * by applying KNN algorithm. 
-	 
+	 */
 	
 //	SQLiteDatabase mDatabase;
 	private void getData() {
@@ -584,7 +577,7 @@ public class MainActivity extends ActionBarActivity {
 		
 	}
 	
-	 Store coordinates of the test data 
+	/* Store coordinates of the test data */
 	public void storeTestDataCoordinates(){
 			SQLiteDatabase db = null;
 		
@@ -676,9 +669,9 @@ public class MainActivity extends ActionBarActivity {
 	
 	
 
-	
+	/*
 	 * This function shows all records in the train table
-	 
+	 */
 	public void showTrainRecords(View view) {
 		// This view shows the coordinates stored in db
 		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
@@ -746,9 +739,9 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	
-	
+	/*
 	 * This function shows all records in the train table
-	 
+	 */
 	public void showTestRecords(View view) {
 		// This view shows the coordinates stored in db
 		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoodinates);
@@ -870,9 +863,9 @@ public class MainActivity extends ActionBarActivity {
 			writer.append("Activity");
 			writer.append('\n');
 
-			 
+			/* 
 			 *   ID, X, Y, Z, Activity
-			 * 
+			 * */
 			for(int i=0; i<Data.length; i++){
 
 				writer.append(""+ i);
@@ -903,7 +896,7 @@ public class MainActivity extends ActionBarActivity {
 	    }
 	 
 	 
-	  Checks if external storage is available for read and write 
+	 /* Checks if external storage is available for read and write */
 	 public boolean isExternalStorageWritable() {
 	     String state = Environment.getExternalStorageState();
 	     if (Environment.MEDIA_MOUNTED.equals(state)) {
@@ -914,7 +907,7 @@ public class MainActivity extends ActionBarActivity {
 	 }
 	 
 
-	  Checks if external storage is available to at least read 
+	 /* Checks if external storage is available to at least read */
 	 public boolean isExternalStorageReadable() {
 	     String state = Environment.getExternalStorageState();
 	     if (Environment.MEDIA_MOUNTED.equals(state) ||
@@ -931,7 +924,5 @@ public class MainActivity extends ActionBarActivity {
 		 intent.putExtra("rssi", true);
 		 startActivity(intent);
 		 
-	 }*/
-	 
-	 
+	 }
 }

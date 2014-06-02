@@ -1,8 +1,11 @@
 package com.example.smartphonesensing2.localization;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -12,11 +15,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.smartphonesensing2.R;
+import com.example.smartphonesensing2.table.Table;
 
 public class Localization extends ActionBarActivity {
 
@@ -34,7 +39,9 @@ public class Localization extends ActionBarActivity {
 	private long start, stop; 
 		
 	// keep track of sample number 
-	private int id_sample=0; 
+	private int id_sample=0;
+	
+	private ArrayList<Table> tables = new ArrayList<Table>();
 	
 	
 	@Override
@@ -45,7 +52,7 @@ public class Localization extends ActionBarActivity {
 		setContentView(R.layout.fragment_localization);
 		
 		
-		
+		createPMFTable();
 	}
 	
 	
@@ -75,6 +82,135 @@ public class Localization extends ActionBarActivity {
 	}*/
 	
 	
+	/*
+	 * This function creates a pmf table for each access-point
+	 */
+	private void createPMFTable() {
+		// Fetch the path
+		String path = Environment.getExternalStorageDirectory().toString()+"/Download/histogram/";
+		
+		// print on the screen
+		Log.d("Files", "Path: " + path);
+		
+		File dir = new File(path);        
+		File dirs[] = dir.listFiles();
+		
+		File subdir = null;
+		File file[] = null;
+		
+		// cell name
+		String cell = "";
+		
+		// table name
+		String accesspoint = "";
+		
+		Table table = null;
+		
+//		Log.d("Files", "Size: "+ dirs.length);
+		
+		for (int i = 0; i < dirs.length; i++){
+			
+//		    Log.d("Dir", "DirName:" + dirs[i].getName());
+		    
+		    // subdirectory
+		    subdir = new File(dirs[i].getPath());
+		    
+		    // list of files in the subdirectory
+		    file = subdir.listFiles();
+//		    
+//		    Log.d("Dir", "file[i].getPath():" + file[i].getPath());
+//		    Log.d("Dir", "File[i].getName():" + file[i].getName());
+//		    Log.d("Dir", "File[i].getParent():" + file[i].getParent());
+//		    
+//		    Log.d("File", "\t FileName:" +subdir.getName());
+		    
+		    // Iterate over each file
+		    for(File f : file) {
+//		    	Log.d("File", "\t FileName:" +f.getName());
+		    	
+		    	// retrieving the cell name from the parent path
+		    	// by removing the path from the folder name
+		    	cell = f.getParent().substring(39);
+		    	
+		    	// retrieving the name of the accesspoint from the filename
+		    	accesspoint = f.getName().substring(0, f.getName().length()-4);
+//		    	Log.d("Accesspoint", accesspoint);
+		    	
+		    	// Fetch the table with the cell name
+		    	table = getTable(accesspoint);
+		    	
+		    	// Creates a new table if it does not exist yet
+		    	if(table == null) {
+		    		table = new Table(accesspoint);
+		    	}
+		    	
+		    	// Read file
+		    	putPMFIntoTable(f, table, cell);
+		    }   
+		}
+
+	}
+
+	
+	/*
+	 * Returns a table with the name cell
+	 */
+	private Table getTable(String cell) {
+		Table table = null;
+		
+		for(int i = 0; i < tables.size(); i++) {
+			
+			if(tables.get(i).getName().equalsIgnoreCase(cell)) {
+				table = tables.get(i);
+				break;
+			}
+		}
+		
+		return table;
+	}
+
+
+	/*
+	 * This function converts the histogram to pmf table
+	 */
+	private void putPMFIntoTable(File f, Table table, String cell) {
+
+//		Log.d("ReadFile", "Filename:"+f.getName());
+		//Read text from file
+		StringBuilder text = new StringBuilder();
+
+		try {
+		    BufferedReader br = new BufferedReader(new FileReader(f));
+		    String line;
+		    String [] tokens;
+
+		    while ((line = br.readLine()) != null) {
+//		        text.append(line);
+//		        text.append('\n');
+		    	tokens = line.split(",");
+		    	
+//		    	Log.d("Token0", tokens[0]);
+//		    	Log.d("Token1", tokens[1]);
+//		    	Log.d("Token2", tokens[2]);
+		    	
+//		    	Log.d("Cell", ""+Integer.parseInt(cell.substring(1)));
+//		    	Log.d("Cell-1", ""+(Integer.parseInt(cell.substring(1))-1));
+		    	
+		    	table.setPMF(
+		    			Integer.parseInt(cell.substring(1))-1, 
+		    			Math.abs(Integer.parseInt(tokens[0])), 
+		    			Float.parseFloat(tokens[2]));
+		    	
+		    	table.printTable();
+		    }
+		    
+//		    Log.d("ReadFile", text.toString());
+		}
+		catch (IOException e) {
+		    Log.d("Error", "Error: "+e.getMessage());
+		}
+	}
+
 	/*
 	 * Scan rssi in a cell
 	 */
@@ -112,25 +248,55 @@ public class Localization extends ActionBarActivity {
 				try {
 
 					WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE); //new
+					List<ScanResult> rssiList = null;
 					
 					while((stop - start) < DURATION){ 
 					//	WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 						wm.startScan();
 						
 
-						List<ScanResult> rssiList = wm.getScanResults();
+						rssiList = wm.getScanResults();
+						
+						final TextView apList = (TextView) findViewById(R.id.apList);
+						
+						
 						
 						id_sample ++;
 						for(int i = 0; i < rssiList.size(); i++) {
+							final String SSID = rssiList.get(i).SSID;
+							final String BSSID =  rssiList.get(i).BSSID;
+							final int level = rssiList.get(i).level;
+							final int frequency = rssiList.get(i).frequency;
+							final String capabilities = rssiList.get(i).capabilities;
+							final int describeContents = rssiList.get(i).describeContents();
 							
+							
+							// write the access-points to a file
 							writeToFile(
-									rssiList.get(i).SSID,
-									rssiList.get(i).BSSID,
-									rssiList.get(i).level,
-									rssiList.get(i).frequency,
-									rssiList.get(i).capabilities,
-									rssiList.get(i).describeContents()
+									SSID,
+									BSSID,
+									level,
+									frequency,
+									capabilities,
+									describeContents
 									);
+							
+							
+							// show the access-points on the screen
+							runOnUiThread(new Runnable () {
+					    		@Override 
+					    		public void run(){
+					    			apList.setText(apList.getText()+
+					    					SSID+
+											BSSID+
+											level+
+											frequency+
+											capabilities+
+											describeContents+
+											"\n"
+			    						);
+					    		}
+					    	});
 						}
 						
 						
