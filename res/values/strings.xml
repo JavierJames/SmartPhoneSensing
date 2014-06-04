@@ -6,6 +6,10 @@
     <string name="action_settings">Settings</string>
     <string name="acceleration">Acceleration</string>
     
+    
+    <string name="activityMonitoring">Activity Monitoring</string>
+    <string name="Localisation">Indoor Localisation</string>
+    
     <!-- Button to store coordinate values in db -->
     <string name="buttonViewTrainData">View Train Data</string>
     <string name="buttonResetTrainData">Reset Train Data</string>
@@ -13,9 +17,9 @@
     <string name="buttonResetTestData">Reset Test Data</string>
     
     <!-- Coordinate labels -->
-    <string name="x_axis">X</string>
-    <string name="y_axis">Y</string>
-    <string name="z_axis">Z</string>
+    <string name="x_axis"> X </string>
+    <string name="y_axis"> Y </string>
+    <string name="z_axis"> Z </string>
     
     <!-- Label for the shown value stored in db -->
     <string name="showStoredCoordinates"></string>

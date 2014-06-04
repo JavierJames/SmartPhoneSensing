@@ -10,18 +10,34 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.smartphonesensing2.MainActivity$PlaceholderFragment" >
 
+    
         <Button
-            android:id="@+id/activity"
+            android:id="@+id/testButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="activityMonitoring"
-            android:text="@string/activityMonitoring" />
+            android:onClick="testActivity"
+            android:text="@string/testButton" />
+
         
         <Button
-            android:id="@+id/localisation"
+            android:id="@+id/AnalyzeActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="indoorLocalisation"
-            android:text="@string/Localisation" />
+            android:onClick="analyzeData"
+            android:text="@string/analyze_activity" />
+        
+        
+        <TextView
+        	android:id="@+id/showStoredCoordinates"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/debugView" />
+        
+        
+        <TextView
+        	android:id="@+id/debugView"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:text="@string/debugView" />
 
 </LinearLayout>

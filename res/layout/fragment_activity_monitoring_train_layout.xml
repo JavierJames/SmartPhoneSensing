@@ -1,0 +1,130 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android1="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.smartphonesensing2.MainActivity$PlaceholderFragment" >
+
+<!-- 
+    <TextView
+        android:id="@+id/debugView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/debugView" />
+ -->
+ 
+ <!-- Show the coordinates of accelerometer on the screen real-time -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <!-- show x-value -->
+        <TextView
+            android:id="@+id/x_axis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/x_axis" />
+
+        <!-- show y-value -->
+        <TextView
+            android:id="@+id/y_axis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/y_axis" />
+
+        <!-- show z-value -->
+        <TextView
+            android:id="@+id/z_axis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/z_axis" />
+    </LinearLayout>
+    
+    
+    <!-- Buttons -->
+    
+    <LinearLayout
+        android1:id="@+id/tab1"
+        android1:layout_width="match_parent"
+        android1:layout_height="match_parent"
+        android1:orientation="vertical" >
+
+        <!-- Stil button -->
+        <Button
+            android:id="@+id/sitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="trainStillActivity"
+            android:text="@string/stillButton" />
+
+        <!-- Walk Button -->
+        <Button
+            android:id="@+id/walkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="trainWalkActivity"
+            android:text="@string/walkButton" />
+
+        <!-- Run Button -->
+        <Button
+            android:id="@+id/runButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="trainRunActivity"
+            android:text="@string/runButton" />
+    </LinearLayout>
+    
+    
+    
+    
+    <!--
+                <LinearLayout
+                    android1:id="@+id/tab3"
+                    android1:layout_width="match_parent"
+                    android1:layout_height="match_parent"
+                    android1:orientation="vertical" >
+
+                    <Button
+                        android:id="@+id/viewTrainData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="showTrainRecords"
+                        android:text="@string/buttonViewTrainData" />
+
+                    <Button
+                        android:id="@+id/resetTrainData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="deleteTrainRecords"
+                        android:text="@string/buttonResetTrainData" />
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dip"
+                        android:background="#FF00FF00" />
+
+                    <Button
+                        android:id="@+id/viewTestData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="showTestRecords"
+                        android:text="@string/buttonViewTestData" />
+
+                    <Button
+                        android:id="@+id/resetTestData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="deleteTestRecords"
+                        android:text="@string/buttonResetTestData" />
+                </LinearLayout>
+    -->
+
+
+
+</LinearLayout>
