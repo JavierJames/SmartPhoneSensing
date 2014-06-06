@@ -25,37 +25,31 @@ public class ActivityMonitoring extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_activity_monitoring_layout);
 		
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
-		
 		
 		// Create a tabhost that will contain the tabs
 		tabHost = (TabHost)findViewById(R.id.tabhost);
 //		tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 		tabHost.setup();
 
-		if(tabHost == null) {
-			Log.d("tabHost", "logHost is null");
-		}
-		else {
-			Log.d("tabHost", "logHost not null");
-		}
 		
 		// Create the tabs
-		TabHost.TabSpec trainTab = tabHost.newTabSpec("TraintrainTabing");
-		TabHost.TabSpec testTab = tabHost.newTabSpec("Testing");
+		TabSpec trainTab = tabHost.newTabSpec("Training");
+		TabSpec testTab = tabHost.newTabSpec("Testing");
 		
 		
 		// Set the tabname and corresponding Activity that will be opened when particular Tab will be selected
-		trainTab.setIndicator("Training");
-		Intent intentTrain = new Intent(this, TrainActivity.class);
-		trainTab.setContent(intentTrain);
 		
+		trainTab.setContent(R.id.training_tab);
+		trainTab.setIndicator("Training");
+		
+		/*Intent intentTrain = new Intent(this, TrainActivity.class);
+		trainTab.setContent(intentTrain);*/
+		
+		
+		testTab.setContent(R.id.testing_tab);
 		testTab.setIndicator("Testing");
-		Intent intentTest = new Intent(this, TestActivity.class);
-		testTab.setContent(intentTest);
+		/*Intent intentTest = new Intent(this, TestActivity.class);
+		testTab.setContent(intentTest);*/
 		
 		// Add tabs to the tabhost
 		tabHost.addTab(trainTab);
@@ -64,81 +58,81 @@ public class ActivityMonitoring extends ActionBarActivity {
 //		tabHost.setCurrentTab(0);
 		 
 	}
-
-	
-	protected void onResume(){
-		super.onResume();
-	}
-	
-	protected void onPause(){
-		
-		super.onPause();
-		
-		
-	}
-	
-	
-	@Override
-	public void onDestroy(){
-		super.onDestroy();
-	}
-	
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
-			return rootView;
-		}
-	}
-
-	
-	// show the highest row number 
-	/*public void onClick(View view) {
-		TextView debug = (TextView) findViewById(R.id.debugView);
-		debug.setText("rowId: " +rowId);
-	}*/
-	 
-
-	 /* Checks if external storage is available to at least read */
-	 public boolean isExternalStorageReadable() {
-	     String state = Environment.getExternalStorageState();
-	     if (Environment.MEDIA_MOUNTED.equals(state) ||
-	         Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-	         return true;
-	     }
-	     return false;
-	 }
-	 
+//
+//	
+//	protected void onResume(){
+//		super.onResume();
+//	}
+//	
+//	protected void onPause(){
+//		
+//		super.onPause();
+//		
+//		
+//	}
+//	
+//	
+//	@Override
+//	public void onDestroy(){
+//		super.onDestroy();
+//	}
+//	
+//	
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.main, menu);
+//		return true;
+//	}
+//
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		// Handle action bar item clicks here. The action bar will
+//		// automatically handle clicks on the Home/Up button, so long
+//		// as you specify a parent activity in AndroidManifest.xml.
+//		int id = item.getItemId();
+//		if (id == R.id.action_settings) {
+//			return true;
+//		}
+//		return super.onOptionsItemSelected(item);
+//	}
+//
+//	/**
+//	 * A placeholder fragment containing a simple view.
+//	 */
+//	public static class PlaceholderFragment extends Fragment {
+//
+//		public PlaceholderFragment() {
+//		}
+//
+//		@Override
+//		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//				Bundle savedInstanceState) {
+//			View rootView = inflater.inflate(R.layout.fragment_main, container,
+//					false);
+//			return rootView;
+//		}
+//	}
+//
+//	
+//	// show the highest row number 
+//	/*public void onClick(View view) {
+//		TextView debug = (TextView) findViewById(R.id.debugView);
+//		debug.setText("rowId: " +rowId);
+//	}*/
+//	 
+//
+//	 /* Checks if external storage is available to at least read */
+//	 public boolean isExternalStorageReadable() {
+//	     String state = Environment.getExternalStorageState();
+//	     if (Environment.MEDIA_MOUNTED.equals(state) ||
+//	         Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+//	         return true;
+//	     }
+//	     return false;
+//	 }
+//	 
 	 
 	 /*public void rssi(View view) {
 		 Intent intent = new Intent(getApplicationContext(), Localization.class);
