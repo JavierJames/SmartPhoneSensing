@@ -1,0 +1,218 @@
+\chapter{Specified Requirements} \label{chap:tests}
+
+
+
+In this chapter we will look more closely at the requirements specified in \cref{chap:requirements}. 
+We will translate the requirements from full natural language to natural language containing the interactions defined in \cref{chap:interactions}.
+This will make the requirements more specific and will make the translation to $\mu$-Calculus easier.
+The following numeration follows that of the general requirements.
+
+Tests add to each other transitively,
+which means that if one test checks the safety requirements of object A and B,
+and another tests the requirements for B and C,
+then it is assumed that A and C together function correctly if they only have interactions through B.
+
+
+\section{Functional Requirements}
+
+\begin{enumerate}
+	% FR1
+	\item For all traces in the system, the system should end in a state in which a step is possible.
+	\lstinputlisting[firstline=4, lastline=4, caption={FR1.mcf}]{source/FR1.mcf}
+
+
+	% FR2
+	\item For all states there should be a path that contains the action doPreSigns(switch\_off).
+	\lstinputlisting[firstline=4, lastline=4, caption={FR2.mcf}]{source/FR2.mcf}	
+
+	
+	% FR3
+	\item For all states there should be a path that contains the action doMotor(motor\_up).
+	\lstinputlisting[firstline=4, lastline=4, caption={FR3.mcf}]{source/FR3.mcf}
+
+
+\end{enumerate}
+
+\section{Safety Requirements}
+\begin{enumerate}
+
+
+	% SR1	
+	\item doPreSigns(switch\_off) may never be followed by doStopSigns(switch\_on) unless doPreSigns(switch\_on) and checkStatusPreSigns(on) happened intermediately.
+	\lstinputlisting[firstline=4, lastline=6, caption={SR1a.mcf}]{source/SR1a.mcf}
+	
+	
+	% SR2
+	\item doStopSigns(switch\_off) may never be followed by doBarriers(switch\_on) unless doStopSigns(switch\_on) and checkStatusStopSigns(on) happened intermediately.
+	\lstinputlisting[firstline=4, lastline=6, caption={SR2a.mcf}]{source/SR2a.mcf}
+	
+	
+	% SR3
+	\item doBarriers(switch\_off) may never be followed by doPins(switch\_off) unless doBarriers(switch\_on) and checkStatusBarriers(on) happened intermediately. 
+	\lstinputlisting[firstline=4, lastline=6, caption={SR3a.mcf}]{source/SR3a.mcf}
+	
+	
+	% SR4	
+	\item doPins(switch\_on) may never be followed by doBrakes(switch\_off) unless doPins(switch\_off) and checkStatusPins(off) happened intermediately. 
+	\lstinputlisting[firstline=4, lastline=6, caption={SR4a.mcf}]{source/SR4a.mcf}
+	
+	% SR5
+	\item doBrakes(switch\_on) may never be followed by doMotor(switch\_up) unless doBrakes(switch\_off) and checkStatusBrakes(off) happened intermediately. 
+	\lstinputlisting[firstline=4, lastline=6, caption={SR5a.mcf}]{source/SR5a.mcf}
+	
+	
+	% SR6
+	\item doBrakes(switch\_off) may never be followed by doMotor(motor\_stop) unless doBrakes(switch\_on) and checkStatusBrakes(on) happened intermediately. 
+	\lstinputlisting[firstline=4, lastline=6, caption={SR6a.mcf}]{source/SR6a.mcf}
+		
+
+	% SR7	
+	\item doMotor(motor\_up) may never be followed by doPins(switch\_on) unless doMotor(motor\_down) and checkStatusMotor(status\_down) happened intermediately. 
+	\lstinputlisting[firstline=4, lastline=6, caption={SR7a.mcf}]{source/SR7a.mcf}
+	
+	
+	% SR8
+	\item doPins(switch\_off) may never be followed by doBarriers(switch\_off) unless doPins(switch\_on) and checkStatusPins(on) happened intermediately. 
+	\lstinputlisting[firstline=4, lastline=6, caption={SR8a.mcf}]{source/SR8a.mcf}
+	
+	
+	% SR9
+	\item doBarriers(switch\_on) may never be followed by doStopSigns(switch\_off) unless doBarriers(switch\_off) and checkStatusBarriers(off) happened intermediately.
+	\lstinputlisting[firstline=4, lastline=6, caption={SR9a.mcf}]{source/SR9a.mcf}
+		
+	
+	%SR 10
+	\item doStopSigns(switch\_on) may never be followed by doPreSigns(switch\_off) unless doStopSigns(switch\_off) and checkStatusStopSigns(off) happened intermediately. 
+	\lstinputlisting[firstline=4, lastline=6, caption={SR10a.mcf}]{source/SR10a.mcf}
+	
+	
+\end{enumerate}
+
+
+\section{Additional tests}
+
+	The $\mu$-calculus properties for the requirements that were presented so far, give equations that test whether certain paths are tested are always reachable or that certain sequences of actions can never happen.
+	To ensure that the safety requirements do not hold vacuously we also performed some additional tests.
+	
+	
+	\subsection{Trivial paths}
+	
+	These tests include several properties that verify that the actions  used in the requirements can be reached in the system.
+	We call these properties the trivial paths.
+	If these actions cannot be reached or do not exist, it is clear that the requirements will hold for the system, but do not have any meaning.
+	We have performed the verification of the trivial path for five requirements.
+	In \cref{ver_tr_SR1} an example of one of the properties is given that tests if the trivial path to the action doStopSigns(switch\_off) exists.
+	Likewise, we have formulated properties for all other actions that were used in the safety requirements.
+	
+	\begin{lstlisting}[caption=SR1 trivial path example ,label=ver_tr_SR1] 
+	<true* . doStopSigns(switch_off) >true 
+	\end{lstlisting}
+
+
+	\subsection{Existential tests}
+	
+    The properties for the trivial paths do not give a full proof that paths exist between the actions that form the safety requirements. 
+    They only test if the possible actions adhere to those specified in the safety requirements. 
+    Therefore we also added existential tests. 
+    These properties test if a path exists between the two most important actions in the safety requirements. 
+    These properties can be found below.
+    We do not need to eliminate a \texttt{doX} action from the intermediate steps where $X$ is a component,
+    because a \texttt{checkStatus} action is always performed before any \texttt{doX} action.
+    This means that through the sensors we know that the current state of the component has not changed from the expected state.
+    
+    \begin{enumerate}
+    
+    
+    	% SR1	
+    	\item doPreSigns(switch\_on) can be followed by doStopSigns(switch\_on) without checkStatusPreSigns(off) or checkStatusPreSigns(error) happening intermediately.
+    	\lstinputlisting[firstline=4, lastline=6, caption={SR1b.mcf}]{source/SR1b.mcf}
+    	
+    	
+    	% SR2
+    	\item doStopSigns(switch\_on) can be followed by doBarriers(switch\_on) without checkStatusStopSigns(off) or checkStatusStopSigns(error) happening intermediately.
+    	\lstinputlisting[firstline=4, lastline=6, caption={SR2b.mcf}]{source/SR2b.mcf}
+    	
+    	
+    	% SR3
+    	\item doBarriers(switch\_on) can be followed by doPins(switch\_off) without checkStatusBarriers(off) or checkStatusBarriers(error) happening intermediately.
+    	\lstinputlisting[firstline=4, lastline=6, caption={SR3b.mcf}]{source/SR3b.mcf}
+    	
+    	
+    	% SR4	
+    	\item doPins(switch\_off) can be followed by doBrakes(switch\_off) without checkStatusPins(off) or checkStatusPins(error) happening intermediately. 
+    	\lstinputlisting[firstline=4, lastline=6, caption={SR4b.mcf}]{source/SR4b.mcf}
+    	
+    	% SR5
+    	\item doBrakes(switch\_off) can be followed by doMotor(motor\_up) without checkStatusBrakes(on) or checkStatusBrakes(error) happening intermediately.
+    	\lstinputlisting[firstline=4, lastline=6, caption={SR5b.mcf}]{source/SR5b.mcf}
+    	
+    	
+    	% SR6
+    	\item doBrakes(switch\_on) can be followed by doMotor(motor\_stop) without checkStatusBrakes(off) or checkStatusBrakes(error) happening intermediately.
+    	\lstinputlisting[firstline=4, lastline=6, caption={SR6b.mcf}]{source/SR6b.mcf}
+    		
+    
+    	% SR7	
+    	\item doMotor(motor\_down) can be followed by doPins(switch\_on) without checkStatusMotor(status\_up), checkStatusMotor(status\_error) or checkStatusMotor(status\_stopped) happening intermediately. 
+    	\lstinputlisting[firstline=4, lastline=6, caption={SR7b.mcf}]{source/SR7b.mcf}
+    	
+    	
+    	% SR8
+    	\item doPins(switch\_on) can be followed by doBarriers(switch\_off) without checkStatusPins(on) or checkStatusPins(error) happening intermediately. 
+    	\lstinputlisting[firstline=4, lastline=6, caption={SR8b.mcf}]{source/SR8b.mcf}
+    	
+    	
+    	% SR9
+    	\item doBarriers(switch\_off) can be followed by doStopSigns(switch\_off) without checkStatusBarriers(on) or checkStatusBarriers(error) happening intermediately.
+    	\lstinputlisting[firstline=4, lastline=6, caption={SR9b.mcf}]{source/SR9b.mcf}
+    		
+    	
+    	%SR 10
+    	\item doStopSigns(switch\_off) can be followed by doPreSigns(switch\_off) without checkStatusStopSigns(on) or checkStatusStopSigns(error) happening intermediately. 
+    	\lstinputlisting[firstline=4, lastline=6, caption={SR10b.mcf}]{source/SR10b.mcf}
+    	
+    	
+    \end{enumerate}
+
+
+	\section{Sensors Testing}
+	
+	We have also tested the sensors in order to ensure that an error status is received when one or more sensors are not working or the component is broken.  
+	
+	We built a significant number of sensors into our system, so this would require a large amount of properties to fully test them. 
+	Because we didn't have time to do that, we have chosen to tests the pre-sign sensors only.
+	There are four pre-sign sensors which need to be aggregated into one status.
+	Also one pre-sign or pre-sign sensor may fail without the operation of the bridge being blocked.
+	If the tests for the pre-sign sensors succeed we can assume that the other sensors have been implemented in a correct fashion as well.
+	
+	One important thing to note is that all sensors for one particular component are the same, so we can assume that the sensors are symmetrical.
+	This reduces the number of cases with different sensor values that have to be tested by a significant amount.
+	In \cref{lst:Sensor_1a} until \cref{lst:Sensor_3a} the 3 properties that were used to test the sensor are given.
+	
+	\begin{enumerate}
+		\item There exists no path where for all combinations that include 2 or more sensor values that are error the status will be on or off. 
+		\lstinputlisting[firstline=4, lastline=15, caption={Sensor\_PreSign1a}, label={lst:Sensor_1a}]{source/Sensor_PreSign1a.mcf}
+			
+		\item There exists no path where for all combinations that include 3 or more sensor values that are on the status will be not be error or off.
+		\lstinputlisting[firstline=4, lastline=15, caption={Sensor\_PreSign2a}, label={lst:Sensor_2a}]{source/Sensor_PreSign2a.mcf}
+		
+		\item There exists no path where for all combinations that include 3 or more sensor values that are off the status will be not be error or on.
+		\lstinputlisting[firstline=4, lastline=15, caption={Sensor\_PreSign3a}, label={lst:Sensor_3a}]{source/Sensor_PreSign3a.mcf}
+	\end{enumerate}
+	
+	To make sure that these properties do not hold vacuously, we also implemented 3 conresponding existential tests.
+	These existential tests are given in \cref{lst:Sensor_1b} until \cref{lst:Sensor_3b}.
+	
+	\begin{enumerate}
+		\item There exists a path where for all combinations that include 2 or more sensor values that are error the status will be error. 
+		\lstinputlisting[firstline=4, lastline=15, caption={Sensor\_PreSign1a.mcf}, label={lst:Sensor_1b}]{source/Sensor_PreSign1b.mcf}
+			
+		\item There exists a path where for all combinations that include 3 or more sensor values that are on the status will be on. 
+		\lstinputlisting[firstline=4, lastline=15, caption={Sensor\_PreSign2a.mcf}, label={lst:Sensor_2b}]{source/Sensor_PreSign2b.mcf}
+		
+		\item There exists a path where for all combinations that include 3 or more sensor values that are off the status will be off. 
+		\lstinputlisting[firstline=4, lastline=15, caption={Sensor\_PreSign3a.mcf}, label={lst:Sensor_3b}]{source/Sensor_PreSign3b.mcf}
+	\end{enumerate}
+	
+	
+	In \cref{chap:verification} the results of the verification of all the properties that were given before will be presented.

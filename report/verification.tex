@@ -1,0 +1,81 @@
+\chapter{Verification Results}	\label{chap:verification}
+	In order to test whether the model satisfies the requirements specified in \cref{chap:requirements} the accompanying $\mu$-calculus formulas in \cref{chap:tests} have to be tested.
+	In this chapter a detailed description of how the verification process was carried out is given.
+	
+	The verification was done using the mCRL2 toolset~\cite{mcrl2website}. 
+	Tools such as \texttt{mcrl22lps} , \texttt{lps2pbes} and \texttt{pbes2bool} were used in this process.
+	The version of the mCRL2 toolset used is \texttt{201310.0 (Release)}.
+	
+	The \texttt{mcrl22lps} tool takes the process specification from our model as input and converts it to a Linear Process System, see \cref{mcrl22lps}. 
+	
+	\begin{lstlisting}[caption=Transformation of mCRL2 model to LPS description, label=mcrl22lps ]
+	mcrl22lps model.mcrl2 model.lps
+	\end{lstlisting}
+	
+	With the model in {\em lps-format} the tests can be run with command
+	\cref{ver_cmd} where {\em <requirement>} is the name of	the requirement at hand, for example {\em SR3}.
+	The tool \texttt{lps2pbes} was used to create a parameterised boolean equation system (PBES) from the LPS description of our model and the requirement at hand.
+	The result is piped to \texttt{pbes2bool} to retrieve
+	the boolean value which shows whether the test passes or not.
+	 
+	\begin{lstlisting}[caption=Requirement testing ,label=ver_cmd] 
+	lps2pbes model.lps -f <requirement>.mcf | pbes2bool
+	\end{lstlisting}
+
+	There are many tests to run and  each test takes a minute or two to compute. To speed up the process the tests were run in parallel using GNU Parallel\cite{Tange2011a}. The \cref{ver_cmd_parallel} shows
+	the command used to speed up the verification with at least a factor four.
+	\begin{lstlisting}[caption=Parallelization of verification command, label=ver_cmd_parallel]
+	parallel -k --tag 'lps2pbes model.lps -f {} | pbes2bool' ::: *.mcf
+	\end{lstlisting}
+	
+	\cref{tbl:verificationResults} depicts the results of running all 13
+	tests listed in \cref{chap:tests} .
+	The results show that the model passed all the functional and safety requirements.
+	This indicates that the model can be considered safe.
+		
+	\begin{table}[!htbp]
+		\begin{center}
+		\begin{tabular}{l | r r}
+			Requirement type & \# passed & \# failed \\ \hline
+			Functional & 3 & 0 \\
+			Safety & 10 & 0	\\
+		\end{tabular}
+		\caption{Model verification results}
+		\label{tbl:verificationResults}
+		\end{center}
+	\end{table}
+
+	
+	\cref{tbl:trivialResults} depicts the results of running all properties for the trivial paths and the existential tests. 
+	The results show that all trivial paths exist for the first five requirements.
+	It can also be seen that all existential tests pass, so all paths that should exist according to our safety requirements do actually exist.
+	Based on these results we can conclude that the safety requirements do not hold vacuously.
+		
+	\begin{table}[!htbp]
+		\begin{center}
+		\begin{tabular}{l | r r}
+			Property type & \# passed & \# failed \\ \hline
+			Trivial paths & 23 & 0	\\
+			Existential tests	&	10	&	0	\\
+		\end{tabular}
+		\caption{The verification results of the trivial paths and existential tests}
+		\label{tbl:trivialResults}
+		\end{center}
+	\end{table}
+	
+	\cref{tbl:sensorResults} depicts the results of running all properties for the sensors.
+	The results show that the implementation of the sensors passes all requirements
+	
+	\begin{table}[!htbp]
+		\begin{center}
+		\begin{tabular}{l | r r}
+		Property type	& \# passed & \# failed \\	\hline
+		Sensor			& 3	& 0 \\
+		Existential tests & 3 & 0 \\
+		\end{tabular}
+		\caption{The verification results for the sensors}
+		\label{tbl:sensorResults}
+		\end{center}
+	\end{table}
+	   
+   

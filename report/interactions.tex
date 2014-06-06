@@ -1,0 +1,132 @@
+\chapter{Behaviour Interactions}	\label{chap:interactions}
+    In this chapter we illustrate the interactions between the system components. We focus mainly on the global interactions.    
+    In \cref{tbl:interactions} the external interactions between the components of the system are defined. 
+	The interactions are grouped by communication pairs: user to safety controller, safety controller to user, safety controller to status controller, sensors to safety controller and the final pair safety controller to hardware controller.
+	
+	The interactions are based on the following assumptions.
+	
+	\begin{itemize}
+	  \item Existence of a brake sensor such that the status of the brakes can be
+	  determined. The idea is that the deck is not allowed to move if the brakes are
+	  inoperable.
+	  \item User does not need to control the motor, brakes and deck independently but
+	  these interactions are grouped into 'userDeck(up) ' and 'userDeck(down)'.
+	  \item Pre-signs are further away from the deck than the stop signs such that
+	  the cars have time to slow down
+	  \item Pre-signs stay on while the stop lights are on for the same reason as
+	  above.
+	  \item We assume all actions are instantaneous. This means that there is no
+	  delay in our systems.
+	\end{itemize}
+	
+	We decided that the user should not have direct control over the locking pins, brakes and motor for safety reasons. The only thing the user wants to do, is open or close the bridge. So there is no reason to let the user perform the right sequence of actions when you can also present two actions that take care of these sequences automatically, as illustrated in \cref{tbl:actionorder}. This will result in a system that can be used more easily by the bridge's operator.
+
+
+
+	
+\begin{center}
+	\begin{longtable}{|l|p{8cm}|l|}
+		\hline
+		\textbf{Interaction name} & \textbf{Description} & \textbf{Parameters} \\ \hline
+		\multicolumn{3}{c}{\textbf{User -> Safety Controller}} \\ \hline
+		userPreSigns & Request the pre-signs to be turned on or off & Switch \\
+		userStopSigns & Request the stop signs to be turned on or off & Switch \\
+		userBarriers & Request the barriers to opened or closed & Switch \\
+		userDeck & Request the deck to be opened or closed & Direction \\
+		
+		
+
+		\hline 
+		\multicolumn{3}{c}{\textbf{Safety Controller -> User}}\\ \hline
+		prodError & Error occurred while executing request &   \\
+		prodOK & OK message &   \\
+	
+		\hline
+		\multicolumn{3}{c}{\textbf{Status -> Safety Controller}} \\ \hline
+		checkStatusPreSigns & The status of the pre-signs & Status \\
+		checkStatusStopSigns & The status of the stop-signs & Status \\
+		checkStatusBarriers & The status of the barriers & Status \\
+		checkStatusPins & The locking pins status & Status \\
+		checkStatusBrakes & The brake status & Status \\
+		checkStatusDeck & The bridge deck status & Status \\
+		checkStatusMotor & The motor status & StatusMotor \\
+		
+		\hline
+		\multicolumn{3}{c}{\textbf{Safety Controller -> Status}} \\ \hline
+		startUpdateStatus & Request Status to poll the sensors for new information & \\
+		endUpdateStatus & Synchronizes the Safety Controller to wait for polling to complete & \\
+		
+		\hline
+		\multicolumn{3}{c}{\textbf{Hardware ->  Sensor}} \\ \hline                              
+		changeSensorPreSigns & Change the sensor of the pre-signs & Status \\                   
+		changeSensorStopSigns & Change the sensor of the stop-signs & Status \\                 
+		changeSensorBarriers & Change the sensor of the barriers & Status \\                    
+		changeSensorPins & Change the locking pins sensor & Status \\                           
+		changeSensorBrakes & Change the brake sensor & Status \\                                
+		changeSensorDeck & Change the bridge deck sensor & Status \\                            
+		changeSensorMotor & Change the motor sensor & StatusMotor \\                            
+		                                                                                        
+		\hline
+		\multicolumn{3}{c}{\textbf{Sensors -> Status}} \\ \hline 
+		commSensorPreSignS$_{\{1,2,3,4\}}$ & Sensor status of the presigns. & Status \\
+		commSensorStopSignS$_{\{1,2,3,4\}}$ & Sensor status of the stopsigns. & Status \\
+		commSensorBarrierB$_{\{1,2\}}$ & Sensor status of the two barrier sensors. & Status \\
+		commSensorPinP$_{\{1,2,\}}$ & Pin lock status sensors. & Status \\
+		commSensorDeck & Bridgedeck status sensor. & Status \\
+		commSensorMotor & Motor status sensor. & StatusMotor \\
+		commSensorBrake & Bridge brake status sensor. & Status \\  
+
+		\hline
+		\multicolumn{3}{c}{\textbf{Safety Controller -> Hardware}} \\ \hline
+		doPreSigns & All pre-signs are controlled with one signal. & Switch \\
+		doStopSigns & All stop-signs are controlled with one signal. & Switch \\
+		doBarriers & All barriers are controlled with one signal. & Switch \\
+		doPins & All locking pins are controlled with one signal. On = engage, off = disengaged & Switch \\
+		doBrakes & The bridge brakes are controlled. & Switch \\ 
+		doMotor & The motor is set to specified setting. & SwitchMotor \\
+		
+		hwResponse & Hardware response. Occurs after sensors have been set & \\ \hline
+		
+		\caption{The interactions of the system.}
+		\label{tbl:interactions}
+	\end{longtable}	
+\end{center}
+
+In \cref{tbl:parameterTypes} the parameter types are defined that were used in \cref{tbl:interactions}.
+
+
+
+\begin{table}[htbp]	
+	\centering
+	\begin{tabular}{|l|l|}
+		\hline
+    	\textbf{Parameter type} & \textbf{Set of values} \\ \hline
+    	Status				& on, off, error			\\
+    % % %	statusDirection		& up, down, error			\\
+    	StatusMotor			& status\_up, status\_down, status\_stopped, status\_error	\\
+    	Switch				& switch\_on, switch\_off					\\
+    	Direction			& up, down					\\
+    	SwitchMotor			& motor\_up, motor\_down, motor\_stop			\\ \hline
+	\end{tabular}
+	\caption{The table of parameter types.}
+	\label{tbl:parameterTypes}
+\end{table}
+
+\begin{comment}
+errorLightsOn & The	requested action can not be performed since the lights are on &
+		\\
+		errorLightsOff & The requested action can not be performed since the lights
+		are off &
+		\\
+		errorBarriersOpen & The requested action can not be performed since the
+		barriers are open & 
+		\\
+		errorBarriersClosed & The requested action can not be performed since the
+		barriers are closed &
+		\\
+		errorDeckOpen & The requested action can not be performed since the deck is
+		open & 
+		\\
+		errorDeckClosed & The requested action can not be performed since the desk is closed &
+		\\
+\end{comment}

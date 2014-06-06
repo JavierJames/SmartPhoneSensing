@@ -1,0 +1,6 @@
+% SR7
+% doMotor(motor_down) can be followed by doPins(switch_on) without checkStatusMotor(status_up), checkStatusMotor(status_error) or checkStatusMotor(status_stopped) happening intermediately.
+
+<true* . doMotor(motor_down) .
+		!(checkStatusMotor(status_up) || checkStatusMotor(status_error) || checkStatusMotor(status_stopped))* . 
+		doPins(switch_on) > true

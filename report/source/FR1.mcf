@@ -1,0 +1,4 @@
+% FR1
+% For all traces in the system, the system should end in a state in which a step is possible.
+
+[true*]<true>true

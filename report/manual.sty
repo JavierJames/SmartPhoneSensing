@@ -1,0 +1,30 @@
+\ProvidesPackage{manual}
+
+\RequirePackage{ifthen}				% For the environments
+\RequirePackage{calc}				% For the environments
+\RequirePackage{array}				% For the tabalar option "m", used in the environments
+\RequirePackage{graphicx}			% For inclusion of the images in the environments
+\RequirePackage{xcolor}				% For the gray color of the environments
+\RequirePackage{framed}				% Allows for page-breaks inside assignment environments
+
+%
+% Commands for general settings:
+%
+
+% The set-commands
+\newcommand{\subtitle}[1]{\def\@subtitle{#1}}
+\newcommand{\version}[1]{\def\@version{#1}}
+
+% The print-commands
+\newcommand{\printauthor}{\@author}
+\newcommand{\printtitle}{\@title}
+\newcommand{\printsubtitle}{\@subtitle}
+\newcommand{\printversion}{\@version}
+
+%
+% Simple macros
+%
+\newcommand{\menu}[1]{\textsf{#1}}		% use for text in a program (menu-entries, text on buttons etc)
+\newcommand{\file}[1]{\texttt{#1}}		% use for filenames and directory-names
+\newcommand{\code}[1]{\texttt{#1}}		% use for pieces of code in the body-text
+\newcommand{\device}[1]{\texttt{\textsc{#1}}}	% Use for buttons, connectors etc. on physical machines (oscilloscope, signalgenerator etc)

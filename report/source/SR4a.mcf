@@ -1,0 +1,7 @@
+ % SR4   
+ % doPins(switch\_on) may never be followed by doBrakes(\off) unless doPins(switch\_off) and checkStatusPins(off) happened intermediately.
+
+[true* . doPins(switch_on) . 
+		!(doPins(switch_off) || checkStatusPins(off))* . 
+		doBrakes(switch_off) ]false
+

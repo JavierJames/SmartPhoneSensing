@@ -1,0 +1,48 @@
+\chapter{Requirements}
+<<<<<<< HEAD
+\label{chap:requirements}
+=======
+\label{chap: requirements}
+In this chapter we provide the requirements safety controller. We start by depicting the functional requirements. Subsequently, we show the safety requirements. 
+>>>>>>> added text to the requirement document. Motivation of decisions which we made. Small introduction to each section was added
+
+
+We will now discuss the important model decisions that have been made, in which our requirements were built from.  
+In our design we assume that there is an hardware mechanism present thats ensures that the motor does not open/close the bridge beyond a maximum point. This entails that if the user tries to open the bridge when it is already open, it will not be possible due to the hardware and our safety controller is not responsible. 
+
+Furthermore, it is assumed that only the user can give the system commands. This we consider a direct user action. Besides these type of actions, the system can do internal actions, which preceded from a initial user command. These are considered as indirect user actions.  
+
+We have set priorities for two different scenarios, the first is that atleast one pre-sign is damanged and the second atleast one stop sign is damaged. We have compared them according to the penalty/risk when a car proceedes the sign when at the wrong time. Seeing that it is essential to ensure the safety, we chose to accept one pre-sign not working. However, if one stop sign does not work, no further actions can be done. 
+
+\section{Functional Requirements}
+In order ensure a proper operation of the safety controller for the bridge, we need specify the specific behavior of our system. This is done modeling the system behavior with functional requirements.  
+ 
+%First of all some functional requirements have to be defined to ensure a proper operation of the bridge.
+
+
+\begin{enumerate}
+\item Cars and boats should have the possibility to safely pass the bridge.
+\item The flow of traffic should only be hampered if this cannot be avoided.
+\item The system should only perform actions that are directly or indirectly started by the user.
+\end{enumerate}
+
+
+
+\section{Safety Requirements}
+To guarantee the safety of boats and cars, it is essential to specify the specific system behaviors needed to make this possible. We do this by providing safety requirments.
+
+
+To guarantee a safe operation of the system the following safety requirements have been defined:
+\begin{enumerate}
+\item The stop signs should only be turned on when at least one pre-signs per lane is on.
+\item The barriers can only be closed when all stop signs are turned on.
+\item The locking pins should only deactivate when the barriers are closed.
+\item The bridge should only open when the locking pins are disabled.
+\item The bridge should only open or close when the engine is not broken.
+\item The locking pins should only activate when the bridge is closed.
+\item The barriers can only be opened when the locking pins are enabled.
+\item The stop signs should only be turned off when the barriers are opened.
+\item The pre-signs should only be turned off when the stop signs are off.
+\end{enumerate}
+
+ 

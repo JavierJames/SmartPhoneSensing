@@ -1,0 +1,8 @@
+% SR1   
+% doPreSigns(switch\_off) may never be followed by doStopSigns(switch\_on) unless doPreSigns(switch\_on) and checkStatusPreSigns(on) happened intermediately.
+
+[true* . doPreSigns(switch_off)  . 
+		!(doPreSigns(switch_on) || checkStatusPreSigns(on))* . 
+		doStopSigns(switch_on) ]false
+
+

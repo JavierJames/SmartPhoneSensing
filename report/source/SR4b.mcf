@@ -1,0 +1,7 @@
+ % SR4   
+ % doPins(switch_off) can be followed by doBrakes(switch_off) without checkStatusPins(off) or checkStatusPins(error) happening intermediately.
+
+<true* . doPins(switch_off) . 
+		!(checkStatusPins(on) || checkStatusPins(error))* . 
+		doBrakes(switch_off) >true
+

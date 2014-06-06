@@ -1,0 +1,85 @@
+\documentclass[11pt,twoside,a4paper]{report}
+
+% Included packages
+\usepackage[english]{babel}
+\usepackage{a4wide,times}
+\usepackage{graphicx}			% Used to include .pdf, .jpg and .png-files
+\usepackage{color}
+\usepackage{listings}
+\usepackage[hyphens]{url}
+
+\usepackage{hyperref}		% package for url's
+% color the links
+\definecolor{dark-red}{rgb}{0.4,0.15,0.15}
+\definecolor{dark-blue}{rgb}{0.15,0.15,0.4}
+\definecolor{medium-blue}{rgb}{0,0,0.5}
+\hypersetup{
+	colorlinks, linkcolor={dark-blue},
+	citecolor={dark-blue}, urlcolor={medium-blue},
+}
+
+\usepackage{pslatex}			% Times, helvetica and courier
+\usepackage[T1]{fontenc}		% Nicer font-encoding	
+\usepackage{epstopdf}
+\usepackage{tabularx}			% Used for evenly spread tables
+\usepackage{eso-pic}			% Absolute positioning, used for lines-to-track appendix and front- and backpage
+\usepackage{datetime}			% Used for some data-references
+\usepackage[font=small,format=plain,labelfont=bf,up,textfont=up]{caption}	% Nicer captions
+\usepackage{nonfloat}			% Captions for non-floating figures and tables.
+\usepackage{nextpage}			% Advanced nextpage commands
+\usepackage{keystroke}			% "real" keys
+\usepackage[nottoc]{tocbibind}	% Include Bibliography in ToC
+%\usepackage{multirow}			% Span text over multiple rows
+\usepackage{verbatim}			% For comment-environment
+%%\usepackage{algorithm}  %removed for convenience to work on all pc's 
+\usepackage{algorithmic}	
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[table]{xcolor}		% Table backgroud coloring
+\usepackage{float}
+\usepackage{fancyhdr}			% Om headers toe te voegen
+%\usepackage{subfig}	%Deprecated
+\usepackage{pdfpages}
+\setlength{\headheight}{15.2pt}
+%%\usepackage[numbered,autolinebreaks,useliterate]{mcode}		% package for matlab code   %removed for convenience to work on all pc's 
+\usepackage{textcomp}
+\usepackage{SIunits}
+\usepackage[section] {placeins}
+\usepackage{manual}				% Macro's for this manual
+\usepackage{todonotes}
+\usepackage{tikz}				% Package for diagrams
+\usepackage{xspace}				% For automatic spaces in macros
+\usetikzlibrary{arrows,automata}
+
+\usepackage{pgfplots}
+%%\usepgfplotslibrary{statistics}  %removed for convenience to work on all pc's 
+% Hide outliers
+\makeatletter
+\pgfplotsset{
+    boxplot/hide outliers/.code={
+        \def\pgfplotsplothandlerboxplot@outlier{}%
+    }
+}
+\makeatother
+\usepackage[nameinlink,capitalise]{cleveref}	% package for cref
+
+\usepackage{subcaption} % For multiple subfigures in one figure
+\usepackage{longtable}
+
+
+\title{\Huge \bf Lab Report}
+\author{W.F. Heida, J.A. James, E. Schoute, C. Tanaskoski}
+
+% Setting options for listing   
+\lstset{
+tabsize = 5,
+language = C,
+breaklines = true,
+basicstyle=\footnotesize,
+numbers = left,
+numberstyle=\footnotesize,
+title=\lstname
+}
+
+\newcommand{\tab}{\hspace*{2em}}
+\newcommand{\matlab}{MATLAB\textregistered}

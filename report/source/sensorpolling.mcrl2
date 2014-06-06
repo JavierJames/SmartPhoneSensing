@@ -1,0 +1,29 @@
+% Poll all our sensors (triggered by communication, see HardwareController's reqPollSensors)
+% First we empty our bags, then we start filling the bag with the sensor values
++ doPollSensors. (
+	sum p1: Status.(getSensorPreSign1(p1).
+	sum p2: Status.(getSensorPreSign2(p2).
+	sum p3: Status.(getSensorPreSign3(p3).
+	sum p4: Status.(getSensorPreSign4(p4).
+
+	sum s1: Status.(getSensorStopSign1(s1).
+	sum s2: Status.(getSensorStopSign2(s2).
+	sum s3: Status.(getSensorStopSign3(s3).
+	sum s4: Status.(getSensorStopSign4(s4).
+
+	sum o1: Status.(getSensorDeck(o1).
+	sum o2: Status.(getSensorBarriers(o2).
+	sum o3: Status.(getSensorBrakes(o3).
+	sum o4: Status.(getSensorPins(o4).
+	sum o5: StatusMotor.(getSensorMotor(o5).
+	sendPollReady.StatusController(
+		statusPreSignBag = {p1:1,p2:1,p3:1,p4:1},
+		statusStopSignBag = {s1:1,s2:1,s3:1,s4:1},
+		statusDeck = o1,
+		statusBarriers = o2,
+		statusBrakes = o3,
+		statusPins = o4,
+		statusMotor = o5
+	)
+	)))) )))) )))))
+)

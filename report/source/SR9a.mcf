@@ -1,0 +1,6 @@
+% SR9
+% doBarriers(switch\_on) may never be followed by doStopSigns(switch\_off) unless doBarriers(switch\_off) and checkStatusBarriers(off) happened intermediately.
+
+[true* . doBarriers(switch_on) . 
+		!(doBarriers(switch_off) || checkStatusBarriers(off))* . 
+		doStopSigns(switch_off) ] false

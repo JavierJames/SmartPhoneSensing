@@ -1,0 +1,6 @@
+% SR7
+% doMotor(motor\_up) may never be followed by doPins(switch\_on) unless doMotor(motor\_down) and checkStatusMotor(status\_down) happened intermediately.
+
+[true* . doMotor(motor_up) .
+		!(doMotor(motor_down) || checkStatusMotor(status_down))* . 
+		doPins(switch_on) ] false
