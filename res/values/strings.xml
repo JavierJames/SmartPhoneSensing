@@ -7,6 +7,15 @@
     <string name="acceleration">Acceleration</string>
     
     
+    
+    <string name="showCurrentActivity">None</string>
+    <string name="activityOverviewButton">Overview</string>
+    
+    <string name="overviewStill">Still:</string>
+    <string name="overviewWalk">Walk:</string>
+    <string name="overviewRun">Run:</string>
+    
+    
     <string name="activityMonitoring">Activity Monitoring</string>
     <string name="Localisation">Indoor Localisation</string>
     

@@ -34,12 +34,52 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
+                
+                <!-- Training tab -->
+                
                 <LinearLayout
                     android:id="@+id/training_tab"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical" >
 
+                    
+                    <!-- Stil button -->
+			        <Button
+			            android:id="@+id/sitButton"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:onClick="trainStillActivity"
+			            android:text="@string/stillButton" />
+			
+			        <!-- Walk Button -->
+			        <Button
+			            android:id="@+id/walkButton"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:onClick="trainWalkActivity"
+			            android:text="@string/walkButton" />
+			
+			        <!-- Run Button -->
+			        <Button
+			            android:id="@+id/runButton"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:onClick="trainRunActivity"
+			            android:text="@string/runButton" />
+                    
+                    
+                </LinearLayout>
+
+                <!-- Testing tab -->
+                
+                <LinearLayout
+                    android:id="@+id/testing_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    
                     <Button
                         android:id="@+id/testButton"
                         android:layout_width="wrap_content"
@@ -47,20 +87,28 @@
                         android:onClick="testActivity"
                         android:text="@string/testButton" />
                     
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/testing_tab"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" >
-
+                    
                     <Button
+                        android:id="@+id/activityOverviewButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="showActivityOverview"
+                        android:text="@string/testButton" />
+                    
+                    
+                    <!-- <Button
                         android:id="@+id/AnalyzeActivity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="analyzeData"
                         android:text="@string/analyze_activity" />
+                     -->
+                    
+                    <TextView
+            			android:id="@+id/showCurrentActivity"
+            			android:layout_width="wrap_content"
+            			android:layout_height="wrap_content"
+            			android:text="@string/showCurrentActivity" />
                     
                 </LinearLayout>
                 

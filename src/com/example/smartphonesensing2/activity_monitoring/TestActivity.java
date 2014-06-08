@@ -26,10 +26,10 @@ import com.example.smartphonesensing2.db.TrainingTable.TrainingField;
 public class TestActivity extends FragmentActivity {
 	
 	// Flags to keep track the mode the app is running
-	private boolean test;
+	/*private boolean test;*/
 	
-	// Reference to testing table
-	private TestingTable testingTable;
+	/*// Reference to testing table
+	private TestingTable testingTable;*/
 	
 	private String activity = "Stil";
 	
@@ -55,7 +55,7 @@ public class TestActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_activity_monitoring_test_layout);
         
-        testingTable = new TestingTable(getApplicationContext());
+        /*testingTable = new TestingTable(getApplicationContext());*/
     }
 	
 	
@@ -64,7 +64,7 @@ public class TestActivity extends FragmentActivity {
 	 * This method tests the app for the activities: still, walk, run.
 	 * While pressed the accelerometer coordinates is being saved in a new data based, 
 	 * to be processed later 
-	 */
+	 
 	public void testActivity(View view) {
 		Button b = (Button) view;
 		
@@ -88,14 +88,14 @@ public class TestActivity extends FragmentActivity {
 			activity = "none";
 			b.setText("Start testing");
 		}
-	}
+	}*/
 	
 	
 
 	/*
 	 * This method samples the input and matches them with the content in the database.
 	 * The matching is done with the KNN algorithm.
-	 */
+	 
 	private void testApp() {
 		
 		Runnable runnable = new Runnable() {
@@ -117,10 +117,10 @@ public class TestActivity extends FragmentActivity {
 		};
 		
 		new Thread(runnable).start();
-	}
+	}*/
 	
 	
-	/* Store coordinates of the test data */
+/*	 Store coordinates of the test data 
 	public void storeTestDataCoordinates(){
 			SQLiteDatabase db = null;
 		
@@ -146,11 +146,11 @@ public class TestActivity extends FragmentActivity {
 			}
 			catch(SQLException e){
 			}				
-	}
+	}*/
 	
 	
 	// Delete all records of the testing table
-	public void deleteTestRecords(View view) {
+	/*public void deleteTestRecords(View view) {
 		SQLiteDatabase db = testingTable.getWritableDatabase();
 
 		int n = db.delete(TestingField.TABLE_NAME, 
@@ -160,13 +160,13 @@ public class TestActivity extends FragmentActivity {
 		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoordinates);
 
 		showStoredCoordinates.setText("Deleted " +n+ " records");
-	}
+	}*/
 	
 	
 	/*
 	 * This method tests the app for the activities: still, walk, run.
 	 */
-	public void analyzeData(View view) {
+	/*public void analyzeData(View view) {
 		Button b = (Button) view;
 		
 		
@@ -181,7 +181,7 @@ public class TestActivity extends FragmentActivity {
 
 			getData();
 			
-			/*store data in internal memory for debugging */
+			store data in internal memory for debugging 
 			
 			Knn_API knn = new Knn_API(K,trainingDataset, testingDataset);
 			String[] activities = knn.get_activities();
@@ -201,7 +201,7 @@ public class TestActivity extends FragmentActivity {
 			
 			
 		}
-	}
+	}*/
 	
 	
 	/*
@@ -210,7 +210,7 @@ public class TestActivity extends FragmentActivity {
 	 */
 	
 //	SQLiteDatabase mDatabase;
-	private void getData() {
+	/*private void getData() {
 		// TODO Auto-generated method stub
 		
 
@@ -320,7 +320,7 @@ public class TestActivity extends FragmentActivity {
 		
 		
 		db.close();
-	}
+	}*/
 	
 	
 	/* Checks if external storage is available for read and write */
@@ -392,7 +392,7 @@ public class TestActivity extends FragmentActivity {
 	 /*
 		 * This function shows all records in the train table
 		 */
-		public void showTestRecords(View view) {
+		/*public void showTestRecords(View view) {
 			// This view shows the coordinates stored in db
 			TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoordinates);
 
@@ -450,5 +450,5 @@ public class TestActivity extends FragmentActivity {
 			}
 			
 			db.close();
-		}
+		}*/
 }

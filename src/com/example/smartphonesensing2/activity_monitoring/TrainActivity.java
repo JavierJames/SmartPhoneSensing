@@ -23,79 +23,79 @@ import com.example.smartphonesensing2.R;
 import com.example.smartphonesensing2.db.TrainingTable;
 import com.example.smartphonesensing2.db.TrainingTable.TrainingField;
 
-public class TrainActivity extends FragmentActivity implements SensorEventListener {
+public class TrainActivity extends FragmentActivity /* implements SensorEventListener */ {
 
 	// Flags to keep track the mode the app is running
-	private boolean train;
+//	private boolean train;
 	
-	private String activity = "Stil";
+//	private String activity = "Stil";
 	
 	// The rate at which the input is sampled
-	private final static int SAMPLE_RATE = 1000;
+//	private final static int SAMPLE_RATE = 1000;
 	
 	// Reference to training table
-	private TrainingTable trainingTable;
+	/*private TrainingTable trainingTable;*/
 	
 
 	// Variables to hold the values of the accelerometer
-	private float mlastX, mlastY, mlastZ;
+	/*private float mlastX, mlastY, mlastZ;*/
 	
 	// rowId of the last inserted data in db
-	private long rowId = 0;
+	/*private long rowId = 0;*/
 	
 	// ???
-	private boolean mInitialized;
+	/*private boolean mInitialized;*/
 	
 	// ???
-	private final float NOISE = (float)2.0;
+//	private final float NOISE = (float)2.0;
 	
 	
-	private Sensor accelerometer;
-	private SensorManager sm;
+	/*private Sensor accelerometer;
+	private SensorManager sm;*/
 	
 		
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		mInitialized = false;
+		/*mInitialized = false;*/
 		
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_activity_monitoring_train_layout);
         
         
 
-		sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+		/*sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 		accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 		
 		
 		
-		trainingTable = new TrainingTable(getApplicationContext());
+		trainingTable = new TrainingTable(getApplicationContext());*/
     }
 	
 	
-protected void onResume(){
-		
-		super.onResume();
-		sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-		
-		
-	}
-	
-	protected void onPause(){
-		
-		super.onPause();
-		sm.unregisterListener(this);
-		
-		
-	}
-	
-	
-	@Override
-	public void onDestroy(){
-		super.onDestroy();
-		trainingTable.close();
-	}
+//protected void onResume(){
+//		
+//		super.onResume();
+//		sm.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+//		
+//		
+//	}
+//	
+//	protected void onPause(){
+//		
+//		super.onPause();
+//		sm.unregisterListener(this);
+//		
+//		
+//	}
+//	
+//	
+//	@Override
+//	public void onDestroy(){
+//		super.onDestroy();
+//		trainingTable.close();
+//	}
 	
 	
 	@Override
@@ -139,7 +139,7 @@ protected void onResume(){
 	
 	/*
 	 * This method trains the app for the still activity
-	 */
+	 
 	public void trainStillActivity(View view){
 	
 		Button b = (Button) view;
@@ -164,7 +164,7 @@ protected void onResume(){
 			activity = "none";
 			b.setText("Start still");
 		}
-	}
+	}*/
 	
 	
 
@@ -172,7 +172,7 @@ protected void onResume(){
 	
 	/*
 	 * This method trains the app for the walking activity
-	 */
+	 
 	public void trainWalkActivity(View view) {
 		Button b = (Button) view;
 		
@@ -196,12 +196,12 @@ protected void onResume(){
 			activity = "none";
 			b.setText("Start walking");
 		}
-	}
+	}*/
 	
 	
 	/*
 	 * This method trains the app for the running activity
-	 */
+	 
 	public void trainRunActivity(View view) {
 		Button b = (Button) view;
 		
@@ -224,12 +224,12 @@ protected void onResume(){
 			activity = "none";
 			b.setText("Start running");
 		}
-	}
+	}*/
 	
 	
 	/*
 	 * This method samples the input and stores them in the database.
-	 */
+	 
 	private void trainApp() {
 	
 		
@@ -254,10 +254,10 @@ protected void onResume(){
 		};
 		
 		new Thread(runnable).start();
-	}
+	}*/
 	
 	
-	public void storeTrainDataCoordinates(){
+	/*public void storeTrainDataCoordinates(){
 		// debug view
 		SQLiteDatabase db = null;
 
@@ -287,11 +287,11 @@ protected void onResume(){
 		}
 		
 		
-	}
+	}*/
 	
 	
 	// Delete all records of the training table
-	public void deleteTrainRecords(View view) {
+	/*public void deleteTrainRecords(View view) {
 		SQLiteDatabase db = trainingTable.getWritableDatabase();
 
 		int n = db.delete(TrainingField.TABLE_NAME, 
@@ -301,11 +301,11 @@ protected void onResume(){
 		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoordinates);
 
 		showStoredCoordinates.setText("Deleted " +n+ " records");
-	}
+	}*/
 
 	
 	
-	@Override
+	/*@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
 		
@@ -354,10 +354,10 @@ protected void onResume(){
 			tvY.setText(Float.toString(deltaY));
 			tvZ.setText(Float.toString(deltaZ));
 		}
-	}
+	}*/
 	
 	
-	public void showCoordinates(){
+	/*public void showCoordinates(){
 		try{
 			// Read values from database
 			
@@ -413,13 +413,13 @@ protected void onResume(){
 		}
 		catch(Exception e){
 		}
-	}
+	}*/
 	
 	
 	/*
 	 * This function shows all records in the train table
 	 */
-	public void showTrainRecords(View view) {
+	/*public void showTrainRecords(View view) {
 		// This view shows the coordinates stored in db
 		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredCoordinates);
 
@@ -483,6 +483,6 @@ protected void onResume(){
 		
 			
 		db.close();
-	}
+	}*/
 	
 }
