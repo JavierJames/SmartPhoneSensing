@@ -1,0 +1,6 @@
+% SR8 
+% doPins(switch_on) can be followed by doBarriers(switch_off) without checkStatusPins(on) or checkStatusPins(error) happening intermediately.
+
+<true* . doPins(switch_on) . 
+		!(checkStatusPins(off) || checkStatusPins(error))* . 
+		doBarriers(switch_off) >true

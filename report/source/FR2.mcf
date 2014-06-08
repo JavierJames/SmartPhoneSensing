@@ -1,0 +1,4 @@
+% FR2
+% For all states there should be a path that contains the action doPreSigns(switch\_off).
+
+[true*]<true* . doPreSigns(switch_off)>true

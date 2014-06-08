@@ -1,0 +1,74 @@
+\chapter{Model Requirements}\label{chap:requirements}
+	As mentioned before, this safety controller should provide a safe environment in which bridge operators can control the bridge. 
+	In order for us to ensure this, we began by specifying requirements to verify the safety and functionality of our design. 
+	In this chapter we will first discuss the important model decisions that have been made, based on which our requirements were formulated. 
+	Subsequently, we will provide the system global requirements. 
+	  
+	In our design we assume that there is an hardware mechanism present that ensures that the motor does not open/close the bridge beyond a maximum point. 
+	This entails that if the user tries to open the bridge when it is already open, it will not be possible due to the hardware.
+	Our safety controller is not responsible for resolving this error.
+	
+	There are two types of actions possible in the system. 
+	The first type follows directly from a user command. 
+	The second type of actions follow on the first type and are therefore indirectly related to a user command. 
+	This means that the system is not allowed to perform actions that are completely initiated by itself.
+	
+	In the system it is allowed that one pre-sign and/or one stop sign is damaged. 
+	Therefore such failures should not directly block the operation of the bridge. 
+	If there are more failures the operation of the bridge should stop, because the system is then considered to be unsafe.
+
+
+	\section{Functional Requirements}
+		In order to ensure a proper operation of the safety controller for the bridge, we needed to define the specific behaviour of our system. 
+		This was done by modelling the system behaviour with functional requirements.  
+	 	
+	 	
+	 	 
+		%First of all some functional requirements have to be defined to ensure a proper operation of the bridge.
+		\begin{enumerate}
+			% FR1
+			\item The system should not contain any deadlocks.
+			
+			% FR2
+			\item Cars should always have the possibility to safely pass the bridge.
+			
+			% FR3
+			\item Boats should always have the possibility to safely pass the bridge.
+		\end{enumerate}
+	
+	\section{Safety Requirements}
+		To guarantee the safety of boats and cars, it was essential to define the specific system behaviour needed to make this possible. 
+		We did this by providing the following safety requirements.
+	
+		\begin{enumerate}
+			% SR1
+			\item The stop signs should only be turned on when the pre signs are on.
+			
+			% SR2
+			\item The barriers should only be closed when the stop-signs are on.
+			
+			% SR3
+			\item The locking pins should only deactivate when the barriers are closed.
+			
+			% SR4
+			\item The brakes should only be turned off when the locking pins are deactivated.
+			
+			% SR5
+			\item The motor should only move upward when the brakes are disabled.
+			
+			% SR6
+			\item The motor should only be stopped when the brakes is engaged.
+			
+			%SR7
+				
+			\item The locking pins should only activate when the motor has moved the bridge deck down.
+		
+			% SR8
+			\item The barriers can only be opened when the locking pins are enabled.
+			
+			% SR9
+			\item The stop signs should only be turned off when the barriers are opened.
+			
+			% SR10
+			\item The pre-signs should only be turned off when the stop signs are off.
+		\end{enumerate}

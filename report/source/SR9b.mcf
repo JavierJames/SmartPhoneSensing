@@ -1,0 +1,6 @@
+% SR9
+% doBarriers(switch_off) can be followed by doStopSigns(switch_off) without checkStatusBarriers(on) or checkStatusBarriers(error) happening intermediately.
+
+<true* . doBarriers(switch_off) . 
+		!(checkStatusBarriers(on) || checkStatusBarriers(error))* . 
+		doStopSigns(switch_off) >true

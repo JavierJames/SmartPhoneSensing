@@ -1,0 +1,6 @@
+% SR10
+% doStopSigns(switch_off) can be followed by doPreSigns(switch_off) without checkStatusStopSigns(on) or checkStatusStopSigns(error) happening intermediately.
+
+<true* . doStopSigns(switch_off) . 
+		!(checkStatusStopSigns(on) || checkStatusStopSigns(error))* . 
+		doPreSigns(switch_off)> true

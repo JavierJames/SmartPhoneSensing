@@ -1,0 +1,6 @@
+% SR10
+% doStopSigns(switch\_on) may never be followed by doPreSigns(switch\_off) unless doStopSigns(switch\_off) and checkStatusStopSigns(off) happened intermediately. 
+
+[true* . doStopSigns(switch_on) . 
+		!(doStopSigns(switch_off) || checkStatusStopSigns(off))* . 
+		doPreSigns(switch_off)] false

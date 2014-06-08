@@ -1,0 +1,37 @@
+Sensors(
+		sensorPreSigns: Status,
+		sensorStopSigns: Status,
+		sensorBarriers: Status,
+		sensorPins: Status,
+		sensorBrakes: Status,
+		sensorDeck: Status,
+		sensorMotor: StatusMotor
+	) = 
+		% Return sensor data to StatusController
+		(
+			sendSensorPreSign1(error) + sendSensorPreSign1(sensorPreSigns)
+			+ sendSensorPreSign2(error) + sendSensorPreSign2(sensorPreSigns)
+			+ sendSensorPreSign3(error) + sendSensorPreSign3(sensorPreSigns)
+			+ sendSensorPreSign4(error) + sendSensorPreSign4(sensorPreSigns)
+			
+			+ sendSensorStopSign1(error) + sendSensorStopSign1(sensorStopSigns)
+			+ sendSensorStopSign2(error) + sendSensorStopSign2(sensorStopSigns)
+			+ sendSensorStopSign3(error) + sendSensorStopSign3(sensorStopSigns)
+			+ sendSensorStopSign4(error) + sendSensorStopSign4(sensorStopSigns)
+
+			+ sendSensorBarriers(error) + sendSensorBarriers(sensorBarriers)
+			+ sendSensorPins(error) + sendSensorPins(sensorPins)
+			+ sendSensorDeck(error) + sendSensorDeck(sensorDeck)
+			+ sendSensorMotor(status_error) + sendSensorMotor(sensorMotor)
+			+ sendSensorBrakes(error) + sendSensorBrakes(sensorBrakes)
+		) . Sensors(sensorPreSigns, sensorStopSigns, sensorBarriers, sensorPins, sensorBrakes, sensorDeck, sensorMotor)
+
+		+ sum m: Status.(
+			recSensorPreSigns(m).Sensors(m, sensorStopSigns, sensorBarriers, sensorPins, sensorBrakes, sensorDeck, sensorMotor)
+			+ recSensorStopSigns(m).Sensors(sensorPreSigns, m, sensorBarriers, sensorPins, sensorBrakes, sensorDeck, sensorMotor)
+			+ recSensorBarriers(m).Sensors(sensorPreSigns, sensorStopSigns, m, sensorPins, sensorBrakes, sensorDeck, sensorMotor)
+			+ recSensorPins(m).Sensors(sensorPreSigns, sensorStopSigns, sensorBarriers, m, sensorBrakes, sensorDeck, sensorMotor)
+			+ recSensorDeck(m).Sensors(sensorPreSigns, sensorStopSigns, sensorBarriers, sensorPins, sensorBrakes, m, sensorMotor)
+			+ recSensorBrakes(m).Sensors(sensorPreSigns, sensorStopSigns, sensorBarriers, sensorPins, m, sensorDeck, sensorMotor)
+		)
+		+ sum m: StatusMotor. recSensorMotor(m) . Sensors(sensorPreSigns, sensorStopSigns, sensorBarriers, sensorPins, sensorBrakes, sensorDeck, m);

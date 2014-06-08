@@ -1,0 +1,8 @@
+% Sensor_PreSign2b
+% There exists a path where for all combinations that include 3 or more sensor values that are off the status will be off. 
+
+<true*. 
+	((commSensorPreSign1(off).commSensorPreSign2(off).commSensorPreSign3(off).commSensorPreSign4(off))	+
+	(commSensorPreSign1(error).commSensorPreSign2(off).commSensorPreSign3(off).commSensorPreSign4(off))	).
+	!(startUpdateStatus)*.
+	checkStatusPreSigns(off)> true

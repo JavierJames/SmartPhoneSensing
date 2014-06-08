@@ -1,0 +1,16 @@
+\chapter{Discussion \& Conclusions}	\label{chap: conclusion}
+	In this project we aimed to design a safety controller which takes commands from the bridge operator 
+	and presents them to the hardware, while taking in mind security of bridge operation.
+	It was essential that this happens in a safe way, to prevent future accidents from happening.
+	
+	In order to build our system, we made some assumptions to simplify the design of the safety controller.
+	One important assumption was that the user does not need to control the motor,
+	brakes and deck independently. % I'm not sure if this is the 'most important one'
+	This is done by a grouping interactions into one single command for the user.
+	We designed a model which consists of four components: safety controller, hardware controller, status controller, and sensors.  
+	
+	We verified the safety of the model with functional and safely requirement using the MCRL2 tools.
+	The model passed all tests and it is therefore considered to meet the requirements and is considered safe.
+	Even though the model passed all test, it should be clear that this does not mean that this design can be used in the real world.
+	Before this can happen, it still requires more strict safety requirements to ensure that the system does not fail.
+	However, this model still demonstrates the beginnings of a bridge controller that adheres to safety requirements. 

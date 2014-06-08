@@ -1,0 +1,6 @@
+% SR6
+% doBrakes(switch\_off) may never be followed by doMotor(motor\_stop) unless doBrakes(switch\_on) and checkStatusBrakes(on) happened intermediately.
+
+[true* . doBrakes(switch_off) . 
+		!(doBrakes(switch_on) || checkStatusBrakes(on))* . 
+		doMotor( motor_stop )]false

@@ -1,0 +1,10 @@
+% Sensor PreSign1b
+% There exists a path where for all combinations that include 2 or more sensor values that are error the status will be error.    
+
+<true*.((commSensorPreSign1(error).commSensorPreSign2(error).commSensorPreSign3(error).commSensorPreSign4(error))	+
+		(commSensorPreSign1(error).commSensorPreSign2(error).commSensorPreSign3(error).commSensorPreSign4(on))	+
+		(commSensorPreSign1(error).commSensorPreSign2(error).commSensorPreSign3(error).commSensorPreSign4(off))	+
+		(commSensorPreSign1(error).commSensorPreSign2(error).commSensorPreSign3(on).commSensorPreSign4(on))		+
+		(commSensorPreSign1(error).commSensorPreSign2(error).commSensorPreSign3(off).commSensorPreSign4(off))		
+		).!(startUpdateStatus)*.checkStatusPreSigns(error)>true
+

@@ -1,0 +1,6 @@
+% SR8 
+% doPins(switch\_off) may never be followed by doBarriers(switch\_off) unless doPins(switch\_on) and checkStatusPins(on) happened intermediately.
+
+[true* . doPins(switch_off) . 
+		!(doPins(switch_on) || checkStatusPins(on))* . 
+		doBarriers(switch_off) ] false

@@ -1,0 +1,4 @@
+% FR3
+% For all states there should be a path that contains the action doMotor(motor\_up).
+
+[true*]<true* . doMotor(motor_up)>true

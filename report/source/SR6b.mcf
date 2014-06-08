@@ -1,0 +1,6 @@
+% SR6
+% doBrakes(switch_on) can be followed by doMotor(motor_stop) without checkStatusBrakes(off) or checkStatusBrakes(error) happening intermediately.
+
+<true* . doBrakes(switch_on) . 
+		!(checkStatusBrakes(off) || checkStatusBrakes(error))* . 
+		doMotor( motor_stop )>true

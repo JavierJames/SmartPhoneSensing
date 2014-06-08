@@ -1,0 +1,99 @@
+init
+	allow(
+		{
+			userPreSigns, userStopSigns, userBarriers, userDeck,
+			prodError, prodOK,
+			checkStatusPreSigns,
+			checkStatusStopSigns,
+			checkStatusBarriers,
+			checkStatusPins,
+			checkStatusBrakes,
+			checkStatusDeck,
+			checkStatusMotor,
+			changeSensorPreSigns,
+			changeSensorStopSigns,
+			changeSensorBarriers,
+			changeSensorPins,
+			changeSensorBrakes,
+			changeSensorDeck,
+			changeSensorMotor,
+			doPreSigns,
+			doStopSigns,
+			doBarriers,
+			doPins,
+			doBrakes,
+			doMotor,
+			hwResponse,
+			startUpdateStatus,
+			endUpdateStatus,
+			commSensorPreSign1,
+			commSensorPreSign2,
+			commSensorPreSign3,
+			commSensorPreSign4,
+			commSensorStopSign1,
+			commSensorStopSign2,
+			commSensorStopSign3,
+			commSensorStopSign4,
+			commSensorBarriers,
+			commSensorPins,
+			commSensorBrakes,
+			commSensorDeck,
+			commSensorMotor
+
+		},
+
+		comm(
+			{
+				% Status to Safety
+				sendStatusPreSigns|getStatusPreSigns -> checkStatusPreSigns,
+				sendStatusStopSigns|getStatusStopSigns -> checkStatusStopSigns,
+				sendStatusBarriers|getStatusBarriers -> checkStatusBarriers,
+				sendStatusPins|getStatusPins -> checkStatusPins,
+				sendStatusBrakes|getStatusBrakes -> checkStatusBrakes,
+				sendStatusDeck|getStatusDeck -> checkStatusDeck,
+				sendStatusMotor|getStatusMotor -> checkStatusMotor,
+
+				% Hardware to Status
+				setSensorPreSigns|recSensorPreSigns -> changeSensorPreSigns,
+				setSensorStopSigns|recSensorStopSigns -> changeSensorStopSigns,
+				setSensorBarriers|recSensorBarriers -> changeSensorBarriers,
+				setSensorPins|recSensorPins -> changeSensorPins,
+				setSensorBrakes|recSensorBrakes -> changeSensorBrakes,
+				setSensorDeck|recSensorDeck -> changeSensorDeck,
+				setSensorMotor|recSensorMotor -> changeSensorMotor,
+
+				% Safety to Hardware
+				reqPreSigns|recPreSigns -> doPreSigns,
+				reqStopSigns|recStopSigns -> doStopSigns,
+				reqBarriers|recBarriers -> doBarriers,
+				reqPins|recPins -> doPins,
+				reqBrakes|recBrakes -> doBrakes,
+				reqMotor|recMotor -> doMotor,
+
+				% Hardware to Safety
+				awaitHwResponse|sendHwResponse -> hwResponse,
+
+				getSensorPreSign1 | sendSensorPreSign1 -> commSensorPreSign1,
+				getSensorPreSign2 | sendSensorPreSign2 -> commSensorPreSign2,
+				getSensorPreSign3 | sendSensorPreSign3 -> commSensorPreSign3,
+				getSensorPreSign4 | sendSensorPreSign4 -> commSensorPreSign4,
+
+				getSensorStopSign1 | sendSensorStopSign1 -> commSensorStopSign1,
+				getSensorStopSign2 | sendSensorStopSign2 -> commSensorStopSign2,
+				getSensorStopSign3 | sendSensorStopSign3 -> commSensorStopSign3,
+				getSensorStopSign4 | sendSensorStopSign4 -> commSensorStopSign4,
+
+				getSensorBarriers | sendSensorBarriers -> commSensorBarriers,
+				getSensorPins | sendSensorPins -> commSensorPins,
+				getSensorBrakes | sendSensorBrakes -> commSensorBrakes,
+				getSensorDeck | sendSensorDeck -> commSensorDeck,
+				getSensorMotor | sendSensorMotor -> commSensorMotor,
+
+				% Safety to Status
+				reqPollSensors|doPollSensors -> startUpdateStatus,
+				awaitPollReady|sendPollReady -> endUpdateStatus
+
+			},
+			Safety || HardwareController || StatusController({off: 4},{off: 4}, off, on, on, off, status_stopped) || Sensors(off, off, off, on, on, off, status_stopped)
+		)
+	);
