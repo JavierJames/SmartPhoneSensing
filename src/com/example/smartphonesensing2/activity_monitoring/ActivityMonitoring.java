@@ -360,9 +360,9 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	public void onSensorChanged(SensorEvent event) {
 		// TODO Auto-generated method stub
 		
-		TextView tvX = (TextView)findViewById(R.id.x_axis);
+		/*TextView tvX = (TextView)findViewById(R.id.x_axis);
 		TextView tvY = (TextView)findViewById(R.id.y_axis);
-		TextView tvZ = (TextView)findViewById(R.id.z_axis);
+		TextView tvZ = (TextView)findViewById(R.id.z_axis);*/
 		
 		float x = event.values[0];
 		float y = event.values[1];
@@ -375,9 +375,9 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 			mlastZ = z ;
 			
 			
-			tvX.setText(Float.toString(mlastX));
+			/*tvX.setText(Float.toString(mlastX));
 			tvY.setText(Float.toString(mlastY));
-			tvZ.setText(Float.toString(mlastZ));
+			tvZ.setText(Float.toString(mlastZ));*/
 			
 //			mInitialized = true;
 		} else {	
@@ -395,9 +395,9 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 			mlastZ = z ;
 			
 			
-			tvX.setText(Float.toString(deltaX));
+			/*tvX.setText(Float.toString(deltaX));
 			tvY.setText(Float.toString(deltaY));
-			tvZ.setText(Float.toString(deltaZ));
+			tvZ.setText(Float.toString(deltaZ));*/
 		}
 	}
 	

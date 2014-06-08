@@ -50,7 +50,7 @@ public class Localization extends ActionBarActivity {
 		setContentView(R.layout.fragment_localization);
 		
 		
-		createPMFTable();
+//		createPMFTable();
 	}
 	
 	

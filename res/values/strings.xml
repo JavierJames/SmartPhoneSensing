@@ -7,6 +7,8 @@
     <string name="acceleration">Acceleration</string>
     
     
+    <!--                Activity monitoring                    -->
+    
     
     <string name="showCurrentActivity">None</string>
     <string name="activityOverviewButton">Overview</string>
@@ -14,6 +16,10 @@
     <string name="overviewStill">Still:</string>
     <string name="overviewWalk">Walk:</string>
     <string name="overviewRun">Run:</string>
+    
+    
+    <!--                 End Activity monitoring                -->
+    
     
     
     <string name="activityMonitoring">Activity Monitoring</string>
