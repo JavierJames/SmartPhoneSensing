@@ -390,7 +390,7 @@ public class TestActivity extends FragmentActivity {
 	 
 	 
 	 /*
-		 * This function shows all records in the train table
+		 * This function shows all records in the test table
 		 */
 		/*public void showTestRecords(View view) {
 			// This view shows the coordinates stored in db

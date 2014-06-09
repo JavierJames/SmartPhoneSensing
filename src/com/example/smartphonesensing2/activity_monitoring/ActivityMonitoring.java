@@ -315,7 +315,7 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	public void storeTestDataCoordinates(){
 			SQLiteDatabase db = null;
 		
-		// Insert the values into the database
+			// Insert the values into the database
 		
 			try{
 				db = testingTable.getWritableDatabase();

@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.smartphonesensing2.MainActivity$PlaceholderFragment" >
 
-    <!-- ////////////////////////////////////////// Tab ////////////////////////////////////////////// -->
+    
 
     <TabHost
         android:id="@+id/tabhost"
@@ -98,20 +98,7 @@
                     
                     <!-- <Button
                         android:id="@+id/AnalyzeActivity"
-                        androrunOnUiThread(new Runnable () {
-					    		@Override 
-					    		public void run(){
-					    			apList.setText(apList.getText()+
-					    					SSID+
-											BSSID+
-											level+
-											frequency+
-											capabilities+
-											describeContents+
-											"\n"
-			    						);
-					    		}
-					    	});id:layout_width="wrap_content"
+                        id:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="analyzeData"
                         android:text="@string/analyze_activity" />
@@ -129,6 +116,6 @@
         </LinearLayout>
     </TabHost>
 
-    <!-- ////////////////////////////////////////// Tab End /////////////////////////////////////////////////// -->
+    
 
 </LinearLayout>

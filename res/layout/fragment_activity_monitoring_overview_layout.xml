@@ -11,7 +11,14 @@
     tools:context="com.example.smartphonesensing2.MainActivity$PlaceholderFragment" >
 
     
-        
+    <TextView
+       	android:id="@+id/overviewActivity"
+       	android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:text="@string/overviewStill" />
+    
+    
+        <!-- 
         <TextView
         	android:id="@+id/overviewStill"
         	android:layout_width="wrap_content"
@@ -31,6 +38,6 @@
         	android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:text="@string/overviewRun" />
-
+ -->
         
 </LinearLayout>

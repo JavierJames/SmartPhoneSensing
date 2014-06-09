@@ -20,7 +20,8 @@ public class TestingTable extends SQLiteOpenHelper {
     	    TestingField.FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
     	    TestingField.FIELD_X + TEXT_TYPE + COMMA_SEP +
     	    TestingField.FIELD_Y + TEXT_TYPE + COMMA_SEP +
-    	    TestingField.FIELD_Z + TEXT_TYPE +
+    	    TestingField.FIELD_Z + TEXT_TYPE + COMMA_SEP +
+    	    TestingField.FIELD_ACTIVITY + TEXT_TYPE +
     	    " );";
     
     // query statement to delete table
@@ -61,6 +62,7 @@ public class TestingTable extends SQLiteOpenHelper {
         public static final String FIELD_X = "x";
         public static final String FIELD_Y = "y";
         public static final String FIELD_Z = "z";
+        public static final String FIELD_ACTIVITY = "Activity";
     }
 
 }
