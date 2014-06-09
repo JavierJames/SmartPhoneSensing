@@ -21,6 +21,16 @@
     <!--                 End Activity monitoring                -->
     
     
+    <!--					Localisation		          -->
+    
+    <string name="localisation_initial_belief_button">Initial belief</string>
+    <string name="localisation_sense_new_AP_button">Sense new AP</string>
+    <string name="localisation_sense_new_scan_button">Sense new Scan</string>
+    <string name="showLocationView">Location</string>
+    
+    <!--					End Localisation		          -->
+    
+    
     
     <string name="activityMonitoring">Activity Monitoring</string>
     <string name="Localisation">Indoor Localisation</string>

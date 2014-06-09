@@ -98,7 +98,20 @@
                     
                     <!-- <Button
                         android:id="@+id/AnalyzeActivity"
-                        android:layout_width="wrap_content"
+                        androrunOnUiThread(new Runnable () {
+					    		@Override 
+					    		public void run(){
+					    			apList.setText(apList.getText()+
+					    					SSID+
+											BSSID+
+											level+
+											frequency+
+											capabilities+
+											describeContents+
+											"\n"
+			    						);
+					    		}
+					    	});id:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="analyzeData"
                         android:text="@string/analyze_activity" />

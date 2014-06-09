@@ -18,7 +18,9 @@ import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.TabHost.TabSpec;
 
 import com.example.smartphonesensing2.R;
 import com.example.smartphonesensing2.table.Table;
@@ -41,6 +43,9 @@ public class Localization extends ActionBarActivity {
 	
 	private ArrayList<Table> tables = new ArrayList<Table>();
 	
+	// Tabhost to hold the tab
+	private TabHost tabHost;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,33 @@ public class Localization extends ActionBarActivity {
 		
 		
 //		createPMFTable();
+		
+		
+		// Create a tabhost that will contain the tabs
+		tabHost = (TabHost)findViewById(R.id.tabhost);
+		//				tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+		tabHost.setup();
+
+
+		// Create the tabs
+		TabSpec trainTab = tabHost.newTabSpec("Training");
+		TabSpec testTab = tabHost.newTabSpec("Testing");
+
+
+		// Set the tabname and corresponding Activity that will be opened when particular Tab will be selected
+
+		trainTab.setContent(R.id.training_tab);
+		trainTab.setIndicator("Training");
+
+
+
+		testTab.setContent(R.id.testing_tab);
+		testTab.setIndicator("Testing");
+
+
+		// Add tabs to the tabhost
+		tabHost.addTab(trainTab);
+		tabHost.addTab(testTab);
 	}
 	
 	
@@ -255,7 +287,7 @@ public class Localization extends ActionBarActivity {
 
 						rssiList = wm.getScanResults();
 						
-						final TextView apList = (TextView) findViewById(R.id.apList);
+//						final TextView apList = (TextView) findViewById(R.id.apList);
 						
 						
 						
@@ -281,7 +313,7 @@ public class Localization extends ActionBarActivity {
 							
 							
 							// show the access-points on the screen
-							runOnUiThread(new Runnable () {
+							/*runOnUiThread(new Runnable () {
 					    		@Override 
 					    		public void run(){
 					    			apList.setText(apList.getText()+
@@ -294,7 +326,7 @@ public class Localization extends ActionBarActivity {
 											"\n"
 			    						);
 					    		}
-					    	});
+					    	});*/
 						}
 						
 						
@@ -326,6 +358,39 @@ public class Localization extends ActionBarActivity {
 
 	new Thread(runnable).start();
 }
+	
+	
+	/*
+	 * This function generates the initial belief
+	 * i.e. it assigns an uniform probability to each cell
+	 */
+	public void initialBelief(View view) {
+		
+	}
+	
+	
+	/*
+	 * This function senses the next highest AP
+	 */
+	public void senseNewAP(View view) {
+		
+	}
+	
+	
+	/*
+	 * This functions creates a list of APs
+	 */
+	public void senseNewScan(View view) {
+		
+	}
+	
+	
+	/*
+	 * This function shows the current location of the user
+	 */
+	public void showCurrentLocation(View view) {
+		TextView text = (TextView) findViewById(R.id.showLocationView);
+	}
 	
 	
 	/*
