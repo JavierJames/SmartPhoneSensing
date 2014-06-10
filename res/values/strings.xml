@@ -7,62 +7,102 @@
     <string name="acceleration">Acceleration</string>
     
     
+    
     <!--                Activity monitoring                    -->
     
+    <string name="activityMonitoring">Activity Monitoring</string>
+    <string name="activityresult">Activity</string>
     
-    <string name="showCurrentActivity">None</string>
-    <string name="activityOverviewButton">Overview</string>
     
-    <string name="overviewStill">Still:</string>
-    <string name="overviewWalk">Walk:</string>
-    <string name="overviewRun">Run:</string>
+    <!-- Coordinate labels -->
+    	<string name="x_axis"> X </string>
+    	<string name="y_axis"> Y </string>
+    	<string name="z_axis"> Z </string>
+    
+    	
+    
+    
+    	
+    <!-- Debug view -->
+    	<!-- TextView: Label for the shown value stored in db -->
+    	<string name="showStoredTrainCoordinates"></string>
+    
+    	<string name="debugView"></string>
+    	
+    	<!-- Buttons to interact with db -->
+    
+		    <string name="buttonViewTrainData">View Training Data</string>
+		    <string name="buttonResetTrainData">Reset Train Data</string>
+		    <string name="buttonViewTestData">View Test Data</string>
+		    <string name="buttonResetTestData">Reset Test Data</string>
+		    
+    
+    
+    	
+    <!-- Training -->
+    	<string name="stillButton">Start still</string>
+    	<string name="walkButton">Start walking</string>
+    	<string name="runButton">Start running</string>
+    
+    
+    <!-- Testing -->
+    	<!-- TextView: Label for the shown value stored in db -->
+    	<string name="showStoredTestCoordinates"></string>
+    	
+    	<string name="testButton">Start testing</string>
+    
+    
+    	<string name="showCurrentActivity">None</string>
+    	
+    	<string name="analyze_activity">Analyze</string>
+    	
+    	<string name="knn_1_x">Ng 1 X-axis</string>
+    	<string name="knn_1_y">Ng 1 Y-axis</string>
+    	<string name="knn_1_z">Ng 1 Z-axis</string>
+    	
+    	
+    	
+    	<!-- Overview -->
+	    	<string name="activityOverviewButton">Overview</string>
+	    
+	    	<string name="overviewStill">Still:</string>
+	    	<string name="overviewWalk">Walk:</string>
+	    	<string name="overviewRun">Run:</string>
+    
+	
+    	
     
     
     <!--                 End Activity monitoring                -->
     
     
+    
+    
     <!--					Localisation		          -->
     
-    <string name="localisation_initial_belief_button">Initial belief</string>
-    <string name="localisation_sense_new_AP_button">Sense new AP</string>
-    <string name="localisation_sense_new_scan_button">Sense new Scan</string>
-    <string name="showLocationView">Location</string>
+    <string name="Localisation">Indoor Localisation</string>
+    <string name="rssi">RSSI</string>
+    
+    
+    <!-- Training -->
+    	<string name="scanRssi">Rssi list</string>
+	    <string name="aplist">Rssi list</string>
+	    
+	    <string name="scanCell">Scan cell</string>
+	    <string name="cell_name">Enter cell name</string>
+	    <string name="cell_hint">Enter cell name</string>
+    	
+    	
+    	
+   	<!-- Testing -->
+   		<string name="localisation_initial_belief_button">Initial belief</string>
+    	<string name="localisation_sense_new_AP_button">Sense new AP</string>
+    	<string name="localisation_sense_new_scan_button">Sense new Scan</string>
+    	<string name="showLocationView">Location</string>
     
     <!--					End Localisation		          -->
     
     
-    
-    <string name="activityMonitoring">Activity Monitoring</string>
-    <string name="Localisation">Indoor Localisation</string>
-    
-    <!-- Button to store coordinate values in db -->
-    <string name="buttonViewTrainData">View Train Data</string>
-    <string name="buttonResetTrainData">Reset Train Data</string>
-    <string name="buttonViewTestData">View Test Data</string>
-    <string name="buttonResetTestData">Reset Test Data</string>
-    
-    <!-- Coordinate labels -->
-    <string name="x_axis"> X </string>
-    <string name="y_axis"> Y </string>
-    <string name="z_axis"> Z </string>
-    
-    <!-- Label for the shown value stored in db -->
-    <string name="showStoredCoordinates"></string>
-    
-    <!-- Debug view -->
-    <string name="debugView"></string>
-    
-    
-    <!-- Training widgets -->
-    
-    <string name="stillButton">Start still</string>
-    <string name="walkButton">Start walking</string>
-    <string name="runButton">Start running</string>
-    <string name="testButton">Start testing</string>
-
-    <string name="knn_1_x">Ng 1 X-axis</string>
-    <string name="knn_1_y">Ng 1 Y-axis</string>
-    <string name="knn_1_z">Ng 1 Z-axis</string>
     
  <!--     <string name="knn_2_x">Ng 2 X-axis</string>
     <string name="knn_2_y">Ng 2 Y-axis</string>
@@ -72,19 +112,14 @@
     <string name="knn_3_y">Ng 3 Y-axis</string>
     <string name="knn_3_z">Ng 3 Z-axis</string>
     -->
-    <string name="activityresult">Activity</string>
-    <string name="analyze_activity">Analyze</string>
     
-    <string name="rssi">RSSI</string>
+    
+    
+    
     
     <!-- Location activity -->
     
-    <string name="scanRssi">Rssi list</string>
-    <string name="aplist">Rssi list</string>
     
-    <string name="scanCell">Scan cell</string>
-    <string name="cell_name">Enter cell name</string>
-    <string name="cell_hint">Enter cell name</string>
     
     
 </resources>

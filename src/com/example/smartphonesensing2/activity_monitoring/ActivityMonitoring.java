@@ -1,7 +1,12 @@
 package com.example.smartphonesensing2.activity_monitoring;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.hardware.Sensor;
@@ -9,6 +14,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +23,8 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.example.smartphonesensing2.R;
+import com.example.smartphonesensing2.KnnClassification.ArrayBuff;
+import com.example.smartphonesensing2.KnnClassification.Knn_API;
 import com.example.smartphonesensing2.db.TestingTable;
 import com.example.smartphonesensing2.db.TestingTable.TestingField;
 import com.example.smartphonesensing2.db.TrainingTable;
@@ -52,6 +60,12 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	
 	private Sensor accelerometer;
 	private SensorManager sm;
+	
+	private ArrayBuff[] trainingDataset, testingDataset;
+	
+	// set accuracy of amount of neighbours
+	int K = 5;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -140,9 +154,25 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
+				
+				// Keeps the counting the number of samples
+//				int sampleCount = 0;
+				
 				try {
 					while(train){
 						
+						// Increment the count
+//						sampleCount++;
+						
+						// Fetch a new sample
+//						fetchSample();
+//						
+						// If 10 samples have been fetched, then calculate the mean
+//						if(sampleCount >= 10) {
+//							mean();
+//						}
+						
+						// ?????????????????? should be inside the if-clause ????????????????
 						storeTrainDataCoordinates();
 //						showCoordinates();
 						Thread.sleep(SAMPLE_RATE);
@@ -426,6 +456,364 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	}
 	
 	
+	/*
+	 * This function shows all records in the train table
+	 * Debug purposes
+	 */
+	public void showTrainRecords(View view) {
+		// This view shows the coordinates stored in db
+		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredTrainCoordinates);
+
+		SQLiteDatabase db = trainingTable.getReadableDatabase();
+		
+		String[] data = {
+				TrainingField.FIELD_ID,
+				TrainingField.FIELD_X,
+				TrainingField.FIELD_Y,
+				TrainingField.FIELD_Z,
+				TrainingField.FIELD_ACTIVITY
+		};
+
+		
+		String where = TrainingField.FIELD_X +" = "+ mlastX +" AND "+ 
+				TrainingField.FIELD_Y +" = "+ mlastY +" AND "+ 
+				TrainingField.FIELD_Z +" = "+ mlastZ;
+		
+
+		String orderBy = TrainingField.FIELD_ACTIVITY + " ASC";
+
+
+		Cursor c = db.query(TrainingField.TABLE_NAME,		// Name of the table 
+				data, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+		
+		// Read the values in each field
+	
+		String dataID;
+		String dataX;
+		String dataY;
+		String dataZ;
+		String dataActivity;
+		
+		if(c.moveToFirst()) {
+			showStoredCoordinates.setText("");
+			
+			do {
+				dataID = c.getString(c.getColumnIndex(TrainingField._ID));
+				dataX = c.getString(c.getColumnIndex(TrainingField.FIELD_X));
+				dataY = c.getString(c.getColumnIndex(TrainingField.FIELD_Y));
+				dataZ = c.getString(c.getColumnIndex(TrainingField.FIELD_Z));
+				dataActivity = c.getString(c.getColumnIndex(TrainingField.FIELD_ACTIVITY));
+				
+				
+				showStoredCoordinates.setText(showStoredCoordinates.getText()+
+						dataID + ":"+
+						" X: "+ dataX +
+						" Y: "+ dataY +
+						" Z: "+ dataZ +
+						" A: "+ dataActivity +"\n"
+						);
+			} while(c.moveToNext());
+		}
+		
+			
+		db.close();
+	}
+	
+	
+	/*
+	 * This function shows all records in the test table
+	 */
+	public void showTestRecords(View view) {
+		// This view shows the coordinates stored in db
+		TextView showStoredCoordinates = (TextView) findViewById(R.id.showStoredTestCoordinates);
+
+		SQLiteDatabase db = testingTable.getReadableDatabase();
+		
+		
+		String[] data = {
+				TestingField.FIELD_ID,
+				TestingField.FIELD_X,
+				TestingField.FIELD_Y,
+				TestingField.FIELD_Z
+		};
+
+		
+		String where = TestingField.FIELD_X +" = "+ mlastX +" AND "+ 
+				TestingField.FIELD_Y +" = "+ mlastY +" AND "+ 
+				TestingField.FIELD_Z +" = "+ mlastZ;
+
+
+
+		Cursor c = db.query(TestingField.TABLE_NAME,		// Name of the table 
+				data, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+		
+		// Read the values in each field
+		
+		String dataID;
+		String dataX;
+		String dataY;
+		String dataZ;
+		
+		if(c.moveToFirst()) {
+			showStoredCoordinates.setText("");
+			
+			do {
+				dataID = c.getString(c.getColumnIndex(TestingField._ID));
+				dataX = c.getString(c.getColumnIndex(TestingField.FIELD_X));
+				dataY = c.getString(c.getColumnIndex(TestingField.FIELD_Y));
+				dataZ = c.getString(c.getColumnIndex(TestingField.FIELD_Z));
+				
+				
+				showStoredCoordinates.setText(showStoredCoordinates.getText()+
+						dataID + ":"+
+						" X: "+ dataX +
+						" Y: "+ dataY +
+						" Z: "+ dataZ +"\n"
+						);
+			} while(c.moveToNext());
+		}
+		
+		db.close();
+	}
+	
+	
+	/*
+	 * This function analyses data
+	 */
+	public void analyzeData(View view) {
+		Button b = (Button) view;
+		
+		
+		
+		if(b.getText().equals("Analyze")){
+			
+					
+			test = true;
+			activity = "test";
+			TextView showStoredTestCoordinates = (TextView) findViewById(R.id.showStoredTestCoordinates);
+			showStoredTestCoordinates.setText("");
+
+			getData();
+			
+//			store data in internal memory for debugging 
+			
+			Knn_API knn = new Knn_API(K,trainingDataset, testingDataset);
+			String[] activities = knn.get_activities();
+			
+			for(int i = 0; i < activities.length; i++) {
+				showStoredTestCoordinates.setText(showStoredTestCoordinates.getText()+ "\n"+
+						activities[i]
+						);
+			}
+
+		}
+		else {
+			
+			test = false;
+			activity = "none";
+			b.setText("Analyze");
+			
+			
+		}
+	}
+	
+	
+	/*
+	 * This function fetches training and testing data from the DB and stores them
+	 * in the arrays trainingDataset and testingDataset, respectively
+	 */
+	private void getData() {
+		// TODO Auto-generated method stub
+		
+
+		SQLiteDatabase db = trainingTable.getReadableDatabase();
+
+		String[] trainingData = {
+				TrainingField.FIELD_ID,
+				TrainingField.FIELD_X,
+				TrainingField.FIELD_Y,
+				TrainingField.FIELD_Z,
+				TrainingField.FIELD_ACTIVITY
+		};
+		
+		
+		
+		String[] testingData = {
+				TestingField.FIELD_ID,
+				TestingField.FIELD_X,
+				TestingField.FIELD_Y,
+				TestingField.FIELD_Z
+		};
+		
+		
+		// send query of traindata to db
+		Cursor c1 = db.query(TrainingField.TABLE_NAME,		// Name of the table 
+				trainingData, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+		db = testingTable.getReadableDatabase();
+		
+		// send query of testdata to db
+		Cursor c2 = db.query(TestingField.TABLE_NAME,		// Name of the table 
+				testingData, 								// Fields to be fetched
+				null,								// where-clause
+				null, 								// arguments for the where-clause
+				null, 								// groupBy
+				null, 								// having
+				null								// orderBy
+				);
+
+		
+		String trainDataID = "";
+		float trainDataX = 0;
+		float trainDataY = 0;
+		float trainDataZ = 0;
+		String trainDataActivity = "";
+		
+		
+		String testDataID = "";
+		float testDataX = 0;
+		float testDataY = 0;
+		float testDataZ = 0;
+		
+		TextView debugView = (TextView) findViewById(R.id.showStoredTestCoordinates);
+		double distance = 0;
+		
+		trainingDataset = new ArrayBuff[c1.getCount()];
+		testingDataset = new ArrayBuff[c2.getCount()];
+		
+		if(c1.moveToFirst() && c2.moveToFirst()) {
+			
+			for(int j = 0; j < c1.getCount(); j++) { // ?? j <= c2.getCount() ??
+				
+				// move to next record of TestingTable
+				c1.moveToPosition(j);
+				
+				// fetch training data
+				trainDataID = c1.getString(c1.getColumnIndex(TrainingField._ID));
+				trainDataX = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_X));
+				trainDataY = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_Y));
+				trainDataZ = c1.getFloat(c1.getColumnIndex(TrainingField.FIELD_Z));
+				trainDataActivity = c1.getString(c1.getColumnIndex(TrainingField.FIELD_ACTIVITY));
+				
+				
+				trainingDataset[j] = new ArrayBuff(j, trainDataX, trainDataY, trainDataZ, trainDataActivity);
+			}
+			
+			for(int i = 0; i < c2.getCount(); i++) { // ?? i <= c1.getCount() ??
+				
+				// move to next record of TrainingTable
+				c2.moveToPosition(i);
+				
+				// fetch test data
+				testDataID = c2.getString(c2.getColumnIndex(TestingField._ID));
+				testDataX = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_X));
+				testDataY = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_Y));
+				testDataZ = c2.getFloat(c2.getColumnIndex(TestingField.FIELD_Z));
+				
+				testingDataset[i] = new ArrayBuff(i, testDataX, testDataY, testDataZ, "");
+			}
+			
+			
+		}
+		
+		/*if(isExternalStorageWritable()) {
+			generateCsvFile("TrainData.txt", trainingDataset);
+			generateCsvFile("TestData.txt", testingDataset);
+		}
+		else {
+			debugView.setText("MainActivity.getData (540):Cannot create file!");
+		}*/
+		db.close();
+	}
+	
+	
+	/* Checks if external storage is available for read and write */
+	 public boolean isExternalStorageWritable() {
+	     String state = Environment.getExternalStorageState();
+	     if (Environment.MEDIA_MOUNTED.equals(state)) {
+	         return true;
+	       	       
+	     }
+	     return false;
+	 }
+	 
+	 
+	 /*
+	  * This function generates a CSV file from the data
+	  */
+	 private static void generateCsvFile(String sFileName, ArrayBuff[] Data) {
+			try
+			{
+				File path = Environment.getExternalStoragePublicDirectory(
+			            Environment.DIRECTORY_DOWNLOADS);
+
+				path.mkdirs();
+				
+				File file = new File(path, sFileName);
+
+				FileWriter writer = new FileWriter(file);
+
+				writer.append("ID");
+				writer.append(',');
+				writer.append("X");
+				writer.append(',');
+				writer.append("Y");
+				writer.append(',');
+				writer.append("Z");
+				writer.append(',');
+				writer.append("Activity");
+				writer.append('\n');
+
+				/* 
+				 *   ID, X, Y, Z, Activity
+				 * */
+				for(int i=0; i<Data.length; i++){
+
+					writer.append(""+ i);
+					writer.append(',');
+					writer.append(""+Data[i].getX());
+					writer.append(',');
+					writer.append(""+Data[i].getY());
+					writer.append(',');
+					writer.append(""+Data[i].getZ());
+					writer.append(',');
+					writer.append(""+Data[i].getActivity());   
+					writer.append('\n');
+
+				}
+				//generate whatever data you want
+
+				if(Data.length > 0)
+					writer.flush();
+				
+				writer.close();
+			}
+			catch(IOException e) {
+				e.printStackTrace();
+			} 
+		  
+		    
+	 }
 //
 //	
 //	protected void onResume(){

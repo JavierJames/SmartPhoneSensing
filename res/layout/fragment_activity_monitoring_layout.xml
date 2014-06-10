@@ -67,10 +67,40 @@
 			            android:layout_height="wrap_content"
 			            android:onClick="trainRunActivity"
 			            android:text="@string/runButton" />
+			        
+			        
+			        <!-- This section is only for debug purposes -->
+			        
+				        <Button
+				            android:id="@+id/buttonViewTrainData"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:onClick="showTrainRecords"
+				            android:text="@string/buttonViewTrainData" />
+				        
+				        
+				        <ScrollView 
+				            android:layout_width="wrap_content"
+	        				android:layout_height="wrap_content" >
+	        				
+				        
+					        <TextView
+		            			android:id="@+id/showStoredTrainCoordinates"
+		            			android:layout_width="wrap_content"
+		            			android:layout_height="wrap_content"
+		            			android:text="@string/showStoredTrainCoordinates" />
+					        
+				        
+				        </ScrollView>
+			        
+			        <!-- End Debug -->
                     
                     
                 </LinearLayout>
 
+                
+                
+                
                 <!-- Testing tab -->
                 
                 <LinearLayout
@@ -95,20 +125,53 @@
                         android:onClick="showActivityOverview"
                         android:text="@string/activityOverviewButton" />
                     
-                    
-                    <!-- <Button
-                        android:id="@+id/AnalyzeActivity"
-                        id:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="analyzeData"
-                        android:text="@string/analyze_activity" />
-                     -->
+                     
                     
                     <TextView
             			android:id="@+id/showCurrentActivity"
             			android:layout_width="wrap_content"
             			android:layout_height="wrap_content"
             			android:text="@string/showCurrentActivity" />
+                    
+                    
+                    <!-- This section is only for debug purposes -->
+			        
+				        
+				        <Button
+	                        android:id="@+id/AnalyzeActivity"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:onClick="analyzeData"
+	                        android:text="@string/analyze_activity" />
+				        
+				        
+				        <Button
+				            android:id="@+id/buttonViewTestData"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:onClick="showTestRecords"
+				            android:text="@string/buttonViewTestData" />
+				        
+				        
+				        
+				        
+				        
+				        <ScrollView 
+				            android:layout_width="wrap_content"
+	        				android:layout_height="wrap_content" >
+	        				
+				        
+					        <TextView
+		            			android:id="@+id/showStoredTestCoordinates"
+		            			android:layout_width="wrap_content"
+		            			android:layout_height="wrap_content"
+		            			android:text="@string/showStoredTestCoordinates" />
+					        
+				        
+				        </ScrollView>
+			        
+			        <!-- End Debug -->
+			        
                     
                 </LinearLayout>
                 
