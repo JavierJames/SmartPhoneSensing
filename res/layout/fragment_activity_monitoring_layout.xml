@@ -71,6 +71,15 @@
 			        
 			        <!-- This section is only for debug purposes -->
 			        
+				        
+				        <Button
+				            android:id="@+id/buttonResetTrainData"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:onClick="deleteTrainRecords"
+				            android:text="@string/buttonResetTrainData" />
+				        
+				        
 				        <Button
 				            android:id="@+id/buttonViewTrainData"
 				            android:layout_width="wrap_content"
@@ -136,13 +145,21 @@
                     
                     <!-- This section is only for debug purposes -->
 			        
-				        
+				       <!-- 
 				        <Button
 	                        android:id="@+id/AnalyzeActivity"
 	                        android:layout_width="wrap_content"
 	                        android:layout_height="wrap_content"
 	                        android:onClick="analyzeData"
 	                        android:text="@string/analyze_activity" />
+				        -->
+				        
+				        <Button
+				            android:id="@+id/buttonResetTestData"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:onClick="deleteTestRecords"
+				            android:text="@string/buttonResetTestData" />
 				        
 				        
 				        <Button

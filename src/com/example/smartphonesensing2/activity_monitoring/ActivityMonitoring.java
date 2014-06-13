@@ -314,6 +314,9 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 			test = false;
 			activity = "none";
 			b.setText("Start testing");
+			
+			TextView showCurrentActivity = (TextView) findViewById(R.id.showCurrentActivity);
+			showCurrentActivity.setText("None");
 		}
 	}
 	
@@ -330,6 +333,15 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 				try {
 					while(test){
 						storeTestDataCoordinates();
+//						showCurrentActivity();
+						
+						
+						runOnUiThread(new Runnable () {
+				    		@Override 
+				    		public void run(){
+				    			showCurrentActivity();
+				    		}
+				    	});
 						
 						Thread.sleep(SAMPLE_RATE);
 					}
@@ -339,6 +351,33 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 					
 //					debug.setText("MainActivity.trainApp() "+ ie.getMessage());
 				}
+			}
+
+			
+			// This function shows the current activity
+			private void showCurrentActivity() {
+				
+				TextView showCurrentActivity = (TextView) findViewById(R.id.showCurrentActivity);
+//				showCurrentActivity.setText("");
+
+				getData();
+				
+				ArrayBuff [] singleTestingDataset = new ArrayBuff[1];
+				singleTestingDataset[0] = new ArrayBuff(0, mlastX, mlastY, mlastZ, "");
+				
+				
+//				store data in internal memory for debugging
+				
+				Knn_API knn = new Knn_API(K, trainingDataset, singleTestingDataset);
+				activities = knn.get_activities();
+				
+				if(activities[0] != null && (activities[0]).length() > 0) {
+					showCurrentActivity.setText(activities[0]);
+				}
+				else {
+					showCurrentActivity.setText("None");
+				}
+				
 			}
 		};
 		
@@ -371,7 +410,8 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 				db.close();
 			}
 			catch(SQLException e){
-			}				
+			}
+			 
 	}
 	
 	
@@ -502,6 +542,7 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 		String dataY;
 		String dataZ;
 		String dataActivity;
+		int sample_nr = 0;
 		
 		if(c.moveToFirst()) {
 			showStoredCoordinates.setText("");
@@ -514,13 +555,16 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 				dataActivity = c.getString(c.getColumnIndex(TrainingField.FIELD_ACTIVITY));
 				
 				
-				showStoredCoordinates.setText(showStoredCoordinates.getText()+
-						dataID + ":"+
+				showStoredCoordinates.setText(showStoredCoordinates.getText()+""+
+						sample_nr + ":"+
 						" X: "+ dataX +
 						" Y: "+ dataY +
 						" Z: "+ dataZ +
 						" A: "+ dataActivity +"\n"
 						);
+				
+				sample_nr++;
+				
 			} while(c.moveToNext());
 		}
 		
@@ -569,6 +613,7 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 		String dataX;
 		String dataY;
 		String dataZ;
+		int sample_nr = 0;
 		
 		if(c.moveToFirst()) {
 			showStoredCoordinates.setText("");
@@ -580,12 +625,15 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 				dataZ = c.getString(c.getColumnIndex(TestingField.FIELD_Z));
 				
 				
-				showStoredCoordinates.setText(showStoredCoordinates.getText()+
-						dataID + ":"+
+				showStoredCoordinates.setText(showStoredCoordinates.getText()+""+
+						sample_nr + ":"+
 						" X: "+ dataX +
 						" Y: "+ dataY +
 						" Z: "+ dataZ +"\n"
 						);
+				
+				sample_nr++;
+				
 			} while(c.moveToNext());
 		}
 		
@@ -606,8 +654,8 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 					
 //			test = true;
 //			activity = "test";
-			TextView showStoredTestCoordinates = (TextView) findViewById(R.id.showStoredTestCoordinates);
-			showStoredTestCoordinates.setText("");
+//			TextView showStoredTestCoordinates = (TextView) findViewById(R.id.showStoredTestCoordinates);
+//			showStoredTestCoordinates.setText("");
 
 			getData();
 			
@@ -616,11 +664,11 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 			Knn_API knn = new Knn_API(K,trainingDataset, testingDataset);
 			activities = knn.get_activities();
 			
-			for(int i = 0; i < activities.length; i++) {
+			/*for(int i = 0; i < activities.length; i++) {
 				showStoredTestCoordinates.setText(showStoredTestCoordinates.getText()+ "\n"+
 						activities[i]
 						);
-			}
+			}*/
 
 //		}
 //		else {
@@ -816,6 +864,38 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 		  
 		    
 	 }
+	 
+	 
+	 
+	 
+	 // Delete all records of the training table
+	 public void deleteTrainRecords(View view) {
+		 SQLiteDatabase db = trainingTable.getWritableDatabase();
+
+		 int n = db.delete(TrainingField.TABLE_NAME, 
+				 null, 
+				 null);
+
+		 TextView showStoredTrainCoordinates = (TextView) findViewById(R.id.showStoredTrainCoordinates);
+
+		 showStoredTrainCoordinates.setText("Deleted " +n+ " records");
+	 }
+	 
+	 
+	 
+	 
+	// Delete all records of the testing table
+	 public void deleteTestRecords(View view) {
+			SQLiteDatabase db = testingTable.getWritableDatabase();
+
+			int n = db.delete(TestingField.TABLE_NAME, 
+					null, 
+					null);
+
+			TextView showStoredTestCoordinates = (TextView) findViewById(R.id.showStoredTestCoordinates);
+
+			showStoredTestCoordinates.setText("Deleted " +n+ " records");
+		}
 //
 //	
 //	protected void onResume(){
