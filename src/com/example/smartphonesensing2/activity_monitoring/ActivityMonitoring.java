@@ -61,7 +61,11 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	private Sensor accelerometer;
 	private SensorManager sm;
 	
+	// Array of training data for the classification
 	private ArrayBuff[] trainingDataset, testingDataset;
+	
+	// Array of classified activities
+	private String[] activities;
 	
 	// set accuracy of amount of neighbours
 	int K = 5;
@@ -188,6 +192,7 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 		
 		new Thread(runnable).start();
 	}
+	
 	
 	/*
 	 * This function stores the training data in db
@@ -374,7 +379,12 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	 * 
 	 */
 	public void showActivityOverview(View view) {
+		
+		analyzeData(view);
+		
 		Intent intent = new Intent(getApplicationContext(), ActivityMonitoringOverview.class);
+		
+		intent.putExtra("activities", activities);
 		
 		startActivity(intent);
 	}
@@ -473,14 +483,6 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 				TrainingField.FIELD_Z,
 				TrainingField.FIELD_ACTIVITY
 		};
-
-		
-		String where = TrainingField.FIELD_X +" = "+ mlastX +" AND "+ 
-				TrainingField.FIELD_Y +" = "+ mlastY +" AND "+ 
-				TrainingField.FIELD_Z +" = "+ mlastZ;
-		
-
-		String orderBy = TrainingField.FIELD_ACTIVITY + " ASC";
 
 
 		Cursor c = db.query(TrainingField.TABLE_NAME,		// Name of the table 
@@ -595,24 +597,24 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	 * This function analyses data
 	 */
 	public void analyzeData(View view) {
-		Button b = (Button) view;
+//		Button b = (Button) view;
 		
 		
 		
-		if(b.getText().equals("Analyze")){
+//		if(b.getText().equals("Analyze")){
 			
 					
-			test = true;
-			activity = "test";
+//			test = true;
+//			activity = "test";
 			TextView showStoredTestCoordinates = (TextView) findViewById(R.id.showStoredTestCoordinates);
 			showStoredTestCoordinates.setText("");
 
 			getData();
 			
-//			store data in internal memory for debugging 
+//			store data in internal memory for debugging
 			
 			Knn_API knn = new Knn_API(K,trainingDataset, testingDataset);
-			String[] activities = knn.get_activities();
+			activities = knn.get_activities();
 			
 			for(int i = 0; i < activities.length; i++) {
 				showStoredTestCoordinates.setText(showStoredTestCoordinates.getText()+ "\n"+
@@ -620,15 +622,15 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 						);
 			}
 
-		}
-		else {
-			
-			test = false;
-			activity = "none";
-			b.setText("Analyze");
-			
-			
-		}
+//		}
+//		else {
+//			
+//			test = false;
+//			activity = "none";
+//			b.setText("Analyze");
+//			
+//			
+//		}
 	}
 	
 	
