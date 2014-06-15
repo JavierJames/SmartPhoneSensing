@@ -39,13 +39,13 @@
     
     
     	
-    <!-- Training -->
+    <!-- Training tab -->
     	<string name="stillButton">Start still</string>
     	<string name="walkButton">Start walking</string>
     	<string name="runButton">Start running</string>
     
     
-    <!-- Testing -->
+    <!-- Testing tab -->
     	<!-- TextView: Label for the shown value stored in db -->
     	<string name="showStoredTestCoordinates"></string>
     	
@@ -70,9 +70,6 @@
 	    	<string name="overviewRun">Run:</string>
     
 	
-    	
-    
-    
     <!--                 End Activity monitoring                -->
     
     
@@ -84,7 +81,8 @@
     <string name="rssi">RSSI</string>
     
     
-    <!-- Training -->
+    <!-- Training tab -->
+    
     	<string name="scanRssi">Rssi list</string>
 	    <string name="aplist">Rssi list</string>
 	    
@@ -94,11 +92,20 @@
     	
     	
     	
-   	<!-- Testing -->
+   	<!-- Testing tab -->
+   	
    		<string name="localisation_initial_belief_button">Initial belief</string>
     	<string name="localisation_sense_new_AP_button">Sense new AP</string>
     	<string name="localisation_sense_new_scan_button">Sense new Scan</string>
     	<string name="showLocationView">Location</string>
+   	
+    	
+    	
+   	<!-- AP selection tab -->
+   		
+   		<string name="selectAP_button">></string>
+   		<string name="unselectAP_button"> &lt; </string>
+   		
     
     <!--					End Localisation		          -->
     

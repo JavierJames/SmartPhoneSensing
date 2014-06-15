@@ -69,40 +69,137 @@
                     android:id="@+id/testing_tab"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical" >
+                    android:orientation="horizontal" >
+                    
+                     
+                    <LinearLayout
+                    	android:id="@+id/testing_buttons"
+                    	android:layout_width="match_parent"
+                    	android:layout_height="match_parent"
+                    	android:orientation="vertical" >
+                     
+                    
+	                    <Button
+					        android:id="@+id/localisation_initial_belief_button"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:onClick="initialBelief"
+					        android:text="@string/localisation_initial_belief_button" />
+	                    
+	                    
+	                    <Button
+					        android:id="@+id/localisation_sense_new_AP_button"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:onClick="senseNewAP"
+					        android:text="@string/localisation_sense_new_AP_button" />
+	                    
+	                    
+	                    <Button
+					        android:id="@+id/localisation_sense_new_scan_button"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:onClick="senseNewScan"
+					        android:text="@string/localisation_sense_new_scan_button" />
+	                    
+	                    
+	                    <TextView
+				        	android:id="@+id/showLocationView"
+				        	android:layout_width="wrap_content"
+				        	android:layout_height="wrap_content"
+				        	android:text="@string/showLocationView" />
+                    
+                    </LinearLayout>
                     
                     
-                    <Button
-				        android:id="@+id/localisation_initial_belief_button"
-				        android:layout_width="wrap_content"
-				        android:layout_height="wrap_content"
-				        android:onClick="initialBelief"
-				        android:text="@string/localisation_initial_belief_button" />
-                    
-                    
-                    <Button
-				        android:id="@+id/localisation_sense_new_AP_button"
-				        android:layout_width="wrap_content"
-				        android:layout_height="wrap_content"
-				        android:onClick="senseNewAP"
-				        android:text="@string/localisation_sense_new_AP_button" />
-                    
-                    
-                    <Button
-				        android:id="@+id/localisation_sense_new_scan_button"
-				        android:layout_width="wrap_content"
-				        android:layout_height="wrap_content"
-				        android:onClick="senseNewScan"
-				        android:text="@string/localisation_sense_new_scan_button" />
-                    
-                    
-                    <TextView
-			        	android:id="@+id/showLocationView"
-			        	android:layout_width="wrap_content"
-			        	android:layout_height="wrap_content"
-			        	android:text="@string/showLocationView" />
+                    <!-- Picture that depicts the current localisation -->
+                    <!-- 
+                    <layer-list
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="wrap_content" >
                         
+                        <item>
+                            <bitmap 
+                                android:src="@drawable/floor_layout" 
+                                android:gravity="center" />
+                        <item/>
+                        
+                    </layer-list>
+                   -->  
+                    
+                    <!--  
+                    <ImageView 
+                        android:id="@+id/showImageLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/floor_layout" />
+                    -->
+                    
+                    
 		        </LinearLayout>
+		        
+                
+                <!-- List of AP tab -->
+                    
+                <RelativeLayout
+                    android:id="@+id/listAP_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+                    
+                    
+                    <!-- List all APs -->
+                    
+                    <ListView 
+                        android:id="@+id/listAllAP"
+                        android:layout_width="200dp"
+                        android:layout_height="fill_parent"
+                        android:background="#0000ff"
+                        >
+                    </ListView>
+                    
+                    
+                    <!-- Select and Unselect button -->
+                    
+                    <LinearLayout
+	                    android:id="@+id/selection_buttons"
+	                    android:layout_width="70dp"
+	                    android:layout_height="match_parent"
+	                    android:orientation="vertical"
+	                    android:layout_toRightOf="@+id/listAllAP">
+                    
+	                    <Button
+					        android:id="@+id/selectAP_button"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:onClick="selectAP"
+					        android:text="@string/selectAP_button" />
+	                    
+	                    
+	                    <Button
+					        android:id="@+id/unselectAP_button"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:onClick="unselectAP"
+					        android:text="@string/unselectAP_button" />
+	                    
+                    </LinearLayout>
+                    
+                    
+                    <!-- List selected APs -->
+                    
+                    <ListView
+                        android:id="@+id/listSelectedAP"
+                        android:layout_width="200dp"
+                        android:layout_height="fill_parent"
+                        android:layout_toRightOf="@+id/selection_buttons"
+                        android:background="#ff0000"
+                        >
+                    </ListView>
+                    
+                    
+                </RelativeLayout>
+		        
+                
                 
     		</FrameLayout>
         </LinearLayout>
