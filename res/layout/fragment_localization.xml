@@ -149,13 +149,16 @@
                     
                     <!-- List all APs -->
                     
+                    
+                    
                     <ListView 
                         android:id="@+id/listAllAP"
                         android:layout_width="200dp"
                         android:layout_height="fill_parent"
-                        android:background="#0000ff"
+                        android:background="#cecece"
                         >
                     </ListView>
+                    
                     
                     
                     <!-- Select and Unselect button -->
@@ -192,8 +195,8 @@
                         android:layout_width="200dp"
                         android:layout_height="fill_parent"
                         android:layout_toRightOf="@+id/selection_buttons"
-                        android:background="#ff0000"
-                        >
+                        android:background="#cccccc"
+                         >
                     </ListView>
                     
                     

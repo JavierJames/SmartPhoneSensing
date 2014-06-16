@@ -981,7 +981,10 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int ic_launcher=0x7f020057;
+        public static final int floor_layout=0x7f020057;
+        public static final int ic_launcher=0x7f020058;
+        public static final int person=0x7f020059;
+        public static final int question_mark=0x7f02005a;
     }
     public static final class id {
         public static final int AnalyzeActivity=0x7f05004e;
@@ -1143,7 +1146,8 @@ containing a value of this type.
         public static final int fragment_activity_monitoring_train_layout=0x7f03001b;
         public static final int fragment_localization=0x7f03001c;
         public static final int fragment_main=0x7f03001d;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001e;
+        public static final int frament_localization_listview_item=0x7f03001e;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001f;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;

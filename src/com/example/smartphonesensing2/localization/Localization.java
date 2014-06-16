@@ -17,6 +17,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -388,7 +390,7 @@ public class Localization extends ActionBarActivity {
 	/*
 	 * Fetch list of AP with their corresponding rssi values
 	 */
-	private void fetchListAP() {
+	private String[] fetchListAP() {
 
 		WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		List<ScanResult> rssiList = null;
@@ -398,6 +400,8 @@ public class Localization extends ActionBarActivity {
 
 		rssiList = wm.getScanResults();
 
+		String[] ssid = new String[rssiList.size()];
+		
 		String SSID;
 		String BSSID;
 		int level;
@@ -410,26 +414,27 @@ public class Localization extends ActionBarActivity {
 		int highestIndex = -1;
 		
 		for(int i = 0; i < rssiList.size(); i++) {
-			SSID = rssiList.get(i).SSID;
+			ssid[i] = rssiList.get(i).SSID;
+			/*SSID = rssiList.get(i).SSID;
 			BSSID =  rssiList.get(i).BSSID;
 			level = rssiList.get(i).level;
 			frequency = rssiList.get(i).frequency;
 			capabilities = rssiList.get(i).capabilities;
-			describeContents = rssiList.get(i).describeContents();
+			describeContents = rssiList.get(i).describeContents();*/
 
 			
 			
 			// sort the list of APs by rssi values ascending
-			if(level > highestRSSI) {
+			/*if(level > highestRSSI) {
 				highestRSSI = level;
 				highestIndex = i;
 				continue;
-			}
+			}*/
 			
 			// TODO: sort APs
 
 			// write the list of access-points to a file
-			writeToFile(
+			/*writeToFile(
 					"fetchedlistAP",
 					SSID,
 					BSSID,
@@ -437,8 +442,10 @@ public class Localization extends ActionBarActivity {
 					frequency,
 					capabilities,
 					describeContents
-					);
+					);*/
 		} // end for(int i = 0; i < rssiList.size(); i++)
+		
+		return ssid;
 	}
 	
 	
@@ -504,12 +511,109 @@ public class Localization extends ActionBarActivity {
 	 * This functions creates a list of APs
 	 */
 	public void senseNewScan(View view) {
-		fetchListAP();
+		
+		// list of APs
+		String[] allAP = fetchListAP();
+		
+		// list of chosen APs
+		String[] chosenAP = {""};
 		
 //		TODO: sort list by rssi values ascending
+		
+		// Create the adapter to translate the array of strings to list items
+		ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
+				this,
+				R.layout.frament_localization_listview_item,
+				allAP
+				);
+		
+		// Create the adapter to translate the array of strings to list items
+		ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
+				this,
+				R.layout.frament_localization_listview_item,
+				chosenAP
+				);
+		
+		// Add adapter to listview
+		ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
+		listAllAP.setAdapter(adapterAllAP);
+		
+		
+		// Add adapter to listview
+		ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
+		listChosenAp.setAdapter(adapterChosenAP);
+		
+		
+		// Add click listener to each item
+		listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
+					long id) {
+				
+				chooseAP(parent, viewClicked, position, id);
+			}
+		});
+		
+		
+		
 	}
 	
 	
+	@SuppressWarnings("unchecked")
+	protected void chooseAP(AdapterView<?> parent, View viewClicked,
+			int position, long id) {
+		
+		// Cast view to textview, so that its text can be retrieved
+		TextView chosenItem = (TextView) viewClicked;
+		
+		
+		// Get the text of the item and insert it into an array
+		// so that it can be passed to an adapter
+		
+		
+//		final String[] selectedAP = new String[0];
+//		String [] selectedAP = {chosenItem.getText().toString()};
+		
+		
+		// Create the adapter to translate the array of strings to list items
+		/*ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
+				this,
+				R.layout.frament_localization_listview_item,
+				selectedAP
+				);*/
+		
+		
+		// Fetch the listSelectedAP to add the clicked item
+		ListView listChosenAP = (ListView) findViewById(R.id.listSelectedAP);
+		
+		// Get the adapter from the chosen list
+		ArrayAdapter<String> adapterChosenAP = (ArrayAdapter<String>) listChosenAP.getAdapter();
+		
+		String debug_tmp = chosenItem.getText().toString();
+		
+		// add the chosen AP to the adapter
+		adapterChosenAP.add(chosenItem.getText().toString());
+		
+		// Add the adapter back to the listview
+		listChosenAP.setAdapter(adapterChosenAP);
+		
+		
+		
+		// remove item from listAllAP
+		ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
+		
+		// Get the adapter from the chosen list
+		ArrayAdapter<String> adapterAllAP = (ArrayAdapter<String>) listAllAP.getAdapter();
+		
+		// Remove the chosen AP from the adapter
+		adapterAllAP.remove(chosenItem.getText().toString());
+		
+		// Add the adapter back to the listview
+		listAllAP.setAdapter(adapterAllAP);
+	}
+
+
 	/*
 	 * This function shows the current location of the user
 	 */
