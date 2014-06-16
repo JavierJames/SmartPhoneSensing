@@ -18,9 +18,14 @@ import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TabHost;
+import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.example.smartphonesensing2.R;
+import com.example.smartphonesensing2.localization.classification.NaiveBayesian;
+import com.example.smartphonesensing2.localization.histogram.TrainingData;
 import com.example.smartphonesensing2.table.Table;
 
 public class Localization extends ActionBarActivity {
@@ -41,16 +46,62 @@ public class Localization extends ActionBarActivity {
 	
 	private ArrayList<Table> tables = new ArrayList<Table>();
 	
+	// Tabhost to hold the tab
+	private TabHost tabHost;
+	
+	// Classifier
+	private NaiveBayesian naiveBayesian;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.fragment_localization);
 		
 		
-		createPMFTable();
+//		createPMFTable();
+		
+		
+		// Create a tabhost that will contain the tabs
+		tabHost = (TabHost)findViewById(R.id.tabhost);
+		//				tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+		tabHost.setup();
+
+
+		// Create the tabs
+		TabSpec trainTab = tabHost.newTabSpec("Training");
+		TabSpec testTab = tabHost.newTabSpec("Testing");
+		TabSpec listAPTab = tabHost.newTabSpec("Select AP");
+
+
+		// Set Activity that will be opened when Training Tab is selected
+		// Set the tabname
+
+		trainTab.setContent(R.id.training_tab);
+		trainTab.setIndicator("Training");
+
+
+		// Set Activity that will be opened when Testing Tab is selected
+		// Set the tabname
+
+		testTab.setContent(R.id.testing_tab);
+		testTab.setIndicator("Testing");
+		
+		
+		// Set Activity that will be opened when Select AP Tab is selected
+		// Set the tabname
+		
+		listAPTab.setContent(R.id.listAP_tab);
+		listAPTab.setIndicator("Select AP");
+
+
+		// Add tabs to the tabhost
+		tabHost.addTab(trainTab);
+		tabHost.addTab(testTab);
+		tabHost.addTab(listAPTab);
+		
 	}
 	
 	
@@ -194,7 +245,7 @@ public class Localization extends ActionBarActivity {
 //		    	Log.d("Cell", ""+Integer.parseInt(cell.substring(1)));
 //		    	Log.d("Cell-1", ""+(Integer.parseInt(cell.substring(1))-1));
 		    	
-		    	table.setPMF(
+		    	table.setValue(
 		    			Integer.parseInt(cell.substring(1))-1, 
 		    			Math.abs(Integer.parseInt(tokens[0])), 
 		    			Float.parseFloat(tokens[2]));
@@ -255,18 +306,24 @@ public class Localization extends ActionBarActivity {
 
 						rssiList = wm.getScanResults();
 						
-						final TextView apList = (TextView) findViewById(R.id.apList);
+//						final TextView apList = (TextView) findViewById(R.id.apList);
 						
-						
+						String SSID;
+						String BSSID;
+						int level;
+						int frequency;
+						String capabilities;
+						int describeContents;
 						
 						id_sample ++;
+						
 						for(int i = 0; i < rssiList.size(); i++) {
-							final String SSID = rssiList.get(i).SSID;
-							final String BSSID =  rssiList.get(i).BSSID;
-							final int level = rssiList.get(i).level;
-							final int frequency = rssiList.get(i).frequency;
-							final String capabilities = rssiList.get(i).capabilities;
-							final int describeContents = rssiList.get(i).describeContents();
+							SSID = rssiList.get(i).SSID;
+							BSSID =  rssiList.get(i).BSSID;
+							level = rssiList.get(i).level;
+							frequency = rssiList.get(i).frequency;
+							capabilities = rssiList.get(i).capabilities;
+							describeContents = rssiList.get(i).describeContents();
 							
 							
 							// write the access-points to a file
@@ -281,7 +338,7 @@ public class Localization extends ActionBarActivity {
 							
 							
 							// show the access-points on the screen
-							runOnUiThread(new Runnable () {
+							/*runOnUiThread(new Runnable () {
 					    		@Override 
 					    		public void run(){
 					    			apList.setText(apList.getText()+
@@ -294,7 +351,7 @@ public class Localization extends ActionBarActivity {
 											"\n"
 			    						);
 					    		}
-					    	});
+					    	});*/
 						}
 						
 						
@@ -324,8 +381,141 @@ public class Localization extends ActionBarActivity {
 		
 		
 
-	new Thread(runnable).start();
-}
+		new Thread(runnable).start();
+	}
+	
+	
+	/*
+	 * Fetch list of AP with their corresponding rssi values
+	 */
+	private void fetchListAP() {
+
+		WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+		List<ScanResult> rssiList = null;
+
+
+		wm.startScan();
+
+		rssiList = wm.getScanResults();
+
+		String SSID;
+		String BSSID;
+		int level;
+		int frequency;
+		String capabilities;
+		int describeContents;
+		
+		// These variables are used for sorting the list of APs
+		int highestRSSI = 0;
+		int highestIndex = -1;
+		
+		for(int i = 0; i < rssiList.size(); i++) {
+			SSID = rssiList.get(i).SSID;
+			BSSID =  rssiList.get(i).BSSID;
+			level = rssiList.get(i).level;
+			frequency = rssiList.get(i).frequency;
+			capabilities = rssiList.get(i).capabilities;
+			describeContents = rssiList.get(i).describeContents();
+
+			
+			
+			// sort the list of APs by rssi values ascending
+			if(level > highestRSSI) {
+				highestRSSI = level;
+				highestIndex = i;
+				continue;
+			}
+			
+			// TODO: sort APs
+
+			// write the list of access-points to a file
+			writeToFile(
+					"fetchedlistAP",
+					SSID,
+					BSSID,
+					level,
+					frequency,
+					capabilities,
+					describeContents
+					);
+		} // end for(int i = 0; i < rssiList.size(); i++)
+	}
+	
+	
+	/*
+	 * This function generates the initial belief
+	 * i.e. it assigns an uniform probability to each cell
+	 */
+	public void initialBelief(View view) {
+		String filepath = "/Downloads/cellsdata/";
+		
+		
+		// Set of training data. Each training data is associated to one access-point
+	    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
+
+	    
+	    /************************
+	     * Create training data
+	     **************************/
+	    
+	    
+	    // new training data
+	    TrainingData td;
+	    
+	    // new access-point name to be associated with the training data
+	    String name = null;
+	    
+
+	    // create training data for each AP
+
+	    /*for(int i = 0; i < chosen_ap_names.size(); i++) {
+
+	    	name = chosen_ap_names.get(i);
+
+	    	td = new TrainingData(name, filepath);
+
+	    	td.createPMFTable();
+	    	td.createHistogramTable();
+
+	    	tds.add(td);
+	    }*/
+		
+		
+		naiveBayesian = new NaiveBayesian(filepath); //create classifier 
+		naiveBayesian.trainClassifier(tds); //train classifier 	   
+		naiveBayesian.setInitialBelieve();    //set the initial believe to uniform
+		
+		
+//		TODO: show current location, all cells should be a candidate.
+	}
+	
+	
+	/*
+	 * This function fetches the next highest AP from the list
+	 */
+	public void senseNewAP(View view) {
+//		current_cell=   naiveBayesian.classifyObservation(observations);
+		
+		// TODO: show current location
+	}
+	
+	
+	/*
+	 * This functions creates a list of APs
+	 */
+	public void senseNewScan(View view) {
+		fetchListAP();
+		
+//		TODO: sort list by rssi values ascending
+	}
+	
+	
+	/*
+	 * This function shows the current location of the user
+	 */
+	public void showCurrentLocation(View view) {
+		TextView text = (TextView) findViewById(R.id.showLocationView);
+	}
 	
 	
 	/*
@@ -411,4 +601,83 @@ public class Localization extends ActionBarActivity {
 		} 
 	}
 	
+	
+	/*
+	 * Write data of access point to a file
+	 */
+	private void writeToFile(String filename, String SSID, String BSSID, int level, int frequency, String capabilities, int content) {
+		try
+		{
+			
+			String cell_name = filename;
+			
+			
+			File path = Environment.getExternalStoragePublicDirectory(
+		            Environment.DIRECTORY_DOWNLOADS
+		            );
+
+			path.mkdirs();
+			
+			
+			File file = new File(path, cell_name+".txt");
+
+			FileWriter writer = new FileWriter(file, true);
+
+			long size = file.length();
+			
+			if(size <= 0) {
+				writer.append("SampleID ");
+				writer.append(",");
+				writer.append("SSID");
+				writer.append(",");
+				writer.append("BSSID");
+				writer.append(",");
+				writer.append("level");
+				writer.append(",");
+				writer.append("frequency");
+				writer.append(",");
+				writer.append("Capabilities");
+				writer.append(",");
+				writer.append("describeContents");
+				writer.append("\n");
+			}
+			writer.append(""+id_sample);
+			writer.append(",");
+			writer.append(SSID);
+			writer.append(",");
+			writer.append(BSSID);
+			writer.append(",");
+			writer.append(""+level);
+			writer.append(",");
+			writer.append(""+frequency);
+			writer.append(",");
+			writer.append(capabilities);
+			writer.append(",");
+			writer.append(""+content);
+			writer.append("\n\n");
+			
+			writer.close();
+			
+			
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		} 
+	}
+	
+	
+	/*
+	 * This function selects AP from the all list
+	 */
+	public void selectAP(View view) {
+		
+	}
+	
+	
+	/*
+	 * This function unselects AP from the chosen list
+	 */
+	public void unselectAP(View view) {
+		
+	}
 }

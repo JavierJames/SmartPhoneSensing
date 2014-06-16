@@ -33,6 +33,7 @@
         <activity android:name="com.example.smartphonesensing2.activity_monitoring.ActivityMonitoring"></activity>
         <activity android:name="com.example.smartphonesensing2.activity_monitoring.TestActivity"></activity>
         <activity android:name="com.example.smartphonesensing2.activity_monitoring.TrainActivity"></activity>
+        <activity android:name="com.example.smartphonesensing2.activity_monitoring.ActivityMonitoringOverview"></activity>
         
     </application>
     

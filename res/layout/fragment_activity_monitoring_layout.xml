@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.smartphonesensing2.MainActivity$PlaceholderFragment" >
 
-    <!-- ////////////////////////////////////////// Tab ////////////////////////////////////////////// -->
+    
 
     <TabHost
         android:id="@+id/tabhost"
@@ -34,12 +34,91 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
+                
+                <!-- Training tab -->
+                
                 <LinearLayout
                     android:id="@+id/training_tab"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical" >
 
+                    
+                    <!-- Stil button -->
+			        <Button
+			            android:id="@+id/stillButton"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:onClick="trainStillActivity"
+			            android:text="@string/stillButton" />
+			
+			        <!-- Walk Button -->
+			        <Button
+			            android:id="@+id/walkButton"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:onClick="trainWalkActivity"
+			            android:text="@string/walkButton" />
+			
+			        <!-- Run Button -->
+			        <Button
+			            android:id="@+id/runButton"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:onClick="trainRunActivity"
+			            android:text="@string/runButton" />
+			        
+			        
+			        <!-- This section is only for debug purposes -->
+			        
+				        
+				        <Button
+				            android:id="@+id/buttonResetTrainData"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:onClick="deleteTrainRecords"
+				            android:text="@string/buttonResetTrainData" />
+				        
+				        
+				        <Button
+				            android:id="@+id/buttonViewTrainData"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:onClick="showTrainRecords"
+				            android:text="@string/buttonViewTrainData" />
+				        
+				        
+				        <ScrollView 
+				            android:layout_width="wrap_content"
+	        				android:layout_height="wrap_content" >
+	        				
+				        
+					        <TextView
+		            			android:id="@+id/showStoredTrainCoordinates"
+		            			android:layout_width="wrap_content"
+		            			android:layout_height="wrap_content"
+		            			android:text="@string/showStoredTrainCoordinates" />
+					        
+				        
+				        </ScrollView>
+			        
+			        <!-- End Debug -->
+                    
+                    
+                </LinearLayout>
+
+                
+                
+                
+                <!-- Testing tab -->
+                
+                <LinearLayout
+                    android:id="@+id/testing_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    
                     <Button
                         android:id="@+id/testButton"
                         android:layout_width="wrap_content"
@@ -47,20 +126,69 @@
                         android:onClick="testActivity"
                         android:text="@string/testButton" />
                     
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/testing_tab"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" >
-
+                    
                     <Button
-                        android:id="@+id/AnalyzeActivity"
+                        android:id="@+id/activityOverviewButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="analyzeData"
-                        android:text="@string/analyze_activity" />
+                        android:onClick="showActivityOverview"
+                        android:text="@string/activityOverviewButton" />
+                    
+                     
+                    
+                    <TextView
+            			android:id="@+id/showCurrentActivity"
+            			android:layout_width="wrap_content"
+            			android:layout_height="wrap_content"
+            			android:text="@string/showCurrentActivity" />
+                    
+                    
+                    <!-- This section is only for debug purposes -->
+			        
+				       <!-- 
+				        <Button
+	                        android:id="@+id/AnalyzeActivity"
+	                        android:layout_width="wrap_content"
+	                        android:layout_height="wrap_content"
+	                        android:onClick="analyzeData"
+	                        android:text="@string/analyze_activity" />
+				        -->
+				        
+				        <Button
+				            android:id="@+id/buttonResetTestData"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:onClick="deleteTestRecords"
+				            android:text="@string/buttonResetTestData" />
+				        
+				        
+				        <Button
+				            android:id="@+id/buttonViewTestData"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:onClick="showTestRecords"
+				            android:text="@string/buttonViewTestData" />
+				        
+				        
+				        
+				        
+				        
+				        <ScrollView 
+				            android:layout_width="wrap_content"
+	        				android:layout_height="wrap_content" >
+	        				
+				        
+					        <TextView
+		            			android:id="@+id/showStoredTestCoordinates"
+		            			android:layout_width="wrap_content"
+		            			android:layout_height="wrap_content"
+		            			android:text="@string/showStoredTestCoordinates" />
+					        
+				        
+				        </ScrollView>
+			        
+			        <!-- End Debug -->
+			        
                     
                 </LinearLayout>
                 
@@ -68,6 +196,6 @@
         </LinearLayout>
     </TabHost>
 
-    <!-- ////////////////////////////////////////// Tab End /////////////////////////////////////////////////// -->
+    
 
 </LinearLayout>
