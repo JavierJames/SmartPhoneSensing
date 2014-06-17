@@ -7,7 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import android.content.Context;
 import android.net.wifi.ScanResult;
@@ -393,6 +397,8 @@ public class Localization extends ActionBarActivity {
 	 */
 	private String[] fetchListAP() {
 
+		// TODO: create treemap for each AP having their name as key and rssi as value 
+		
 		WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		List<ScanResult> rssiList = null;
 
@@ -502,6 +508,19 @@ public class Localization extends ActionBarActivity {
 	 * This function fetches the next highest AP from the list
 	 */
 	public void senseNewAP(View view) {
+		
+		// Fetch the list with the chosen AP
+		ListView chosenAP = (ListView) findViewById(R.id.listSelectedAP);
+		
+		@SuppressWarnings("unchecked")
+		ArrayAdapter<String> adapter = (ArrayAdapter<String>) chosenAP.getAdapter();
+		
+		ArrayList<Integer> observation = new ArrayList<Integer>();
+		
+		for(int i = 0; i < adapter.getCount(); i++) {
+//			observation
+		}
+		
 //		current_cell=   naiveBayesian.classifyObservation(observations);
 		
 		// TODO: show current location
@@ -519,7 +538,9 @@ public class Localization extends ActionBarActivity {
 		// list of chosen APs in arraylist to be added in the ArrayAdapter
 		ArrayList<String> chosenAP = new ArrayList<String>();
 		
+		
 //		TODO: sort list by rssi values ascending
+		
 		
 		// Create the adapter to translate the array of strings to list items
 		ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
@@ -528,12 +549,14 @@ public class Localization extends ActionBarActivity {
 				allAP
 				);
 		
+		
 		// Create the adapter to translate the array of strings to list items
 		ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
 				this,
 				R.layout.frament_localization_listview_item,
 				chosenAP
 				);
+		
 		
 		// Add adapter to listview
 		ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
@@ -804,18 +827,41 @@ public class Localization extends ActionBarActivity {
 	}
 	
 	
+	
+	
+	/*
+	 * Sort the treemap by its values
+	 */
+	static <K,V extends Comparable<? super V>> SortedSet<Map.Entry<K,V>> sortTreeMapByValues(Map<K,V> map) {
+		
+	    SortedSet<Map.Entry<K,V>> sortedEntries = new TreeSet<Map.Entry<K,V>>(new Comparator<Map.Entry<K,V>>() {
+	        	
+	            @Override 
+	            public int compare(Map.Entry<K,V> e1, Map.Entry<K,V> e2) {
+	                return e1.getValue().compareTo(e2.getValue());
+	            }
+	        }
+	    );
+	    
+	    sortedEntries.addAll(map.entrySet());
+	    return sortedEntries;
+	}
+	
+	
+	
+	
 	/*
 	 * This function selects AP from the all list
 	 */
-	public void selectAP(View view) {
-		
-	}
+//	public void selectAP(View view) {
+//		
+//	}
 	
 	
 	/*
 	 * This function unselects AP from the chosen list
 	 */
-	public void unselectAP(View view) {
-		
-	}
+//	public void unselectAP(View view) {
+//		
+//	}
 }
