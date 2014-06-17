@@ -1000,8 +1000,8 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050065;
-        public static final int activity=0x7f050063;
+        public static final int action_settings=0x7f050062;
+        public static final int activity=0x7f050060;
         public static final int activityOverviewButton=0x7f050048;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
@@ -1031,9 +1031,9 @@ containing a value of this type.
         public static final int listAP_tab=0x7f05005d;
         public static final int listAllAP=0x7f05005e;
         public static final int listMode=0x7f050001;
-        public static final int listSelectedAP=0x7f050062;
+        public static final int listSelectedAP=0x7f05005f;
         public static final int list_item=0x7f050029;
-        public static final int localisation=0x7f050064;
+        public static final int localisation=0x7f050061;
         public static final int localisation_initial_belief_button=0x7f050059;
         public static final int localisation_sense_new_AP_button=0x7f05005a;
         public static final int localisation_sense_new_scan_button=0x7f05005b;
@@ -1057,8 +1057,6 @@ containing a value of this type.
         public static final int search_plate=0x7f050036;
         public static final int search_src_text=0x7f050037;
         public static final int search_voice_btn=0x7f05003b;
-        public static final int selectAP_button=0x7f050060;
-        public static final int selection_buttons=0x7f05005f;
         public static final int shortcut=0x7f05002e;
         public static final int showCurrentActivity=0x7f050049;
         public static final int showCustom=0x7f050007;
@@ -1081,7 +1079,6 @@ containing a value of this type.
         public static final int title=0x7f05002b;
         public static final int top_action_bar=0x7f050020;
         public static final int training_tab=0x7f05003f;
-        public static final int unselectAP_button=0x7f050061;
         public static final int up=0x7f050021;
         public static final int useLogo=0x7f050003;
         public static final int walkButton=0x7f050041;

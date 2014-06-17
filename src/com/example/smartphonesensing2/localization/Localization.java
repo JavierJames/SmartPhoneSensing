@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
@@ -512,11 +513,11 @@ public class Localization extends ActionBarActivity {
 	 */
 	public void senseNewScan(View view) {
 		
-		// list of APs
-		String[] allAP = fetchListAP();
+		// list of APs in arraylist to be added in the ArrayAdapter
+		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
 		
-		// list of chosen APs
-		String[] chosenAP = {""};
+		// list of chosen APs in arraylist to be added in the ArrayAdapter
+		ArrayList<String> chosenAP = new ArrayList<String>();
 		
 //		TODO: sort list by rssi values ascending
 		
@@ -551,46 +552,43 @@ public class Localization extends ActionBarActivity {
 			public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
 					long id) {
 				
-				chooseAP(parent, viewClicked, position, id);
+				chooseAP(viewClicked);
 			}
+		});
+		
+		
+		listChosenAp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
+					long id) {
+				
+				unChooseAP(viewClicked);
+			}
+			
 		});
 		
 		
 		
 	}
-	
-	
+
+
+	/*
+	 * This function passes the chosen AP from the all list and passe
+	 */
 	@SuppressWarnings("unchecked")
-	protected void chooseAP(AdapterView<?> parent, View viewClicked,
-			int position, long id) {
+	protected void chooseAP(View viewClicked) {
 		
 		// Cast view to textview, so that its text can be retrieved
 		TextView chosenItem = (TextView) viewClicked;
 		
 		
-		// Get the text of the item and insert it into an array
-		// so that it can be passed to an adapter
-		
-		
-//		final String[] selectedAP = new String[0];
-//		String [] selectedAP = {chosenItem.getText().toString()};
-		
-		
-		// Create the adapter to translate the array of strings to list items
-		/*ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
-				this,
-				R.layout.frament_localization_listview_item,
-				selectedAP
-				);*/
-		
-		
 		// Fetch the listSelectedAP to add the clicked item
 		ListView listChosenAP = (ListView) findViewById(R.id.listSelectedAP);
 		
-		// Get the adapter from the chosen list
+		// Get the adapter of the chosen list
 		ArrayAdapter<String> adapterChosenAP = (ArrayAdapter<String>) listChosenAP.getAdapter();
 		
-		String debug_tmp = chosenItem.getText().toString();
 		
 		// add the chosen AP to the adapter
 		adapterChosenAP.add(chosenItem.getText().toString());
@@ -603,7 +601,7 @@ public class Localization extends ActionBarActivity {
 		// remove item from listAllAP
 		ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
 		
-		// Get the adapter from the chosen list
+		// Get the adapter of the all list
 		ArrayAdapter<String> adapterAllAP = (ArrayAdapter<String>) listAllAP.getAdapter();
 		
 		// Remove the chosen AP from the adapter
@@ -611,6 +609,42 @@ public class Localization extends ActionBarActivity {
 		
 		// Add the adapter back to the listview
 		listAllAP.setAdapter(adapterAllAP);
+	}
+	
+	
+	protected void unChooseAP(View viewClicked) {
+		
+		// Cast view to textview, so that its text can be retrieved
+		TextView chosenItem = (TextView) viewClicked;
+
+
+		// Fetch the listAllAP to add the clicked item
+		ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
+
+		// Get the adapter of the chosen list
+		@SuppressWarnings("unchecked")
+		ArrayAdapter<String> adapterAllAP = (ArrayAdapter<String>) listAllAP.getAdapter();
+
+
+		// add the chosen AP to the adapter
+		adapterAllAP.add(chosenItem.getText().toString());
+
+		// Add the adapter back to the listview
+		listAllAP.setAdapter(adapterAllAP);
+
+
+
+		// remove item from listChosenAP
+		ListView listChosenAP = (ListView) findViewById(R.id.listSelectedAP);
+
+		// Get the adapter of the chosen list
+		ArrayAdapter<String> adapterChosenAP = (ArrayAdapter<String>) listChosenAP.getAdapter();
+
+		// Remove the chosen AP from the adapter
+		adapterChosenAP.remove(chosenItem.getText().toString());
+
+		// Add the adapter back to the listview
+		listChosenAP.setAdapter(adapterChosenAP);
 	}
 
 
