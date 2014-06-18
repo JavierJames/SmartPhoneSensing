@@ -10,7 +10,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.Context;
@@ -31,7 +33,13 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.example.smartphonesensing2.R;
+import com.example.smartphonesensing2.localization.classification.LaplaceBayesian;
 import com.example.smartphonesensing2.localization.classification.NaiveBayesian;
+import com.example.smartphonesensing2.localization.filter.AccessPointOccurrence;
+import com.example.smartphonesensing2.localization.filter.AccessPointRSSIStrength;
+import com.example.smartphonesensing2.localization.filter.SelectionAverage;
+import com.example.smartphonesensing2.localization.filter.SelectionCoverage;
+import com.example.smartphonesensing2.localization.histogram.Histogram;
 import com.example.smartphonesensing2.localization.histogram.TrainingData;
 import com.example.smartphonesensing2.table.Table;
 
@@ -58,6 +66,18 @@ public class Localization extends ActionBarActivity {
 	
 	// Classifier
 	private NaiveBayesian naiveBayesian;
+	
+	// The to the main directory
+	private String filepath;
+	
+	// Set of training data. Each training data is associated to one access-point
+    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
+    
+    // Filter to be applied on the AP
+    AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);
+    
+    // Holds the rssi values of the chosen AP
+    ArrayList<Integer> observations = new ArrayList<Integer>();
 	
 	
 	@Override
@@ -108,6 +128,179 @@ public class Localization extends ActionBarActivity {
 		tabHost.addTab(trainTab);
 		tabHost.addTab(testTab);
 		tabHost.addTab(listAPTab);
+		
+		
+		
+		
+		int User=2;  //0 = Javier pc, 1=Luis pc, 2=all phones,
+		
+		
+		String folder_base_path = null;
+		
+		if(User==0){
+			folder_base_path = "/home/swifferayubu/Dropbox/Test/";
+			//folder_base_path = "/home/swifferayubu/Dropbox/Doc/";
+		}
+		else if (User==1)
+			folder_base_path =	"/home/luis/Dropbox/School/Elective/Smart Phones Sensing/Doc/";
+		else if (User==2)
+			folder_base_path =	Environment.getExternalStorageDirectory().toString()+"/Downloads/";
+		
+		String root_folder_name = "cellsdata/";		//main folder
+	
+		filepath = folder_base_path + root_folder_name;	
+			
+		
+		
+		
+		
+		/* *********************************************
+		 * Phase 1: Create Histogram and PMF for all Access points
+		 * Phase 2: Filter Access Points 
+		 * ********************************************* */
+		Histogram histogram = null;
+		AccessPointOccurrence occurrency = new AccessPointOccurrence();
+	
+		int numberOfCells =17;
+		int coverage_percentage= 50;
+		SelectionCoverage selCvg = new SelectionCoverage(numberOfCells,coverage_percentage,filepath);
+		SelectionAverage selAvg = new SelectionAverage(filepath);
+				
+		//fetch path to the Raw sampled data, saved in .txt format
+		String pathToRawData= "1_RawUnselected_AP/";
+//		Path dir = Paths.get(filepath+pathToRawData);
+		
+		String dir = Environment.getExternalStorageDirectory()+filepath+pathToRawData;
+		
+		File f = new File(dir);
+		
+		File[] files = f.listFiles();
+		
+		try /*(DirectoryStream<Path> stream = Files.newDirectoryStream(dir))*/ {
+			
+			// Iterates over all files which the name starts with c and ends with .txt
+			for(File file : files) {
+				
+				if(file.getName().toString().startsWith("c", 0) && 
+						file.getName().toString().endsWith(".txt")) {
+					
+					histogram = new Histogram();  
+					
+					//step 1: Red raw data
+					//step 2: Create histogram of raw data
+					histogram.generateHistogram(file);
+																
+					//step 3: compute access-point occurrences 
+					histogram.writeHistogramToFile(occurrency); 
+				}
+				
+				
+			} // for(Path file : stream)
+			
+			// Write occurrence of each access-point to a file
+			occurrency.writeOccurrenceToFile(filepath);
+		
+			// step 4: Filter by coverage, > 50%
+			//filter Access-Point by coverage and save results
+			selCvg.generateSelection();
+			selCvg.writeSelectionToFile();
+			
+			// Compute overall average
+			//todo: Can the percentage be given as parameter?
+			selAvg.computeTotalAverage(); 
+			selAvg.writeOverallAverageToFile();
+			
+			
+			
+		}
+		catch(Exception e) {
+			System.out.println("\n\nError: Main.main: \n\n"+e.getMessage());
+		}
+		
+		//step 5: Filter by RSSI average strength
+		TreeMap<String,Float> Data_filterphase1 = new TreeMap<String, Float>();
+
+		Data_filterphase1 = rssi_filter.fetch_AP_and_RSSIavg(); //fetch access points from filter 1
+	    
+		//filter data by rssi strength
+		// all rssi strength that are outside the std deviation are removed
+		rssi_filter.filter_rssi_too_strong_Tree(Data_filterphase1);
+			
+	    
+	   // rssi_filter.display_normalAP();
+	    
+	    // write to file the AP that remained after filtering
+	    rssi_filter.save_filtered_AP();
+	    
+	    
+
+	    
+	     
+	      
+	      // Show training data in a table
+//	      DataTable dt = new DataTable(tds);
+//	      dt.showTables();
+//	      dt.showHistogramTable();
+	    
+	      
+	      
+	    
+	    /*
+	     * Initial belief
+	     */
+	    
+	
+		/* *********************************************
+		 *  Phase 3: Apply Bayesian classification using the chosen Access points 
+		 * ********************************************* */
+//	      int current_cell = 0;
+//	      int current_cell2 = 0;
+	      
+	      //Naive Bayesian classifier
+//	      NaiveBayesian naiveBayesian = new NaiveBayesian(filepath); //create classifier 
+//	      naiveBayesian.trainClassifier(tds); //train classifier 	   
+//	      naiveBayesian.setInitialBelieve();    //set the initial believe to uniform
+	      
+	    
+	 //     NaiveBayesian 
+	      
+	      /* Laplace classifier */
+//		  LaplaceBayesian laplaceClassifier = new LaplaceBayesian(filepath);
+//		  laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
+//		  laplaceClassifier.setInitialBelieve();
+		      
+		  
+		  /*
+		   * End initial belief
+		   */
+		  
+		  
+	    
+	    
+	    /*
+	     * Sense new scan
+	     */
+	    
+	      // fetch new testing data to classify
+	      ArrayList<Integer> observations = new ArrayList<Integer>();  
+	      
+	      
+	      // Sample only the chosen AP
+	      observations = oberserveNewRssi(keyboard,tds);  
+	 
+
+	      
+	      
+	      current_cell=   naiveBayesian.classifyObservation(observations); 
+
+	 //     System.out.println("\n\nClassfication Type: Naive Bayesian");
+
+	      
+	   //   System.out.println("My location is Cell "+current_cell);
+	
+	     // System.out.println("\n\nClassfication Type: Laplace");
+	     
+	      current_cell2 = laplaceClassifier.classifyObservation(observations);
 		
 	}
 	
@@ -395,7 +588,7 @@ public class Localization extends ActionBarActivity {
 	/*
 	 * Fetch list of AP with their corresponding rssi values
 	 */
-	private String[] fetchListAP() {
+	private ArrayList<Integer> fetchRSSIChosenAP(ArrayList<String> chosenAP) {
 
 		// TODO: create treemap for each AP having their name as key and rssi as value 
 		
@@ -420,8 +613,29 @@ public class Localization extends ActionBarActivity {
 		int highestRSSI = 0;
 		int highestIndex = -1;
 		
+		// List of RSSI of each chosen AP
+		ArrayList<Integer> observation = new ArrayList<Integer>();
+		
+		
 		for(int i = 0; i < rssiList.size(); i++) {
+			
 			ssid[i] = rssiList.get(i).SSID;
+			SSID = rssiList.get(i).SSID;
+			BSSID =  rssiList.get(i).BSSID;
+			level = rssiList.get(i).level;
+			
+			
+			// Iterate each chosen AP 
+			for(int j = 0; j < chosenAP.size(); j++) {
+				
+				// if the SSID+BSSID matches the name of the chosen AP
+				// then add it to the list
+				if((SSID+BSSID).equalsIgnoreCase(chosenAP.get(j))) {
+					observation.add(j, Integer.valueOf(level));
+				}
+			}
+			
+			
 			/*SSID = rssiList.get(i).SSID;
 			BSSID =  rssiList.get(i).BSSID;
 			level = rssiList.get(i).level;
@@ -452,7 +666,7 @@ public class Localization extends ActionBarActivity {
 					);*/
 		} // end for(int i = 0; i < rssiList.size(); i++)
 		
-		return ssid;
+		return observation;
 	}
 	
 	
@@ -465,7 +679,7 @@ public class Localization extends ActionBarActivity {
 		
 		
 		// Set of training data. Each training data is associated to one access-point
-	    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
+//	    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
 
 	    
 	    /************************
@@ -532,8 +746,95 @@ public class Localization extends ActionBarActivity {
 	 */
 	public void senseNewScan(View view) {
 		
+		
+		
+		
+		//step 6: Choose X amount of Access points as TrainingData
+//	    Scanner keyboard = new Scanner(System.in);
+	    ArrayList<String> chosen_ap_names = new ArrayList<String>();
+	  
+//	    chosen_ap_names = getNewAccessPoints(keyboard,rssi_filter);
+	    
+	    // Fetch APs chosen by the user
+	    ListView chosenAP = (ListView) findViewById(R.id.listSelectedAP);
+	    @SuppressWarnings("unchecked")
+		ArrayAdapter<String> adapter = (ArrayAdapter<String>)chosenAP.getAdapter();
+	    
+	    
+	    // Add each AP in the selected list to the arraylist chosen_ap_names
+	    for(int i = 0; i <= adapter.getCount(); i++) {
+	    	chosen_ap_names.add(adapter.getItem(i));
+	    }
+	    
+	    
+		    
+	    //step 7: Create PMF table for each chosen Access Point
+	    
+	    // Set of training data. Each training data is associated to one access-point
+//	    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
+	    
+	    // Selected access-point names by the user
+	    //ArrayList<String> names = new ArrayList<String>();
+
+	   // names = chosen_ap_names;
+	    
+	    // new training data
+	    TrainingData td;
+	    
+	    // new access-point name to be associated with the training data
+	    String name = null;
+	    
+	    
+
+	    // create training data for each AP
+
+	      for(int i = 0; i < chosen_ap_names.size(); i++) {
+	           
+	           name = chosen_ap_names.get(i);
+	           
+	      		td = new TrainingData(name, filepath);
+	      
+	     	 	td.createPMFTable();
+	      		td.createHistogramTable();
+	      		
+	      		tds.add(td);
+	      }
+
+		
+	     
+	      
+	      
+	      // Sample only the chosen AP
+	      observations = fetchRSSIChosenAP(chosen_ap_names); //oberserveNewRssi(keyboard,tds);  
+	 
+
+	      
+	      
+	      current_cell=   naiveBayesian.classifyObservation(observations); 
+
+	     
+	      current_cell2 = laplaceClassifier.classifyObservation(observations);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		// list of APs in arraylist to be added in the ArrayAdapter
-		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
+//		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
 		
 		// list of chosen APs in arraylist to be added in the ArrayAdapter
 		ArrayList<String> chosenAP = new ArrayList<String>();
