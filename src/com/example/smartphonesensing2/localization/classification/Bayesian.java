@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 //import com.sun.corba.se.impl.oa.poa.AOMEntry;
 
+
 import com.example.smartphonesensing2.table.Table;
 
 public class Bayesian {
@@ -372,7 +373,7 @@ public class Bayesian {
      * */
 		public static int findNextMaxRssi(ArrayList<Integer> observations2)
 		{
-			int max_rssi;
+			int max_rssi = 0;
 			Integer [] temp = new Integer [observations2.size()];
 			
 			observations2.toArray(temp);
@@ -380,9 +381,15 @@ public class Bayesian {
 			//sort array in ascending order
 	        Arrays.sort(temp);
 	       
+	       // if(nextMaxInded<observations2.size()){
 	        //take last index and then continue taking that to the left
 	        max_rssi=temp[temp.length -1-nextMaxInded++].intValue();
-	        
+	       /* }
+	        else{
+	        	System.out.println("No More AccessPoints to fetch rssi values");
+	        //	return (Integer) null;
+	        }
+	        */
 			return max_rssi;
 			
 		}
