@@ -73,7 +73,7 @@ public class Localization extends ActionBarActivity {
 	private ProbabilisticBayesian probabilisticClassifier;
 	
 	
-	
+
 	// The path to the main directory
 	private String filepath;
 	
@@ -85,7 +85,9 @@ public class Localization extends ActionBarActivity {
     
     // Holds the rssi values of the chosen AP
     ArrayList<Integer> observations = new ArrayList<Integer>();
-	private int SenseNewAP_buttonPressCount=0;
+
+    //keep track of how many times Button SenseNewAP has been pressed, prevent overpressing
+    private int SenseNewAP_buttonPressCount=0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +162,7 @@ public class Localization extends ActionBarActivity {
 		else if (User==1)
 			folder_base_path =	"/home/luis/Dropbox/School/Elective/Smart Phones Sensing/Doc/";
 		else if (User==2)
-			folder_base_path =	Environment.getExternalStorageDirectory().toString()+"/Downloads/";
+			folder_base_path =	Environment.getExternalStorageDirectory().toString()+"/Download/";
 		
 		String root_folder_name = "cellsdata/";		//main folder
 	
@@ -186,9 +188,13 @@ public class Localization extends ActionBarActivity {
 		String pathToRawData= "1_RawUnselected_AP/";
 //		Path dir = Paths.get(filepath+pathToRawData);
 		
-		String dir = Environment.getExternalStorageDirectory()+filepath+pathToRawData;
+		String dir = filepath+pathToRawData;
 		
 		File f = new File(dir);
+		
+		boolean debug_f1 = f.isDirectory();
+		boolean debug_f2 = f.isFile();
+		boolean debug_f3 = f.exists();
 		
 		File[] files = f.listFiles();
 		
@@ -230,7 +236,7 @@ public class Localization extends ActionBarActivity {
 			
 		}
 		catch(Exception e) {
-			System.out.println("\n\nError: Main.main: \n\n"+e.getMessage());
+			Log.d("List files","\n\nError: Main.main: \n\n"+e.getMessage());
 		}
 		
 		//step 5: Filter by RSSI average strength
@@ -298,16 +304,17 @@ public class Localization extends ActionBarActivity {
 	     */
 	    
 	      // fetch new testing data to classify
-	      ArrayList<Integer> observations = new ArrayList<Integer>();  
+//	      ArrayList<Integer> observations = new ArrayList<Integer>();  
 	      
 	      
 	      // Sample only the chosen AP
+
 	  //    observations = oberserveNewRssi(keyboard,tds);  
 	 
 
 	      
 	      
-	//      current_cell=   naiveBayesian.classifyObservation(observations); 
+//	      current_cell=   naiveBayesian.classifyObservation(observations); 
 
 	 //     System.out.println("\n\nClassfication Type: Naive Bayesian");
 
@@ -734,6 +741,10 @@ public class Localization extends ActionBarActivity {
 		naiveBayesian.setInitialBelieve();    //set the initial believe to uniform
 		
 		
+		laplaceClassifier = new LaplaceBayesian(filepath);
+		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
+		laplaceClassifier.setInitialBelieve();
+		
 //		TODO: show current location, all cells should be a candidate.
 	}
 	
@@ -746,6 +757,9 @@ public class Localization extends ActionBarActivity {
 		int cellID = 0; 
 		
 		System.out.println("About to classify");
+		int current_cell = 0;
+		
+		int current_cell2 = 0;
 		
 		//dummy classifier
 		LaplaceBayesian lpclassifier = new LaplaceBayesian(null); 
@@ -754,13 +768,31 @@ public class Localization extends ActionBarActivity {
 		//get the list of observations that belongs to the chosen AP
 	//	ArrayList<Integer> observations = new ArrayList<Integer>();
 
+
 	/*	System.out.println("Observations size: "+observations.size());
+	      
+	      /*
+	       * End
+	       */
+	      
+		
+		
+				
+		
+		
+		
+		// list of APs in arraylist to be added in the ArrayAdapter
+//		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
+		
+		// list of chosen APs in arraylist to be added in the ArrayAdapter
+//		ArrayList<String> chosenAP = new ArrayList<String>();
+		
 		
 		for(int i=0; i<observations.size(); i++)
 		{
 			System.out.println("Value  "+observations.get(i));
 		}
-	*/
+		
 		//Get AP id for the next strongest RSSI value 
 		//call only if button not pressed amount of times of AP
 		if(SenseNewAP_buttonPressCount<observations.size()){
@@ -778,6 +810,12 @@ public class Localization extends ActionBarActivity {
 		test.add(observations.get(cellID));
 		
 		//classify observation based on this AP training data.
+		// Create the adapter to translate the array of strings to list items
+		/*ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
+				this,
+				R.layout.frament_localization_listview_item,
+				allAP
+				);*/
 		
 		//cellID=lpclassifier.classifyObservation(test);
 		
@@ -785,6 +823,17 @@ public class Localization extends ActionBarActivity {
 		
 		
 		//call necessary functions 
+		// Create the adapter to translate the array of strings to list items
+		/*ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
+				this,
+				R.layout.frament_localization_listview_item,
+				chosenAP
+				);*/
+		
+		
+		// Add adapter to listview
+		/*ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
+		listAllAP.setAdapter(adapterAllAP);*/
 		
 		//current_cell=   naiveBayesian.classifyObservation(observations); 
 
@@ -801,6 +850,17 @@ public class Localization extends ActionBarActivity {
 	public void senseNewScan(View view) {
 		
 		
+		// Add adapter to listview
+		/*ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
+		listChosenAp.setAdapter(adapterChosenAP);
+		*/
+		
+		// Add click listener to each item
+		/*listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
+					long id) {
 				
 				
 				//step 6: Choose X amount of Access points as TrainingData
@@ -883,7 +943,6 @@ public class Localization extends ActionBarActivity {
 				
 				
 				
-			
 				
 				
 				// list of APs in arraylist to be added in the ArrayAdapter
@@ -924,6 +983,7 @@ public class Localization extends ActionBarActivity {
 				
 				// Add click listener to each item
 				listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//		});*/ //not sure if had to take off?
 		
 					@Override
 					public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
