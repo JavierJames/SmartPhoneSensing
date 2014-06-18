@@ -33,8 +33,10 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.example.smartphonesensing2.R;
+import com.example.smartphonesensing2.localization.classification.Bayesian;
 import com.example.smartphonesensing2.localization.classification.LaplaceBayesian;
 import com.example.smartphonesensing2.localization.classification.NaiveBayesian;
+import com.example.smartphonesensing2.localization.classification.ProbabilisticBayesian;
 import com.example.smartphonesensing2.localization.filter.AccessPointOccurrence;
 import com.example.smartphonesensing2.localization.filter.AccessPointRSSIStrength;
 import com.example.smartphonesensing2.localization.filter.SelectionAverage;
@@ -59,26 +61,31 @@ public class Localization extends ActionBarActivity {
 	// keep track of sample number 
 	private int id_sample=0;
 	
+	
 	private ArrayList<Table> tables = new ArrayList<Table>();
 	
 	// Tabhost to hold the tab
 	private TabHost tabHost;
 	
-	// Classifier
+	// Classifiers
 	private NaiveBayesian naiveBayesian;
+	private LaplaceBayesian laplaceClassifier;
+	private ProbabilisticBayesian probabilisticClassifier;
 	
-	// The to the main directory
+	
+	
+	// The path to the main directory
 	private String filepath;
 	
 	// Set of training data. Each training data is associated to one access-point
     ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
     
-    // Filter to be applied on the AP
+    // Filter to be applied on the AP, based on average rssi strength over entire platform
     AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);
     
     // Holds the rssi values of the chosen AP
     ArrayList<Integer> observations = new ArrayList<Integer>();
-	
+	private int SenseNewAP_buttonPressCount=0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,13 @@ public class Localization extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.fragment_localization);
+		
+		
+		//debug
+		observations.add(-32);
+		observations.add(-12);
+		observations.add(-22);
+		observations.add(-42);
 		
 		
 //		createPMFTable();
@@ -128,6 +142,8 @@ public class Localization extends ActionBarActivity {
 		tabHost.addTab(trainTab);
 		tabHost.addTab(testTab);
 		tabHost.addTab(listAPTab);
+		
+		
 		
 		
 		
@@ -286,12 +302,12 @@ public class Localization extends ActionBarActivity {
 	      
 	      
 	      // Sample only the chosen AP
-	      observations = oberserveNewRssi(keyboard,tds);  
+	  //    observations = oberserveNewRssi(keyboard,tds);  
 	 
 
 	      
 	      
-	      current_cell=   naiveBayesian.classifyObservation(observations); 
+	//      current_cell=   naiveBayesian.classifyObservation(observations); 
 
 	 //     System.out.println("\n\nClassfication Type: Naive Bayesian");
 
@@ -300,9 +316,13 @@ public class Localization extends ActionBarActivity {
 	
 	     // System.out.println("\n\nClassfication Type: Laplace");
 	     
-	      current_cell2 = laplaceClassifier.classifyObservation(observations);
+//	      current_cell2 = laplaceClassifier.classifyObservation(observations);
 		
-	}
+	} //end onCreate
+	
+
+	
+	
 	
 	
 	/*
@@ -719,17 +739,57 @@ public class Localization extends ActionBarActivity {
 	
 	
 	/*
-	 * This function fetches the next highest AP from the list
+	 * This function fetches the next AP, from the list of chosen AP, with the highest RSSI value
 	 */
 	public void senseNewAP(View view) {
 		
+		int cellID = 0; 
+		
+		System.out.println("About to classify");
+		
+		//dummy classifier
+		LaplaceBayesian lpclassifier = new LaplaceBayesian(null); 
 		
 		
+		//get the list of observations that belongs to the chosen AP
+	//	ArrayList<Integer> observations = new ArrayList<Integer>();
+
+	/*	System.out.println("Observations size: "+observations.size());
 		
-		current_cell=   naiveBayesian.classifyObservation(observations); 
+		for(int i=0; i<observations.size(); i++)
+		{
+			System.out.println("Value  "+observations.get(i));
+		}
+	*/
+		//Get AP id for the next strongest RSSI value 
+		//call only if button not pressed amount of times of AP
+		if(SenseNewAP_buttonPressCount<observations.size()){
+		cellID = Bayesian.NextStrongestAP(observations);
+		System.out.println("highest rssi value: "+observations.get(cellID));
+		}
+		else{
+			System.out.println("No More AccessPoints to fetch rssi values");
+		}
+		
+		SenseNewAP_buttonPressCount++;
+		
+		//add only one integer to the arraylist for now
+		ArrayList<Integer> test = new ArrayList<Integer>();
+		test.add(observations.get(cellID));
+		
+		//classify observation based on this AP training data.
+		
+		//cellID=lpclassifier.classifyObservation(test);
+		
+		//System.out.println("highest rssi value: "+observations.get(cellID));
+		
+		
+		//call necessary functions 
+		
+		//current_cell=   naiveBayesian.classifyObservation(observations); 
 
 	     
-		current_cell2 = laplaceClassifier.classifyObservation(observations);
+		//current_cell2 = laplaceClassifier.classifyObservation(observations);
 		
 		// TODO: show current location
 	}
@@ -741,153 +801,153 @@ public class Localization extends ActionBarActivity {
 	public void senseNewScan(View view) {
 		
 		
-		
-		
-		//step 6: Choose X amount of Access points as TrainingData
-//	    Scanner keyboard = new Scanner(System.in);
-	    ArrayList<String> chosen_ap_names = new ArrayList<String>();
-	  
-//	    chosen_ap_names = getNewAccessPoints(keyboard,rssi_filter);
-	    
-	    // Fetch APs chosen by the user
-	    ListView chosenAP = (ListView) findViewById(R.id.listSelectedAP);
-	    @SuppressWarnings("unchecked")
-		ArrayAdapter<String> adapter = (ArrayAdapter<String>)chosenAP.getAdapter();
-	    
-	    
-	    // Add each AP in the selected list to the arraylist chosen_ap_names
-	    for(int i = 0; i <= adapter.getCount(); i++) {
-	    	chosen_ap_names.add(adapter.getItem(i));
-	    }
-	    
-	    
-		    
-	    //step 7: Create PMF table for each chosen Access Point
-	    
-	    // Set of training data. Each training data is associated to one access-point
-//	    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
-	    
-	    // Selected access-point names by the user
-	    //ArrayList<String> names = new ArrayList<String>();
-
-	   // names = chosen_ap_names;
-	    
-	    // new training data
-	    TrainingData td;
-	    
-	    // new access-point name to be associated with the training data
-	    String name = null;
-	    
-	    
-
-	    // create training data for each AP
-
-	      for(int i = 0; i < chosen_ap_names.size(); i++) {
-	           
-	           name = chosen_ap_names.get(i);
-	           
-	      		td = new TrainingData(name, filepath);
-	      
-	     	 	td.createPMFTable();
-	      		td.createHistogramTable();
-	      		
-	      		tds.add(td);
-	      }
-
-		
-	     
-	      
-	      
-	      // Sample only the chosen AP
-	      observations = fetchRSSIChosenAP(chosen_ap_names); //oberserveNewRssi(keyboard,tds);  
-	 
-
-	      
-	      /*
-	       * End
-	       */
-	      
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// list of APs in arraylist to be added in the ArrayAdapter
-//		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
-		
-		// list of chosen APs in arraylist to be added in the ArrayAdapter
-		ArrayList<String> chosenAP = new ArrayList<String>();
-		
-		
-//		TODO: sort list by rssi values ascending
-		
-		
-		// Create the adapter to translate the array of strings to list items
-		ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
-				this,
-				R.layout.frament_localization_listview_item,
-				allAP
-				);
-		
-		
-		// Create the adapter to translate the array of strings to list items
-		ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
-				this,
-				R.layout.frament_localization_listview_item,
-				chosenAP
-				);
-		
-		
-		// Add adapter to listview
-		ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
-		listAllAP.setAdapter(adapterAllAP);
-		
-		
-		// Add adapter to listview
-		ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
-		listChosenAp.setAdapter(adapterChosenAP);
-		
-		
-		// Add click listener to each item
-		listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
-					long id) {
 				
-				chooseAP(viewClicked);
-			}
-		});
-		
-		
-		listChosenAp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
-					long id) {
 				
-				unChooseAP(viewClicked);
-			}
+				//step 6: Choose X amount of Access points as TrainingData
+		//	    Scanner keyboard = new Scanner(System.in);
+			    ArrayList<String> chosen_ap_names = new ArrayList<String>();
+			  
+		//	    chosen_ap_names = getNewAccessPoints(keyboard,rssi_filter);
+			    
+			    // Fetch APs chosen by the user
+			    ListView chosenAP = (ListView) findViewById(R.id.listSelectedAP);
+			    @SuppressWarnings("unchecked")
+				ArrayAdapter<String> adapter = (ArrayAdapter<String>)chosenAP.getAdapter();
+			    
+			    
+			    // Add each AP in the selected list to the arraylist chosen_ap_names
+			    for(int i = 0; i <= adapter.getCount(); i++) {
+			    	chosen_ap_names.add(adapter.getItem(i));
+			    }
+			    
+			    
+				    
+			    //step 7: Create PMF table for each chosen Access Point
+			    
+			    // Set of training data. Each training data is associated to one access-point
+		//	    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
+			    
+			    // Selected access-point names by the user
+			    //ArrayList<String> names = new ArrayList<String>();
+		
+			   // names = chosen_ap_names;
+			    
+			    // new training data
+			    TrainingData td;
+			    
+			    // new access-point name to be associated with the training data
+			    String name = null;
+			    
+			    
+		
+			    // create training data for each AP
+		
+			      for(int i = 0; i < chosen_ap_names.size(); i++) {
+			           
+			           name = chosen_ap_names.get(i);
+			           
+			      		td = new TrainingData(name, filepath);
+			      
+			     	 	td.createPMFTable();
+			      		td.createHistogramTable();
+			      		
+			      		tds.add(td);
+			      }
+		
+				
+			     
+			      
+			      
+			      // Sample only the chosen AP
+			      observations = fetchRSSIChosenAP(chosen_ap_names); //oberserveNewRssi(keyboard,tds);  
+			 
+		
+			      
+			      /*
+			       * End
+			       */
+			      
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 			
-		});
+				
+				
+				// list of APs in arraylist to be added in the ArrayAdapter
+		//		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
+				
+				// list of chosen APs in arraylist to be added in the ArrayAdapter
+				ArrayList<String> chosenAPNAMES = new ArrayList<String>();
+				
+				
+		//		TODO: sort list by rssi values ascending
+				
+				
+				// Create the adapter to translate the array of strings to list items
+				ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
+						this,
+						R.layout.frament_localization_listview_item, chosenAPNAMES   //not good, just for debugging purposes
+						//allAP
+						);
+				
+				
+				// Create the adapter to translate the array of strings to list items
+				ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
+						this,
+						R.layout.frament_localization_listview_item,
+						chosenAPNAMES
+						);
+				
+				
+				// Add adapter to listview
+				ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
+				listAllAP.setAdapter(adapterAllAP);
+				
+				
+				// Add adapter to listview
+				ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
+				listChosenAp.setAdapter(adapterChosenAP);
+				
+				
+				// Add click listener to each item
+				listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		
+					@Override
+					public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
+							long id) {
+						
+						chooseAP(viewClicked);
+					}
+				});
+				
+				
+				listChosenAp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		
+					@Override
+					public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
+							long id) {
+						
+						unChooseAP(viewClicked);
+					}
+					
+				});
+				
+				
 		
-	}
+	} //end SenseNewScan Function
 
 
 	/*
