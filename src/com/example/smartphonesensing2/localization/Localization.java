@@ -723,19 +723,13 @@ public class Localization extends ActionBarActivity {
 	 */
 	public void senseNewAP(View view) {
 		
-		// Fetch the list with the chosen AP
-		ListView chosenAP = (ListView) findViewById(R.id.listSelectedAP);
 		
-		@SuppressWarnings("unchecked")
-		ArrayAdapter<String> adapter = (ArrayAdapter<String>) chosenAP.getAdapter();
 		
-		ArrayList<Integer> observation = new ArrayList<Integer>();
 		
-		for(int i = 0; i < adapter.getCount(); i++) {
-//			observation
-		}
-		
-//		current_cell=   naiveBayesian.classifyObservation(observations);
+		current_cell=   naiveBayesian.classifyObservation(observations); 
+
+	     
+		current_cell2 = laplaceClassifier.classifyObservation(observations);
 		
 		// TODO: show current location
 	}
@@ -809,11 +803,10 @@ public class Localization extends ActionBarActivity {
 	 
 
 	      
+	      /*
+	       * End
+	       */
 	      
-	      current_cell=   naiveBayesian.classifyObservation(observations); 
-
-	     
-	      current_cell2 = laplaceClassifier.classifyObservation(observations);
 		
 		
 		
