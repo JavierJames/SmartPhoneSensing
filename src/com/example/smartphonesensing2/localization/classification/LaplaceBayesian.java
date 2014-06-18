@@ -32,12 +32,24 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
      * Constructor
      *  */	
 	public LaplaceBayesian(String filepath) {
-		super(filepath);
+		super(filepath, "Laplace Bayesian");
 		// TODO Auto-generated constructor stub
 	
 	
 	}
 
+	
+
+	/* 
+	 * Get Training Data for this unique Classifier
+	 * */
+	public ArrayList<TrainingData>  getPersonalTrainingData()
+	{
+		return tds_laplace;
+	}
+	
+	
+	
 	
 	/* @parameter 1: list of training data made from the chosen Access Points
 	 * Train classifier, to know what PMF Table to use
@@ -80,6 +92,10 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 		}		
 	}
 	
+	
+	/* 
+	 * Get Training Data for this unique Classifier
+	 * */ 
 	 		    
 	public ArrayList<TrainingData> getUpdatedTrainingData ()
 	{
@@ -92,7 +108,6 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 	 * This function takes in the new observation sample, and returns the classification type. 
 	 *   */
 
-	//???????? The argument is a list of indexes of APs chosen by the user. And not rssi values ??????
 	public int classifyObservation(ArrayList<Integer> observations)
 	{
 	
@@ -122,16 +137,7 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 			//fetch the conditional probability of being in all cells and having that given rssi value for that given AP
 			sense_results = senseOneAP(observations.get(ap_index), tds_laplace.get(ap_index).getPMF()); //P(e[i]=r|H)
 			posterior = vector_mult(this.prior, sense_results);	
-		
-	/*		System.out.println("prior !! ");
-			display_1D(this.prior);
-			
-			System.out.println("Sense Model !!");
-			display_1D(sense_results);
-			
-			System.out.println("Posterior !!");
-			display_1D(this.posterior);
-	*/	
+
 			System.arraycopy(this.posterior, 0, this.prior, 0, this.posterior.length); // update prior after 1 step.    
 			
 			classification_result=getMaxValueandClassify(posterior);
@@ -162,62 +168,7 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 		    
  
 	
-	/* This function takes the PMF of a given accesspoint, and adjust it according to the Laplace Filter*/
-    /*public Float [][] laplace_correction(Float [][]histogram)
-    {
-    	
-    	Float [][] temp = new Float[histogram.length][histogram[0].length];
-    	int NumberOfSamples;
-    	
-    	Float [][] laplaceHistogramTable = new Float [histogram.length][histogram[0].length];
-    	Float [][] laplacePMFTable = new Float [histogram.length][histogram[0].length];
-    	
-		// System.out.println("pmf array length:"+pmf[0].length);
-		    	
-    	// run through each cell distribution. and adjust the histogram according to the laplace
-    	for(int c=0; c<temp.length; c++)
-    	{
-    		//get cell number of samples, for given AP
-    		NumberOfSamples=getCellOccurrences(temp[c]);
-    		
-    		
-    		//update histogram 
-    		
-    		//update pmf
-
-    		
-    		
-    		//copy data from Cell [i] for further processing if and only 0 probability exist in cell distribution
-    	   if( contains(pmf[c], 0)) 
-    	   {
-    		   
-    		   
-    		  u= pmf[0].length;
-    		  p=1/u;
-    		  
-    		  
-    		  //copy the rssi values in the first row of array. this is the label 
-    		  System.arraycopy(pmf[0], 0, temp[0], 0, pmf[0].length);
-    		  
-    		  // update each element in cell's array
-    		 for(int r=0; r<u; r++)
-    		 {
-    			 temp[c][r]= (pmf[c][r] + u*p)/ u;
-    			//	temp[c][r]= 3;
-    		 }
-    		 
-    		   
-    	   }
-    		
-    	}
-
-    	
-    	
-    	return temp;
-    	
-    }
-    
-    */
+	
     
     public Float [] correctHistogram(Float[] histogram)
     {
@@ -243,8 +194,10 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
     }
     
     
-
-    private Float [] correctPMF(Float[]histogram_corrected, int occurrences)
+    /*This functions corrects the PMF for the Laplace TrainingData
+     * @paramter1: Corrected histogram, which added one to each possible rssi, which we cover ( -100 ->0 )"
+     * @parameter2: The updated occurrences with this correction*/
+      private Float [] correctPMF(Float[]histogram_corrected, int occurrences)
     {
    	
     	Float [] temp = new Float[histogram_corrected.length];

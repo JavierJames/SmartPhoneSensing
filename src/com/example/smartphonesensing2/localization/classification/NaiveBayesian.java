@@ -7,10 +7,19 @@ import java.util.ArrayList;
 public class NaiveBayesian extends Bayesian implements ClassifierAPI{
 
 	public NaiveBayesian(String filepath) {
-		super(filepath);
+		super(filepath,"Deterministic Bayesian");
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	/* 
+	 * Get Training Data for this unique Classifier
+	 * */ 	
+	public ArrayList<TrainingData>  getPersonalTrainingData()
+	{
+		return tds;
+	}
+	
 	
 	
 	/* Train classifier, to know what PMF Table to use */

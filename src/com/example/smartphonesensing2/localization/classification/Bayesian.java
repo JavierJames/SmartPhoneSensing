@@ -15,8 +15,10 @@ import com.example.smartphonesensing2.table.Table;
 public class Bayesian {
 	//String folder_name="3_Chosen_AP/2_PMF_AccessPoints_allCells/";
 	String filepath="";
+	public String classificationName="";
 	
-	int nextMaxInded;
+	
+	static int nextMaxInded;
 	
 	
     // Set of training data. Each training data is associated to one access-point
@@ -52,16 +54,24 @@ public class Bayesian {
    	public ArrayList<Float[][]> TrainingData_PMF = new ArrayList<Float[][]>();
 	
 	
-	public Bayesian(String filepath)
+   	public Bayesian(String filepath, String classifierName)
 	{
 		this.filepath=filepath;
+		this.classificationName=classifierName;
 	
 		 /* initialize buffers */
 		for(int i=0; i<this.posterior.length; i++) this.posterior[i]=(float)0;
 		for(int i=0; i<this.prior.length; i++) this.prior[i]=(float)0;
 		
 	}
-	
+
+   	
+	public String getClassiferName()
+	{
+		return classificationName;
+	}
+   	
+   	
 	
 	public float [] get_posterior()
 	{
@@ -120,15 +130,6 @@ public class Bayesian {
 			sense_results = senseOneAP(observations.get(ap_index), tds.get(ap_index).getPMF()); //P(e[i]=r|H)
 			posterior = vector_mult(this.prior, sense_results);	
 		
-	/*		System.out.println("prior !! ");
-			display_1D(this.prior);
-			
-			System.out.println("Sense Model !!");
-			display_1D(sense_results);
-			
-			System.out.println("Posterior !!");
-			display_1D(this.posterior);
-	*/	
 			System.arraycopy(this.posterior, 0, this.prior, 0, this.posterior.length); // update prior after 1 step.    
 			
 			classification_result=getMaxValueandClassify(posterior);
@@ -369,7 +370,7 @@ public class Bayesian {
     /* @parameter 1: a list of rssi value for a given sample
      * Find the next strongest rssi value 
      * */
-		public int findNextMaxRssi(ArrayList<Integer> observations2)
+		public static int findNextMaxRssi(ArrayList<Integer> observations2)
 		{
 			int max_rssi;
 			Integer [] temp = new Integer [observations2.size()];
@@ -392,7 +393,7 @@ public class Bayesian {
 		 * */
 		
 		//???????? The argument is a list of indexes of APs chosen by the user. And not rssi values ??????
-       public int NextStrongestAP(ArrayList<Integer> observations2)  
+       public static int NextStrongestAP(ArrayList<Integer> observations2)  
        {
     	   int max_rssi =0;
     	   int ap_index = 0;
