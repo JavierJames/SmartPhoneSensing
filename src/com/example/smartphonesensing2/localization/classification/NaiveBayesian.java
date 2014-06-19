@@ -61,16 +61,6 @@ public class NaiveBayesian extends Bayesian implements ClassifierAPI{
 			//fetch the conditional probability of being in all cells and having that given rssi value for that given AP
 			sense_results = senseOneAP(observations.get(ap_index), tds.get(ap_index).getPMF()); //P(e[i]=r|H)
 			posterior = vector_mult(this.prior, sense_results);	
-		
-	/*		System.out.println("prior !! ");
-			display_1D(this.prior);
-			
-			System.out.println("Sense Model !!");
-			display_1D(sense_results);
-			
-			System.out.println("Posterior !!");
-			display_1D(this.posterior);
-	*/	
 			System.arraycopy(this.posterior, 0, this.prior, 0, this.posterior.length); // update prior after 1 step.    
 			
 			classification_result=getMaxValueandClassify(posterior);
@@ -98,7 +88,32 @@ public class NaiveBayesian extends Bayesian implements ClassifierAPI{
 	
 	
 	
+	/*
+	 * This function takes in the new observation sample, but only for One AP, and returns the classification type
+	 * In form of the cell number. 
+	 *   */
+ 
+	public ArrayList<Integer> classifyObservation( int observation, TrainingData td)
+	{
 	
+		ArrayList<Integer> location = new ArrayList<Integer>();
+   
+    	float[] sense_results = new float [numberOfCells];         
+
+  	
+	   //fetch the conditional probability of being in all cells and having that given rssi value for that given AP
+		sense_results = senseOneAP(observation, td.getPMF()); //P(e[i]=r|H)
+		posterior = vector_mult(this.prior, sense_results);	
+
+		System.arraycopy(this.posterior, 0, this.prior, 0, this.posterior.length); // update prior after 1 step.    
+
+		location = getMaxValueandClassify2(this.posterior);
+			
+		return location;
+		
+		
+	}
+
 	
 	
 	

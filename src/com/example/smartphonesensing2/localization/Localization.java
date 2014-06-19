@@ -575,23 +575,24 @@ public class Localization extends ActionBarActivity {
 				[4th]: tudelft-dastud_00_1b_90_76_ce_14       -83;
 */
 		
-				observation.add(-73);
+		/*		observation.add(-73);
 				observation.add(-72);
 				observation.add(-74);
 				observation.add(-83);
-		
+		*/
 		// TODO: create treemap for each AP having their name as key and rssi as value 
 		
-	/*	WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+		WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		List<ScanResult> rssiList = null;
 
 
 		wm.startScan();
 
 		rssiList = wm.getScanResults();
-
-		String[] ssid = new String[rssiList.//hsize()];
 		
+		//String[] ssid = new String[rssiList.//hsize()];
+		String[] ssid = new String[rssiList.size()];
+		                                              			
 		String SSID;
 		String BSSID;
 		int level;
@@ -611,7 +612,7 @@ public class Localization extends ActionBarActivity {
 			SSID = rssiList.get(i).SSID;
 			BSSID =  rssiList.get(i).BSSID;
 			level = rssiList.get(i).level;
-			
+	
 			
 			// Iterate each chosen AP 
 			for(int j = 0; j < chosenAP.size(); j++) {
@@ -622,38 +623,9 @@ public class Localization extends ActionBarActivity {
 					observation.add(j, Integer.valueOf(level));
 				}
 			}
-		*/	
-			
-			/*SSID = rssiList.get(i).SSID;
-			BSSID =  rssiList.get(i).BSSID;
-			level = rssiList.get(i).level;
-			frequency = rssiList.get(i).frequency;
-			capabilities = rssiList.get(i).capabilities;
-			describeContents = rssiList.get(i).describeContents();*/
-
 			
 			
-			// sort the list of APs by rssi values ascending
-			/*if(level > highestRSSI) {
-				highestRSSI = level;
-				highestIndex = i;
-				continue;
-			}*/
-			
-			// TODO: sort APs
-
-			// write the list of access-points to a file
-			/*writeToFile(
-					"fetchedlistAP",
-					SSID,
-					BSSID,
-					level,
-					frequency,
-					capabilities,
-					describeContents
-					);*/
-	//	} // end for(int i = 0; i < rssiList.size(); i++)
-		
+		}	
 		return observation;
 	}
 	
@@ -706,10 +678,16 @@ public class Localization extends ActionBarActivity {
 		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
 		laplaceClassifier.setInitialBelieve();
 		
+		probabilisticClassifier = new ProbabilisticBayesian(filepath);
+		probabilisticClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
+		probabilisticClassifier.setInitialBelieve();
+		
+		
 		//currentcell= laplaceClassifier.get
 	
-		showLocation(laplaceClassifier.getCurrentLocation());
-		
+		//showLocation(laplaceClassifier.getCurrentLocation());
+		//showLocation(naiveBayesian.getCurrentLocation());
+		showLocation(probabilisticClassifier.getCurrentLocation());
 		
 //		TODO: show current location, all cells should be a candidate.
 	}
@@ -726,7 +704,8 @@ public class Localization extends ActionBarActivity {
 		int current_cell = 0;
 		
 		int current_cell2 = 0;
-	
+		int current_cell3= 0;
+		
 		ArrayList<Integer> current_location = new ArrayList<Integer>();
 					
 		
@@ -742,12 +721,28 @@ public class Localization extends ActionBarActivity {
 		
 		SenseNewAP_buttonPressCount++;
 		
-		//classifier the  single observation with the corresponding training data
-		current_location =laplaceClassifier.classifyObservation(observations.get(id_AP), laplaceClassifier.tds.get(id_AP));
 		
-	
+		
+		//classifier the  single observation with the corresponding training data
+		current_location =laplaceClassifier.classifyObservation(observations.get(id_AP), laplaceClassifier.getPersonalTrainingData().get(id_AP));
+		//update gui with classification
 		laplaceClassifier.updataCurrentLocation(current_location);
 		showLocation(laplaceClassifier.getCurrentLocation());
+		
+		
+		
+/*		current_location =naiveBayesian.classifyObservation(observations.get(id_AP), naiveBayesian.getPersonalTrainingData().get(id_AP));
+		//update gui with classification
+		naiveBayesian.updataCurrentLocation(current_location);
+		showLocation(naiveBayesian.getCurrentLocation());
+	*/			
+	/*	current_location =probabilisticClassifier.classifyObservation(observations.get(id_AP), probabilisticClassifier.getPersonalTrainingData().get(id_AP));
+		//update gui with classification
+		probabilisticClassifier.updataCurrentLocation(current_location);
+		showLocation(probabilisticClassifier.getCurrentLocation());
+	*/			
+			
+		
 		
 		
 		//current_cell=   naiveBayesian.classifyObservation(observations); 
