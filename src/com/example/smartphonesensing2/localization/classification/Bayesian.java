@@ -252,14 +252,14 @@ public class Bayesian {
   	  
   	  ArrayList<Integer> listofIndexes = new  ArrayList<Integer>(); 
   	ArrayList<Float> maxValues = new  ArrayList<Float>(); 
-  	
+  /*	
 	  List data = Arrays.asList(numbers); // !!!!
 	  ArrayList data2 = new ArrayList<Integer>(); // !!!!
 	  List data3 = new ArrayList(); // !!!!
 	  
 	  Collections.addAll(data2, numbers);
 	  Collections.addAll(data3, numbers);
-	    
+	*/    
 	  
 		   
   	  float []results = new float [2];
@@ -355,7 +355,7 @@ public class Bayesian {
   			  if(numbers[j] == valuetoFetch)
   			  {
   				  valueIndex = j;
-  				listofIndexes.add(valueIndex+1);
+  				listofIndexes.add(valueIndex);
   				  System.out.println("Max value index:"+valueIndex);
   				 System.out.println("Cell :"+(valueIndex+1));
   			  }

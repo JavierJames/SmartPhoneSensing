@@ -204,7 +204,8 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 		//	classification_result=getMaxValueandClassify(posterior);
 			
 			//location = getMaxValueandClassify2(posterior);
-			location = getMaxValueandClassify2(temp);
+			location = getMaxValueandClassify2(this.posterior);
+			// = getMaxValueandClassify2(temp);
 			
 	/*		cellNumber= (int)(classification_result[0] +1);
 			
