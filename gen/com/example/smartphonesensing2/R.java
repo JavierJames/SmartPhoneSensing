@@ -1000,7 +1000,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050062;
+        public static final int action_settings=0x7f050063;
         public static final int activity=0x7f050060;
         public static final int activityOverviewButton=0x7f050048;
         public static final int activity_chooser_view_content=0x7f050025;
@@ -1045,6 +1045,7 @@ containing a value of this type.
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
+        public static final int rowTextView=0x7f050062;
         public static final int runButton=0x7f050042;
         public static final int scanCell=0x7f050057;
         public static final int search_badge=0x7f050032;
@@ -1150,6 +1151,9 @@ containing a value of this type.
         public static final int main=0x7f0c0000;
     }
     public static final class string {
+        /**  AP selection tab 
+         */
+        public static final int FinalizeSelection_button=0x7f0a0035;
         /**                  End Activity monitoring                
 					Localisation		          
          */
@@ -1233,9 +1237,7 @@ containing a value of this type.
         /**  Training tab 
          */
         public static final int scanRssi=0x7f0a002c;
-        /**  AP selection tab 
-         */
-        public static final int selectAP_button=0x7f0a0035;
+        public static final int selectAP_button=0x7f0a0036;
         public static final int showCurrentActivity=0x7f0a0021;
         public static final int showLocationView=0x7f0a0034;
         /**  Testing tab 
@@ -1250,7 +1252,7 @@ containing a value of this type.
          */
         public static final int stillButton=0x7f0a001c;
         public static final int testButton=0x7f0a0020;
-        public static final int unselectAP_button=0x7f0a0036;
+        public static final int unselectAP_button=0x7f0a0037;
         public static final int walkButton=0x7f0a001d;
         /**  Coordinate labels 
          */

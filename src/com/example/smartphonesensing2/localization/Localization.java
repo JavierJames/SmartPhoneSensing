@@ -35,7 +35,6 @@ import android.widget.TextView;
 
 import com.example.smartphonesensing2.R;
 import com.example.smartphonesensing2.localization.classification.Bayesian;
-import com.example.smartphonesensing2.localization.classification.ClassifierAPI;
 import com.example.smartphonesensing2.localization.classification.LaplaceBayesian;
 import com.example.smartphonesensing2.localization.classification.NaiveBayesian;
 import com.example.smartphonesensing2.localization.classification.ProbabilisticBayesian;
@@ -575,11 +574,11 @@ public class Localization extends ActionBarActivity {
 				[4th]: tudelft-dastud_00_1b_90_76_ce_14       -83;
 */
 		
-		/*		observation.add(-73);
-				observation.add(-72);
-				observation.add(-74);
-				observation.add(-83);
-		*/
+//				observation.add(-73);
+//				observation.add(-72);
+//				observation.add(-74);
+//				observation.add(-83);
+		
 		// TODO: create treemap for each AP having their name as key and rssi as value 
 		
 		WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -589,10 +588,9 @@ public class Localization extends ActionBarActivity {
 		wm.startScan();
 
 		rssiList = wm.getScanResults();
+
+		//String[] ssid = new String[rssiList.size()];
 		
-		//String[] ssid = new String[rssiList.//hsize()];
-		String[] ssid = new String[rssiList.size()];
-		                                              			
 		String SSID;
 		String BSSID;
 		int level;
@@ -608,24 +606,53 @@ public class Localization extends ActionBarActivity {
 		
 		for(int i = 0; i < rssiList.size(); i++) {
 			
-			ssid[i] = rssiList.get(i).SSID;
+//			ssid[i] = rssiList.get(i).SSID;
 			SSID = rssiList.get(i).SSID;
 			BSSID =  rssiList.get(i).BSSID;
 			level = rssiList.get(i).level;
-	
+			
 			
 			// Iterate each chosen AP 
 			for(int j = 0; j < chosenAP.size(); j++) {
 				
 				// if the SSID+BSSID matches the name of the chosen AP
 				// then add it to the list
-				if((SSID+BSSID).equalsIgnoreCase(chosenAP.get(j))) {
+				if((SSID+(BSSID.replace(':', '_'))).equalsIgnoreCase(chosenAP.get(j))) {
 					observation.add(j, Integer.valueOf(level));
 				}
 			}
 			
 			
-		}	
+			/*SSID = rssiList.get(i).SSID;
+			BSSID =  rssiList.get(i).BSSID;
+			level = rssiList.get(i).level;
+			frequency = rssiList.get(i).frequency;
+			capabilities = rssiList.get(i).capabilities;
+			describeContents = rssiList.get(i).describeContents();*/
+
+			
+			
+			// sort the list of APs by rssi values ascending
+			/*if(level > highestRSSI) {
+				highestRSSI = level;
+				highestIndex = i;
+				continue;
+			}*/
+			
+			// TODO: sort APs
+
+			// write the list of access-points to a file
+			/*writeToFile(
+					"fetchedlistAP",
+					SSID,
+					BSSID,
+					level,
+					frequency,
+					capabilities,
+					describeContents
+					);*/
+		} // end for(int i = 0; i < rssiList.size(); i++)
+		
 		return observation;
 	}
 	
@@ -678,16 +705,10 @@ public class Localization extends ActionBarActivity {
 		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
 		laplaceClassifier.setInitialBelieve();
 		
-		probabilisticClassifier = new ProbabilisticBayesian(filepath);
-		probabilisticClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
-		probabilisticClassifier.setInitialBelieve();
-		
-		
 		//currentcell= laplaceClassifier.get
 	
-		//showLocation(laplaceClassifier.getCurrentLocation());
-		//showLocation(naiveBayesian.getCurrentLocation());
-		showLocation(probabilisticClassifier.getCurrentLocation());
+		showLocation(laplaceClassifier.getCurrentLocation());
+		
 		
 //		TODO: show current location, all cells should be a candidate.
 	}
@@ -698,22 +719,50 @@ public class Localization extends ActionBarActivity {
 	 */
 	public void senseNewAP(View view) {
 		
-		int id_AP = 0; 
+		int cellID = 0; 
 		
 		System.out.println("About to classify");
 		int current_cell = 0;
 		
 		int current_cell2 = 0;
-		int current_cell3= 0;
 		
-		ArrayList<Integer> current_location = new ArrayList<Integer>();
-					
+		//dummy classifier
+		//LaplaceBayesian lpclassifier = new LaplaceBayesian(null); 
+		
+		
+		//get the list of observations that belongs to the chosen AP
+	//	ArrayList<Integer> observations = new ArrayList<Integer>();
+
+
+	/*	System.out.println("Observations size: "+observations.size());
+	      
+	      /*
+	       * End
+	       */
+	      
+		
+		
+				
+		
+		
+		
+		// list of APs in arraylist to be added in the ArrayAdapter
+//		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
+		
+		// list of chosen APs in arraylist to be added in the ArrayAdapter
+//		ArrayList<String> chosenAP = new ArrayList<String>();
+		
+		
+		for(int i=0; i<observations.size(); i++)
+		{
+			System.out.println("Value  "+observations.get(i));
+		}
 		
 		//Get AP id for the next strongest RSSI value 
 		//call only if button not pressed amount of times of AP
 		if(SenseNewAP_buttonPressCount<observations.size()){
-			id_AP = Bayesian.NextStrongestAP(observations);
-			System.out.println("highest rssi value: "+observations.get(id_AP));
+		cellID = Bayesian.NextStrongestAP(observations);
+		System.out.println("highest rssi value: "+observations.get(cellID));
 		}
 		else{
 			System.out.println("No More AccessPoints to fetch rssi values");
@@ -721,29 +770,35 @@ public class Localization extends ActionBarActivity {
 		
 		SenseNewAP_buttonPressCount++;
 		
+		//add only one integer to the arraylist for now
+		//ArrayList<Integer> test = new ArrayList<Integer>();
+		//test.add(observations.get(cellID));
+		
+		//classify observation based on this AP training data.
+		// Create the adapter to translate the array of strings to list items
+		/*ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
+				this,
+				R.layout.frament_localization_listview_item,
+				allAP
+				);*/
+		
+		//cellID=lpclassifier.classifyObservation(test);
+		
+		//System.out.println("highest rssi value: "+observations.get(cellID));
 		
 		
-		//classifier the  single observation with the corresponding training data
-		current_location =laplaceClassifier.classifyObservation(observations.get(id_AP), laplaceClassifier.getPersonalTrainingData().get(id_AP));
-		//update gui with classification
-		laplaceClassifier.updataCurrentLocation(current_location);
-		showLocation(laplaceClassifier.getCurrentLocation());
+		//call necessary functions 
+		// Create the adapter to translate the array of strings to list items
+		/*ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
+				this,
+				R.layout.frament_localization_listview_item,
+				chosenAP
+				);*/
 		
 		
-		
-/*		current_location =naiveBayesian.classifyObservation(observations.get(id_AP), naiveBayesian.getPersonalTrainingData().get(id_AP));
-		//update gui with classification
-		naiveBayesian.updataCurrentLocation(current_location);
-		showLocation(naiveBayesian.getCurrentLocation());
-	*/			
-	/*	current_location =probabilisticClassifier.classifyObservation(observations.get(id_AP), probabilisticClassifier.getPersonalTrainingData().get(id_AP));
-		//update gui with classification
-		probabilisticClassifier.updataCurrentLocation(current_location);
-		showLocation(probabilisticClassifier.getCurrentLocation());
-	*/			
-			
-		
-		
+		// Add adapter to listview
+		/*ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
+		listAllAP.setAdapter(adapterAllAP);*/
 		
 		//current_cell=   naiveBayesian.classifyObservation(observations); 
 
