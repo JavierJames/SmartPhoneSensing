@@ -4,11 +4,15 @@ import com.example.smartphonesensing2.localization.histogram.TrainingData;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 //import com.sun.corba.se.impl.oa.poa.AOMEntry;
+
+
 
 
 import com.example.smartphonesensing2.table.Table;
@@ -27,7 +31,7 @@ public class Bayesian {
 	
     //for a given sample, keep track of all of the estimation calculated during each new posterior
     public ArrayList<Integer> ClassificationEstimations = new ArrayList<Integer>();
-    
+  
     //keep track of all the classification results and correct answer, in order to calculate accuracy of this classifier
    //   ArrayList<String> listOfClassification = new ArrayList<String>();
   //  ArrayList<String> listOfCorrectLocalization = new ArrayList<String>();
@@ -38,7 +42,7 @@ public class Bayesian {
 	
 	
 	//ArrayList to keep localization result for a given sample 
-	ArrayList<Integer> currentLocation = new ArrayList<Integer>();
+	static ArrayList<Integer> currentLocation = new ArrayList<Integer>();
 	
 
 	//information about classifier accuracy
@@ -119,8 +123,6 @@ public class Bayesian {
     	int max_rssi;
     	int ap_index;
     	
-		//setInitialBelieve();
-		//ClassificationEstimations.add("Uniform");
 		
 		/*for each training data, and its corresponding observation, apply the sense model 
 		 * So find the probability of being in Cell[i], and having that rssi value for that given AP, 
@@ -152,7 +154,9 @@ public class Bayesian {
 		 //   System.out.println("cellnumber:"+cellNumber);
 		    ClassificationEstimations.add( (int)(classification_result[0] +1));
 	     //	System.out.println("Cell:" + ClassificationEstimations.get(t)); 
-						
+	
+		    
+		    
 		}
 				
 	    return bayesian_result;
@@ -215,7 +219,7 @@ public class Bayesian {
     	
     }
     
-
+    /*This functions reads a lit of numbers and returns the the index of the highest number */
     public static float [] getMaxValueandClassify(float[] numbers){  
     	  float maxValue = numbers[0];
     	  float cellid = 0;
@@ -233,9 +237,195 @@ public class Bayesian {
     	  return results;  
     	}  
     	  
+    /*This functions reads a lit of numbers and returns the the indexes of the highest number */
+
+    public  ArrayList<Integer> getMaxValueandClassify2(float[] numbers){  
+  	  float maxValue = numbers[0];
+  	  float cellid = 0;
+  	  int maxIndex = 0;
+  	  int maxIndex2 = 0;
+  	  int tempIndex=0;
+  	  
+  	  ArrayList<Integer> listofIndexes = new  ArrayList<Integer>(); 
+  	  
+  	  float []results = new float [2];
+  	
+  	  
+	   float [] temp = new float [numbers.length];
+	  	System.arraycopy(numbers, 0, temp,0 , numbers.length);
+	  
+	  	Arrays.sort(temp);
+	  	
+  	  
+	  	float first = temp[temp.length-1]; // get highest number 
+	  	maxIndex=temp.length-1;
+		float second = temp[temp.length-2];  // get 2nd highest number 
+		maxIndex2=temp.length-2;
+		
+		float tempvalue;
+		 
+		
+  	  /*check if unknown results
+  	   * all or more than two numbers are equivalent to max value */
+  	  if(unknownLocation(numbers))
+  	  {
+  		
+  		  //set the arraylist of current cells to default
+  		
+  			/* set uniform distribution for prior */
+  			for(int i=0; i<numbers.length; i++)
+  			{
+  				listofIndexes.add(i);
+  				//currentLocation.add(i);// at the beginning all rooms is the current location
+  			}
+  		  return listofIndexes;  
+  		  
+  	  }else{ //find top 2 results
+  		  	
+
+	    	if (first < second)
+	        {
+	    		tempvalue = first;
+	            first = second;
+	            second = tempvalue;
+	            
+	            tempIndex= maxIndex;
+	            maxIndex = maxIndex2;
+	            maxIndex2 = tempIndex;
+	            
+	            
+	        }
+	    	
+	        for (int i = temp.length-3; i >=0;	i--)
+	        {
+	            if (temp[i] >= first)
+	            {
+	            	second = first;
+	                first = temp[i];
+	                
+	                maxIndex2=maxIndex;
+	                maxIndex=i;
+	                
+	            }
+	            else if (temp[i] > second)
+	            {
+	            	second = temp[i];
+	            	maxIndex2=i;
+	            }
+	        }
+  		  
+  	   
+	        listofIndexes.add(maxIndex);
+	  		listofIndexes.add(maxIndex2);
+	  		
+	        //if values are not put only maxx
+	        if(listofIndexes.get(0) != listofIndexes.get(1)){
+	        	listofIndexes.remove(1);
+            }
+            
+  	  }     
+  	  
+  	  return listofIndexes;  
+  	}  
     
-     
-       
+  	  
+     /* This function checks to see if the posterior has a good result*/
+     public static boolean unknownLocation(float [] posterior)
+     {
+    	   int passBoundary =2; //if more than 2 cells are the same then unknown location
+    	   int count=0;
+    	   
+    	   float [] temp = new float [posterior.length];
+    	   
+			boolean flag = false; // all cells are not the same
+			boolean flag2 = false; // more than two cells are the same
+			
+			System.arraycopy(posterior, 0, temp,0 , posterior.length);
+			
+			//put max value to the right
+			Arrays.sort(temp);
+			
+			float first = temp[temp.length-1];
+			float second = temp[temp.length-2];
+			float tempvalue;
+			
+			
+			 if (posterior.length == 0) {
+			        return false;
+			    }
+			 
+			 
+			 
+			 
+		/*	else {
+			    	
+			    	if (first < second)
+			        {
+			    		tempvalue = first;
+			            first = second;
+			            second = tempvalue;
+			            
+			            flag = false; // if more than one max value are not the same. cells are known
+			            
+			            return flag; 
+			        }
+			    	else if(first ==second){
+			    		count ++;
+			    	}
+			  
+			    	
+			        for (int i = posterior.length-3; i >=0;	i--)
+			        {
+			            if (temp[i] >= first)
+			            {
+			            	second = first;
+			                first = temp[i];
+			            }
+			            else if (temp[i] > second)
+			            {
+			            	second = temp[i];
+			            }
+			        }
+			    	
+			*/    	
+
+					 /* check more than two cells are the same to max value */
+				for(int i = 0; i < posterior.length && !flag2; i++)
+				{
+				  if (posterior[i] == first ) count++;
+				 
+				  if(count>passBoundary+1)
+				  { 
+					  flag2 = true;
+					  break;
+				  }
+			
+				}
+			    
+			 
+			 
+			 
+				 /* check more than two cells are the same to max value */
+				/*
+			    for(int i = 1; i < posterior.length && !flag2; i++)
+						{
+						  if (posterior[i] == posterior[i-1] ) count++; 
+						  else {
+							  flag2 = false;
+							  break;
+						  }
+						  if(count>passBoundary) flag2 = true;
+					
+						}
+					    
+			
+				
+				
+			*/
+			
+			
+			return flag ||flag2;
+	 }
 
     
     

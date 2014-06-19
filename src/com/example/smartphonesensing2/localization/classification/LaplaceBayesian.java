@@ -171,10 +171,11 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 	 * This function takes in the new observation sample, but only for One AP, and returns the classification type. 
 	 *   */
  
-	public int classifyObservation( int observation, TrainingData td)
+	public ArrayList<Integer> classifyObservation( int observation, TrainingData td)
 	{
 	
 		int bayesian_result = 0;
+		ArrayList<Integer> location = new ArrayList<Integer>();
    
     	float [] classification_result = new float [2];  // return format is [0]= cellID, [1]: probability 
     	
@@ -183,6 +184,14 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
   
     	int cellNumber;
        	int ap_index;
+       	
+       	float temp [] = new float [5];
+       	
+       	temp[0]=3f;
+       	temp[1]=3f;
+       	temp[2]=6f;
+       	temp[3]=2f;
+       	temp[4]=1f;
     	
 				
 		   //fetch the conditional probability of being in all cells and having that given rssi value for that given AP
@@ -191,9 +200,12 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 
 		//	System.arraycopy(this.posterior, 0, this.prior, 0, this.posterior.length); // update prior after 1 step.    
 			
-			classification_result=getMaxValueandClassify(posterior);
+		//	classification_result=getMaxValueandClassify(posterior);
 			
-			cellNumber= (int)(classification_result[0] +1);
+			//location = getMaxValueandClassify2(posterior);
+			location = getMaxValueandClassify2(temp);
+			
+	/*		cellNumber= (int)(classification_result[0] +1);
 			
 			//update end result only if classification had a valid cell id
 			if( cellNumber >= 1)
@@ -205,10 +217,10 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 		    ClassificationEstimations.add( (int)(classification_result[0] +1));
 	     //	System.out.println("Cell:" + ClassificationEstimations.get(t)); 
 		    System.out.println("Cell: "+ (classification_result[0]+1) + "Probability: "+classification_result[1] );
-									
+		*/							
 	
 				
-	    return bayesian_result;
+	    return location;
 	
 	
 		

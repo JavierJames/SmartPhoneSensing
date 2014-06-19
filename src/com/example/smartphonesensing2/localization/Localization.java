@@ -720,20 +720,21 @@ public class Localization extends ActionBarActivity {
 	 */
 	public void senseNewAP(View view) {
 		
-		int cellID = 0; 
+		int id_AP = 0; 
 		
 		System.out.println("About to classify");
 		int current_cell = 0;
 		
 		int current_cell2 = 0;
 	
+		ArrayList<Integer> current_location = new ArrayList<Integer>();
 					
 		
 		//Get AP id for the next strongest RSSI value 
 		//call only if button not pressed amount of times of AP
 		if(SenseNewAP_buttonPressCount<observations.size()){
-			cellID = Bayesian.NextStrongestAP(observations);
-			System.out.println("highest rssi value: "+observations.get(cellID));
+			id_AP = Bayesian.NextStrongestAP(observations);
+			System.out.println("highest rssi value: "+observations.get(id_AP));
 		}
 		else{
 			System.out.println("No More AccessPoints to fetch rssi values");
@@ -742,11 +743,10 @@ public class Localization extends ActionBarActivity {
 		SenseNewAP_buttonPressCount++;
 		
 		//classifier the  single observation with the corresponding training data
-		current_cell =laplaceClassifier.classifyObservation(observations.get(cellID), laplaceClassifier.tds.get(cellID));
+		current_location =laplaceClassifier.classifyObservation(observations.get(id_AP), laplaceClassifier.tds.get(id_AP));
 		
-		ArrayList<Integer> cell = new ArrayList<Integer>();
-		cell.add(current_cell);
-		laplaceClassifier.updataCurrentLocation(cell);
+	
+		laplaceClassifier.updataCurrentLocation(current_location);
 		showLocation(laplaceClassifier.getCurrentLocation());
 		
 		
