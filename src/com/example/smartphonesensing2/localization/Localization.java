@@ -94,7 +94,7 @@ public class Localization extends ActionBarActivity {
     ArrayList<String> ToBeSelectedAP = new ArrayList<String>();
     ArrayList<String> SelectedAP = new ArrayList<String>();
 	// list of chosen APs in arraylist to be added in the ArrayAdapter
-	ArrayList<String> chosenAPNAMES = new ArrayList<String>();
+	ArrayList<String> chosen_ap_names = new ArrayList<String>();
     
     //need a list of chosenAP Names
     
@@ -213,7 +213,7 @@ public class Localization extends ActionBarActivity {
 			ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
 					this,
 					R.layout.frament_localization_listview_item,
-					chosenAPNAMES
+					chosen_ap_names
 					);
 			
 			//Get listView Object of all AP from xml file 
@@ -551,10 +551,25 @@ public class Localization extends ActionBarActivity {
 	 * Fetch list of AP with their corresponding rssi values
 	 */
 	private ArrayList<Integer> fetchRSSIChosenAP(ArrayList<String> chosenAP) {
-
+		// List of RSSI of each chosen AP
+				ArrayList<Integer> observation = new ArrayList<Integer>();
+				
+		
+		//hardcode for testing
+		/*		1st Conferentie-TUD_00_1b_90_76_d3_f6      -73;
+				2nd  TUvisitor_00_1b_90_76_d3_f3            -72;
+				3rd  eduroam_00_1b_90_76_d3_f0                 -74; 
+				[4th]: tudelft-dastud_00_1b_90_76_ce_14       -83;
+*/
+		
+				observation.add(-73);
+				observation.add(-72);
+				observation.add(-74);
+				observation.add(-83);
+		
 		// TODO: create treemap for each AP having their name as key and rssi as value 
 		
-		WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+	/*	WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		List<ScanResult> rssiList = null;
 
 
@@ -562,7 +577,7 @@ public class Localization extends ActionBarActivity {
 
 		rssiList = wm.getScanResults();
 
-		String[] ssid = new String[rssiList.size()];
+		String[] ssid = new String[rssiList.//hsize()];
 		
 		String SSID;
 		String BSSID;
@@ -575,8 +590,6 @@ public class Localization extends ActionBarActivity {
 		int highestRSSI = 0;
 		int highestIndex = -1;
 		
-		// List of RSSI of each chosen AP
-		ArrayList<Integer> observation = new ArrayList<Integer>();
 		
 		
 		for(int i = 0; i < rssiList.size(); i++) {
@@ -596,7 +609,7 @@ public class Localization extends ActionBarActivity {
 					observation.add(j, Integer.valueOf(level));
 				}
 			}
-			
+		*/	
 			
 			/*SSID = rssiList.get(i).SSID;
 			BSSID =  rssiList.get(i).BSSID;
@@ -626,7 +639,7 @@ public class Localization extends ActionBarActivity {
 					capabilities,
 					describeContents
 					);*/
-		} // end for(int i = 0; i < rssiList.size(); i++)
+	//	} // end for(int i = 0; i < rssiList.size(); i++)
 		
 		return observation;
 	}
@@ -785,147 +798,18 @@ public class Localization extends ActionBarActivity {
 	public void senseNewScan(View view) {
 		
 		
-		// Add adapter to listview
-		/*ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
-		listChosenAp.setAdapter(adapterChosenAP);
-		*/
-		
-		// Add click listener to each item
-		/*listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
-					long id) {
-				
-				
-				//step 6: Choose X amount of Access points as TrainingData
-		//	    Scanner keyboard = new Scanner(System.in);
-			    ArrayList<String> chosen_ap_names = new ArrayList<String>();
-			  
-		//	    chosen_ap_names = getNewAccessPoints(keyboard,rssi_filter);
-			    
-			    // Fetch APs chosen by the user
-			    ListView chosenAP = (ListView) findViewById(R.id.listSelectedAP);
-			    @SuppressWarnings("unchecked")
-				ArrayAdapter<String> adapter = (ArrayAdapter<String>)chosenAP.getAdapter();
-			    
-			    
-			    // Add each AP in the selected list to the arraylist chosen_ap_names
-			    for(int i = 0; i <= adapter.getCount(); i++) {
-			    	chosen_ap_names.add(adapter.getItem(i));
-			    }
-			    
-			    
-				    
-			    //step 7: Create PMF table for each chosen Access Point
-			    
-			    // Set of training data. Each training data is associated to one access-point
-		//	    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
-			    
-			    // Selected access-point names by the user
-			    //ArrayList<String> names = new ArrayList<String>();
-		
-			   // names = chosen_ap_names;
-			    
-			    // new training data
-			    TrainingData td;
-			    
-			    // new access-point name to be associated with the training data
-			    String name = null;
-			    
-			    
-		
-			    // create training data for each AP
-		
-			      for(int i = 0; i < chosen_ap_names.size(); i++) {
-			           
-			           name = chosen_ap_names.get(i);
-			           
-			      		td = new TrainingData(name, filepath);
-			      
-			     	 	td.createPMFTable();
-			      		td.createHistogramTable();
-			      		
-			      		tds.add(td);
-			      }
-		
-				
-			     
-			      
-			      
-			      // Sample only the chosen AP
-			      observations = fetchRSSIChosenAP(chosen_ap_names); //oberserveNewRssi(keyboard,tds);  
+	    // fetch only the RSSI value for the chosen AP
+	    observations = fetchRSSIChosenAP(chosen_ap_names); //oberserveNewRssi(keyboard,tds);  
+	 
+		for(int i=0; i<observations.size(); i++)
+		{
+			System.out.println("Observation"+observations.get(i));
+		}
+	    
+	      
 			 
 		
 			      
-			      /*
-			       * End
-			       */
-			      		
-				
-				// list of APs in arraylist to be added in the ArrayAdapter
-		//		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
-				
-				// list of chosen APs in arraylist to be added in the ArrayAdapter
-		/*			ArrayList<String> chosenAPNAMES = new ArrayList<String>();
-				
-				
-		//		TODO: sort list by rssi values ascending
-				
-				
-			// Create the adapter to translate the array of strings to list items
-				ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
-						this,
-						R.layout.frament_localization_listview_item, ToBeSelectedAP   //not good, just for debugging purposes
-						//allAP
-						);
-				
-				
-				// Create the adapter to translate the array of strings to list items
-				ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
-						this,
-						R.layout.frament_localization_listview_item,
-						chosenAPNAMES
-						);
-				
-				//Get listView Object of all AP from xml file 
-				// Add adapter to listview
-				ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
-				listAllAP.setAdapter(adapterAllAP);
-				
-				
-				//Get listView Object of all selected AP from xml file 
-				// Add adapter to listview
-				ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
-				listChosenAp.setAdapter(adapterChosenAP);
-				
-				
-				// Add click listener to each item
-				listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//		});*/ //not sure if had to take off?
-		
-	/*				@Override
-					public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
-							long id) {
-						
-						chooseAP(viewClicked);
-					}
-				});
-				
-				
-				listChosenAp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-		
-					@Override
-					public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
-							long id) {
-						
-						unChooseAP(viewClicked);
-					}
-					
-				});
-				
-		*/		
-		
 	} //end SenseNewScan Function
 
 
