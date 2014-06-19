@@ -168,7 +168,8 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 	
 
 	/*
-	 * This function takes in the new observation sample, but only for One AP, and returns the classification type. 
+	 * This function takes in the new observation sample, but only for One AP, and returns the classification type
+	 * In form of the cell number. 
 	 *   */
  
 	public ArrayList<Integer> classifyObservation( int observation, TrainingData td)
@@ -198,7 +199,7 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 			sense_results = senseOneAP(observation, td.getPMF()); //P(e[i]=r|H)
 			posterior = vector_mult(this.prior, sense_results);	
 
-		//	System.arraycopy(this.posterior, 0, this.prior, 0, this.posterior.length); // update prior after 1 step.    
+			System.arraycopy(this.posterior, 0, this.prior, 0, this.posterior.length); // update prior after 1 step.    
 			
 		//	classification_result=getMaxValueandClassify(posterior);
 			

@@ -7,10 +7,14 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
 //import com.sun.corba.se.impl.oa.poa.AOMEntry;
+
+
 
 
 
@@ -247,7 +251,17 @@ public class Bayesian {
   	  int tempIndex=0;
   	  
   	  ArrayList<Integer> listofIndexes = new  ArrayList<Integer>(); 
-  	  
+  	ArrayList<Float> maxValues = new  ArrayList<Float>(); 
+  	
+	  List data = Arrays.asList(numbers); // !!!!
+	  ArrayList data2 = new ArrayList<Integer>(); // !!!!
+	  List data3 = new ArrayList(); // !!!!
+	  
+	  Collections.addAll(data2, numbers);
+	  Collections.addAll(data3, numbers);
+	    
+	  
+		   
   	  float []results = new float [2];
   	
   	  
@@ -275,7 +289,7 @@ public class Bayesian {
   			/* set uniform distribution for prior */
   			for(int i=0; i<numbers.length; i++)
   			{
-  				listofIndexes.add(i);
+  				listofIndexes.add(i+1);
   				//currentLocation.add(i);// at the beginning all rooms is the current location
   			}
   		  return listofIndexes;  
@@ -293,7 +307,7 @@ public class Bayesian {
 	            maxIndex = maxIndex2;
 	            maxIndex2 = tempIndex;
 	            
-	            
+	          
 	        }
 	    	
 	        for (int i = temp.length-3; i >=0;	i--)
@@ -315,15 +329,41 @@ public class Bayesian {
 	        }
   		  
   	   
-	        listofIndexes.add(maxIndex);
-	  		listofIndexes.add(maxIndex2);
+	        
+	        maxValues.add(first);
+	        maxValues.add(second);
+	      //  listofIndexes.add(maxIndex);
+	  	//	listofIndexes.add(maxIndex2);
 	  		
 	        //if values are not put only maxx
-	        if(listofIndexes.get(0) != listofIndexes.get(1)){
+	       /* if(listofIndexes.get(0) != listofIndexes.get(1)){
 	        	listofIndexes.remove(1);
-            }
+            }*/
             
   	  }     
+
+  	  float valuetoFetch;
+  	  int valueIndex = 0;
+  	  //for the given indexed find out the original array index 
+  	  for(int i=0; i<maxValues.size(); i++)
+  	  {
+  		  valuetoFetch=maxValues.get(i);
+  		  
+  		  //fetch the original index of that current max value
+  		  for(int j=0; j<numbers.length; j++)
+  		  {
+  			  if(numbers[j] == valuetoFetch)
+  			  {
+  				  valueIndex = j;
+  				listofIndexes.add(valueIndex+1);
+  				  System.out.println("Max value index:"+valueIndex);
+  				 System.out.println("Cell :"+(valueIndex+1));
+  			  }
+  		  }
+  		
+  	  }
+  	  
+  	  
   	  
   	  return listofIndexes;  
   	}  
