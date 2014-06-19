@@ -619,7 +619,7 @@ public class Localization extends ActionBarActivity {
 				
 				// if the SSID+BSSID matches the name of the chosen AP
 				// then add it to the list
-				if((SSID+BSSID).equalsIgnoreCase(chosenAP.get(j))) {
+				if((SSID+"_"+BSSID).equalsIgnoreCase(chosenAP.get(j))) {
 					observation.add(j, Integer.valueOf(level));
 				}
 			}
