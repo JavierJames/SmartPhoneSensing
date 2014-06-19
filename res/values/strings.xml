@@ -102,9 +102,12 @@
     	
     	
    	<!-- AP selection tab -->
+   		<string name="FinalizeSelection_button"> Finalize Selection </string>
+   		
    		
    		<string name="selectAP_button">></string>
    		<string name="unselectAP_button"> &lt; </string>
+   		
    		
     
     <!--					End Localisation		          -->

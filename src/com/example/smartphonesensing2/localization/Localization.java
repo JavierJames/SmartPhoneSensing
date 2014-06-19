@@ -184,6 +184,13 @@ public class Localization extends ActionBarActivity {
 		//fetchfilewithfilteredAP
 		ToBeSelectedAP=	fetchFileFilteredAP();
 		
+		/* 1st. Conferentie-TUD_00_1b_90_76_d3_f6   
+           2nd  TUvisitor_00_1b_90_76_d3_f3            
+           3rd eduroam_00_1b_90_76_d3_f0                 
+           4th tudelft-dastud_00_1b_90_76_ce_14       
+
+		 * */
+		
 	/*	ToBeSelectedAP.add("Conferentie-TUD_00_1b_90_76_d3_f6");
 		ToBeSelectedAP.add("TUvisitor_00_1b_90_76_d3_f3 ");
 		ToBeSelectedAP.add("eduroam_00_1b_90_76_d3_f0  ");
@@ -256,11 +263,7 @@ public class Localization extends ActionBarActivity {
 			});
 			
 	
-	     
 	  
-	     
-	     
-	     
 		
 		
 		
@@ -664,7 +667,6 @@ public class Localization extends ActionBarActivity {
 		int currentcell=0;
 		
 		// Set of training data. Each training data is associated to one access-point
-//	    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
 
 	    
 	    /************************
@@ -673,10 +675,10 @@ public class Localization extends ActionBarActivity {
 	    
 	    
 	    // new training data
-	    TrainingData td;
+	//    TrainingData td;
 	    
 	    // new access-point name to be associated with the training data
-	    String name = null;
+	  //  String name = null;
 	    
 
 	    // create training data for each AP
@@ -725,7 +727,7 @@ public class Localization extends ActionBarActivity {
 		int current_cell2 = 0;
 		
 		//dummy classifier
-		LaplaceBayesian lpclassifier = new LaplaceBayesian(null); 
+		//LaplaceBayesian lpclassifier = new LaplaceBayesian(null); 
 		
 		
 		//get the list of observations that belongs to the chosen AP
@@ -814,7 +816,7 @@ public class Localization extends ActionBarActivity {
 		
 		
 	    // fetch only the RSSI value for the chosen AP
-	    observations = fetchRSSIChosenAP(chosen_ap_names); //oberserveNewRssi(keyboard,tds);  
+	    observations = fetchRSSIChosenAP(chosen_ap_names); 
 	 
 		for(int i=0; i<observations.size(); i++)
 		{
@@ -1166,6 +1168,81 @@ public class Localization extends ActionBarActivity {
 		return AP_names;
 	}
 	
+	/* function call when finished selection AP, to create the TrainingData*/
+	public void finalizeSelction (View view)
+	{
+		ArrayList<String> selectedAPnames = new ArrayList<String>();
+	//	ArrayList<TrainingData> tds = new 	ArrayList<TrainingData>();
+		
+		//fetch the names of AP
+		
+		// remove item from listAllAP
+		ListView listSelectedAP = (ListView) findViewById(R.id.listSelectedAP);
+		//TextView listSelectedAPText = (TextView) view;
+		
+	    // Get the adapter of the chosen list
+				@SuppressWarnings("unchecked")
+			//	ArrayAdapter<String> adapterAllAP = (ArrayAdapter<String>) listAllAP.getAdapter();
+
+		ArrayAdapter<String> adapterSelectedAP = (ArrayAdapter<String>) listSelectedAP.getAdapter();
+		
+			// get the list of strings from adapter
+			for(int i=0; i<adapterSelectedAP.getCount(); i++)
+			{
+				selectedAPnames.add(adapterSelectedAP.getItem(i));
+			}
+				
+		
+		//selectedAPnames.add(adapterSelectedAP.toString());
+		
+		
+		
+		
+		// Add the adapter back to the listview
+		listSelectedAP.setAdapter(adapterSelectedAP);
+		
+		
+		
+		//Create a training Data for each chosen AP
+		
+		
+		
+ //step 7: Create PMF table for each chosen Access Point
+	    
+		
+	    // Set of training data. Each training data is associated to one access-point
+	   // ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
+	    
+	    // new training data
+	    TrainingData td;
+	    
+	    // new access-point name to be associated with the training data
+	    String name = null;
+	    
+	    
+
+	    // create training data for each AP
+
+	      for(int i = 0; i < selectedAPnames.size(); i++) {
+	           
+	           name = selectedAPnames.get(i);
+	           
+	      		td = new TrainingData(name, filepath);
+	      
+	     	 	td.createPMFTable();
+	      		td.createHistogramTable();
+	      		
+	      		tds.add(td);
+	      }
+
+		
+		
+		
+		
+		
+		
+		
+	}
 	
 	
 	
