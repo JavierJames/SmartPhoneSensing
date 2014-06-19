@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import com.example.smartphonesensing2.R;
 import com.example.smartphonesensing2.localization.classification.Bayesian;
+import com.example.smartphonesensing2.localization.classification.ClassifierAPI;
 import com.example.smartphonesensing2.localization.classification.LaplaceBayesian;
 import com.example.smartphonesensing2.localization.classification.NaiveBayesian;
 import com.example.smartphonesensing2.localization.classification.ProbabilisticBayesian;
@@ -725,44 +726,14 @@ public class Localization extends ActionBarActivity {
 		int current_cell = 0;
 		
 		int current_cell2 = 0;
-		
-		//dummy classifier
-		//LaplaceBayesian lpclassifier = new LaplaceBayesian(null); 
-		
-		
-		//get the list of observations that belongs to the chosen AP
-	//	ArrayList<Integer> observations = new ArrayList<Integer>();
-
-
-	/*	System.out.println("Observations size: "+observations.size());
-	      
-	      /*
-	       * End
-	       */
-	      
-		
-		
-				
-		
-		
-		
-		// list of APs in arraylist to be added in the ArrayAdapter
-//		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
-		
-		// list of chosen APs in arraylist to be added in the ArrayAdapter
-//		ArrayList<String> chosenAP = new ArrayList<String>();
-		
-		
-		for(int i=0; i<observations.size(); i++)
-		{
-			System.out.println("Value  "+observations.get(i));
-		}
+	
+					
 		
 		//Get AP id for the next strongest RSSI value 
 		//call only if button not pressed amount of times of AP
 		if(SenseNewAP_buttonPressCount<observations.size()){
-		cellID = Bayesian.NextStrongestAP(observations);
-		System.out.println("highest rssi value: "+observations.get(cellID));
+			cellID = Bayesian.NextStrongestAP(observations);
+			System.out.println("highest rssi value: "+observations.get(cellID));
 		}
 		else{
 			System.out.println("No More AccessPoints to fetch rssi values");
@@ -770,35 +741,14 @@ public class Localization extends ActionBarActivity {
 		
 		SenseNewAP_buttonPressCount++;
 		
-		//add only one integer to the arraylist for now
-		//ArrayList<Integer> test = new ArrayList<Integer>();
-		//test.add(observations.get(cellID));
+		//classifier the  single observation with the corresponding training data
+		current_cell =laplaceClassifier.classifyObservation(observations.get(cellID), laplaceClassifier.tds.get(cellID));
 		
-		//classify observation based on this AP training data.
-		// Create the adapter to translate the array of strings to list items
-		/*ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
-				this,
-				R.layout.frament_localization_listview_item,
-				allAP
-				);*/
+		ArrayList<Integer> cell = new ArrayList<Integer>();
+		cell.add(current_cell);
+		laplaceClassifier.updataCurrentLocation(cell);
+		showLocation(laplaceClassifier.getCurrentLocation());
 		
-		//cellID=lpclassifier.classifyObservation(test);
-		
-		//System.out.println("highest rssi value: "+observations.get(cellID));
-		
-		
-		//call necessary functions 
-		// Create the adapter to translate the array of strings to list items
-		/*ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
-				this,
-				R.layout.frament_localization_listview_item,
-				chosenAP
-				);*/
-		
-		
-		// Add adapter to listview
-		/*ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
-		listAllAP.setAdapter(adapterAllAP);*/
 		
 		//current_cell=   naiveBayesian.classifyObservation(observations); 
 

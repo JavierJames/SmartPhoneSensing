@@ -164,6 +164,59 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 		
 	}
 	
+
+	
+
+	/*
+	 * This function takes in the new observation sample, but only for One AP, and returns the classification type. 
+	 *   */
+ 
+	public int classifyObservation( int observation, TrainingData td)
+	{
+	
+		int bayesian_result = 0;
+   
+    	float [] classification_result = new float [2];  // return format is [0]= cellID, [1]: probability 
+    	
+    	float[] sense_results = new float [numberOfCells];         
+
+  
+    	int cellNumber;
+       	int ap_index;
+    	
+				
+		   //fetch the conditional probability of being in all cells and having that given rssi value for that given AP
+			sense_results = senseOneAP(observation, td.getPMF()); //P(e[i]=r|H)
+			posterior = vector_mult(this.prior, sense_results);	
+
+		//	System.arraycopy(this.posterior, 0, this.prior, 0, this.posterior.length); // update prior after 1 step.    
+			
+			classification_result=getMaxValueandClassify(posterior);
+			
+			cellNumber= (int)(classification_result[0] +1);
+			
+			//update end result only if classification had a valid cell id
+			if( cellNumber >= 1)
+			{
+				bayesian_result = (int)(classification_result[0] +1);
+			}
+			
+		 //   System.out.println("cellnumber:"+cellNumber);
+		    ClassificationEstimations.add( (int)(classification_result[0] +1));
+	     //	System.out.println("Cell:" + ClassificationEstimations.get(t)); 
+		    System.out.println("Cell: "+ (classification_result[0]+1) + "Probability: "+classification_result[1] );
+									
+	
+				
+	    return bayesian_result;
+	
+	
+		
+		
+	}
+
+	
+	
 	
 		    
  
