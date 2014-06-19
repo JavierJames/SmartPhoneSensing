@@ -75,6 +75,7 @@ public class Localization extends ActionBarActivity {
 	
 
 	// The path to the main directory
+	
 	private String filepath;
 	
 	// Set of training data. Each training data is associated to one access-point
@@ -89,6 +90,15 @@ public class Localization extends ActionBarActivity {
     //keep track of how many times Button SenseNewAP has been pressed, prevent overpressing
     private int SenseNewAP_buttonPressCount=0;
 	
+    /*AP selection */
+    ArrayList<String> ToBeSelectedAP = new ArrayList<String>();
+    ArrayList<String> SelectedAP = new ArrayList<String>();
+	// list of chosen APs in arraylist to be added in the ArrayAdapter
+	ArrayList<String> chosenAPNAMES = new ArrayList<String>();
+    
+    //need a list of chosenAP Names
+    
+    
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -97,16 +107,12 @@ public class Localization extends ActionBarActivity {
 		setContentView(R.layout.fragment_localization);
 		
 		
-		//debug
-		observations.add(-32);
-		observations.add(-12);
-		observations.add(-22);
-		observations.add(-42);
-		
-		
 //		createPMFTable();
 		
-		
+		/* *****************************************
+		 * Set up the User Interface with Tab buttons
+		 * 
+		 *  ***************************************** */
 		// Create a tabhost that will contain the tabs
 		tabHost = (TabHost)findViewById(R.id.tabhost);
 		//				tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
@@ -148,8 +154,9 @@ public class Localization extends ActionBarActivity {
 		
 		
 		
-		
-		
+		/* 
+		 * Set base Path where files should be fetched and stored
+		 * */
 		int User=2;  //0 = Javier pc, 1=Luis pc, 2=all phones,
 		
 		
@@ -167,163 +174,91 @@ public class Localization extends ActionBarActivity {
 		String root_folder_name = "cellsdata/";		//main folder
 	
 		filepath = folder_base_path + root_folder_name;	
+		 
+		
+		
+	/* 
+	 * */
+		
+		ToBeSelectedAP.add("Conferentie-TUD_00_1b_90_76_d3_f6");
+		ToBeSelectedAP.add("TUvisitor_00_1b_90_76_d3_f3 ");
+		ToBeSelectedAP.add("eduroam_00_1b_90_76_d3_f0  ");
+		ToBeSelectedAP.add("tudelft-dastud_00_1b_90_76_ce_14 ");
+		
+		
+		
+	     ListView listAvailableAP;
+	     ArrayAdapter<String> adapter_listAvailableAP;
+	     
+	    
+	     listAvailableAP = (ListView) findViewById(R.id.listAllAP);
+	    
+	     adapter_listAvailableAP= new ArrayAdapter<String>(this, R.layout.frament_localization_listview_item, ToBeSelectedAP);
+	     
+	     listAvailableAP.setAdapter(adapter_listAvailableAP);
+	     
+	     
+	     	     
+	 
 			
-		
-		
-		
-		
-		/* *********************************************
-		 * Phase 1: Create Histogram and PMF for all Access points
-		 * Phase 2: Filter Access Points 
-		 * ********************************************* */
-		Histogram histogram = null;
-		AccessPointOccurrence occurrency = new AccessPointOccurrence();
+			// Create the adapter to translate the array of strings to list items
+			ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
+					this,
+					R.layout.frament_localization_listview_item, ToBeSelectedAP   //not good, just for debugging purposes
+					//allAP
+					);
+			
+			
+			// Create the adapter to translate the array of strings to list items
+			ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
+					this,
+					R.layout.frament_localization_listview_item,
+					chosenAPNAMES
+					);
+			
+			//Get listView Object of all AP from xml file 
+			// Add adapter to listview
+			ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
+			listAllAP.setAdapter(adapterAllAP);
+			
+			
+			//Get listView Object of all selected AP from xml file 
+			// Add adapter to listview
+			ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
+			listChosenAp.setAdapter(adapterChosenAP);
+			
+			
+			// Add click listener to each item
+			listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
+						long id) {
+					
+					chooseAP(viewClicked);
+				}
+			});
+			
+			
+			listChosenAp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 	
-		int numberOfCells =17;
-		int coverage_percentage= 50;
-		SelectionCoverage selCvg = new SelectionCoverage(numberOfCells,coverage_percentage,filepath);
-		SelectionAverage selAvg = new SelectionAverage(filepath);
-				
-		//fetch path to the Raw sampled data, saved in .txt format
-		String pathToRawData= "1_RawUnselected_AP/";
-//		Path dir = Paths.get(filepath+pathToRawData);
-		
-		String dir = filepath+pathToRawData;
-		
-		File f = new File(dir);
-		
-		boolean debug_f1 = f.isDirectory();
-		boolean debug_f2 = f.isFile();
-		boolean debug_f3 = f.exists();
-		
-		File[] files = f.listFiles();
-		
-		try /*(DirectoryStream<Path> stream = Files.newDirectoryStream(dir))*/ {
-			
-			// Iterates over all files which the name starts with c and ends with .txt
-			for(File file : files) {
-				
-				if(file.getName().toString().startsWith("c", 0) && 
-						file.getName().toString().endsWith(".txt")) {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
+						long id) {
 					
-					histogram = new Histogram();  
-					
-					//step 1: Red raw data
-					//step 2: Create histogram of raw data
-					histogram.generateHistogram(file);
-																
-					//step 3: compute access-point occurrences 
-					histogram.writeHistogramToFile(occurrency); 
+					unChooseAP(viewClicked);
 				}
 				
-				
-			} // for(Path file : stream)
+			});
 			
-			// Write occurrence of each access-point to a file
-			occurrency.writeOccurrenceToFile(filepath);
-		
-			// step 4: Filter by coverage, > 50%
-			//filter Access-Point by coverage and save results
-			selCvg.generateSelection();
-			selCvg.writeSelectionToFile();
-			
-			// Compute overall average
-			//todo: Can the percentage be given as parameter?
-			selAvg.computeTotalAverage(); 
-			selAvg.writeOverallAverageToFile();
-			
-			
-			
-		}
-		catch(Exception e) {
-			Log.d("List files","\n\nError: Main.main: \n\n"+e.getMessage());
-		}
-		
-		//step 5: Filter by RSSI average strength
-		TreeMap<String,Float> Data_filterphase1 = new TreeMap<String, Float>();
-
-		Data_filterphase1 = rssi_filter.fetch_AP_and_RSSIavg(); //fetch access points from filter 1
-	    
-		//filter data by rssi strength
-		// all rssi strength that are outside the std deviation are removed
-		rssi_filter.filter_rssi_too_strong_Tree(Data_filterphase1);
-			
-	    
-	   // rssi_filter.display_normalAP();
-	    
-	    // write to file the AP that remained after filtering
-	    rssi_filter.save_filtered_AP();
-	    
-	    
-
-	    
-	     
-	      
-	      // Show training data in a table
-//	      DataTable dt = new DataTable(tds);
-//	      dt.showTables();
-//	      dt.showHistogramTable();
-	    
-	      
-	      
-	    
-	    /*
-	     * Initial belief
-	     */
-	    
 	
-		/* *********************************************
-		 *  Phase 3: Apply Bayesian classification using the chosen Access points 
-		 * ********************************************* */
-//	      int current_cell = 0;
-//	      int current_cell2 = 0;
-	      
-	      //Naive Bayesian classifier
-//	      NaiveBayesian naiveBayesian = new NaiveBayesian(filepath); //create classifier 
-//	      naiveBayesian.trainClassifier(tds); //train classifier 	   
-//	      naiveBayesian.setInitialBelieve();    //set the initial believe to uniform
-	      
-	    
-	 //     NaiveBayesian 
-	      
-	      /* Laplace classifier */
-//		  LaplaceBayesian laplaceClassifier = new LaplaceBayesian(filepath);
-//		  laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
-//		  laplaceClassifier.setInitialBelieve();
-		      
-		  
-		  /*
-		   * End initial belief
-		   */
-		  
-		  
-	    
-	    
-	    /*
-	     * Sense new scan
-	     */
-	    
-	      // fetch new testing data to classify
-//	      ArrayList<Integer> observations = new ArrayList<Integer>();  
-	      
-	      
-	      // Sample only the chosen AP
-
-	  //    observations = oberserveNewRssi(keyboard,tds);  
-	 
-
-	      
-	      
-//	      current_cell=   naiveBayesian.classifyObservation(observations); 
-
-	 //     System.out.println("\n\nClassfication Type: Naive Bayesian");
-
-	      
-	   //   System.out.println("My location is Cell "+current_cell);
-	
-	     // System.out.println("\n\nClassfication Type: Laplace");
 	     
-//	      current_cell2 = laplaceClassifier.classifyObservation(observations);
+	  
+	     
+	     
+	     
+		
+		
 		
 	} //end onCreate
 	
@@ -806,8 +741,8 @@ public class Localization extends ActionBarActivity {
 		SenseNewAP_buttonPressCount++;
 		
 		//add only one integer to the arraylist for now
-		ArrayList<Integer> test = new ArrayList<Integer>();
-		test.add(observations.get(cellID));
+		//ArrayList<Integer> test = new ArrayList<Integer>();
+		//test.add(observations.get(cellID));
 		
 		//classify observation based on this AP training data.
 		// Create the adapter to translate the array of strings to list items
@@ -845,7 +780,7 @@ public class Localization extends ActionBarActivity {
 	
 	
 	/*
-	 * This functions creates a list of APs
+	 * This functions fetches rssi values for the list of chosen AP, selected by the user
 	 */
 	public void senseNewScan(View view) {
 		
@@ -926,39 +861,22 @@ public class Localization extends ActionBarActivity {
 			      /*
 			       * End
 			       */
-			      
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
+			      		
 				
 				// list of APs in arraylist to be added in the ArrayAdapter
 		//		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
 				
 				// list of chosen APs in arraylist to be added in the ArrayAdapter
-				ArrayList<String> chosenAPNAMES = new ArrayList<String>();
+		/*			ArrayList<String> chosenAPNAMES = new ArrayList<String>();
 				
 				
 		//		TODO: sort list by rssi values ascending
 				
 				
-				// Create the adapter to translate the array of strings to list items
+			// Create the adapter to translate the array of strings to list items
 				ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
 						this,
-						R.layout.frament_localization_listview_item, chosenAPNAMES   //not good, just for debugging purposes
+						R.layout.frament_localization_listview_item, ToBeSelectedAP   //not good, just for debugging purposes
 						//allAP
 						);
 				
@@ -970,12 +888,13 @@ public class Localization extends ActionBarActivity {
 						chosenAPNAMES
 						);
 				
-				
+				//Get listView Object of all AP from xml file 
 				// Add adapter to listview
 				ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
 				listAllAP.setAdapter(adapterAllAP);
 				
 				
+				//Get listView Object of all selected AP from xml file 
 				// Add adapter to listview
 				ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
 				listChosenAp.setAdapter(adapterChosenAP);
@@ -985,7 +904,7 @@ public class Localization extends ActionBarActivity {
 				listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //		});*/ //not sure if had to take off?
 		
-					@Override
+	/*				@Override
 					public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
 							long id) {
 						
@@ -1005,7 +924,7 @@ public class Localization extends ActionBarActivity {
 					
 				});
 				
-				
+		*/		
 		
 	} //end SenseNewScan Function
 
