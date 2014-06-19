@@ -140,12 +140,28 @@
 		        
                 
                 <!-- List of AP tab -->
-                    
+               <!--      
+                <LinearLayout
+                	android:id="@+id/listAP_TabMain"
+                	android:layout_width="match_parent"
+                	android:layout_height="match_parent"
+                	android:orientation="vertical" >
+                  -->
+                  
                 <RelativeLayout
                     android:id="@+id/listAP_tab"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" >
                     
+            
+                           <Button
+					        android:id="@+id/finalizeSelection_button"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:onClick="finalizeSelction"
+					        android:text="@string/FinalizeSelection_button" 
+					        android:layout_alignParentBottom="true" />
+	            
                     
                     <!-- List all APs -->
                     
@@ -154,48 +170,19 @@
                     <ListView 
                         android:id="@+id/listAllAP"
                         android:layout_width="200dp"
-                        android:layout_height="fill_parent"
+                        android:layout_height="400dp"
                         android:background="#cecece"
                         >
                     </ListView>
                     
                     
-                    
-                    <!-- Select and Unselect button -->
-                    
-                    <!--
-                    <LinearLayout
-	                    android:id="@+id/selection_buttons"
-	                    android:layout_width="70dp"
-	                    android:layout_height="match_parent"
-	                    android:orientation="vertical"
-	                    android:layout_toRightOf="@+id/listAllAP">
-                    
-                         
-	                    <Button
-					        android:id="@+id/selectAP_button"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:onClick="selectAP"
-					        android:text="@string/selectAP_button" />
-	                    
-	                    
-	                    <Button
-					        android:id="@+id/unselectAP_button"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:onClick="unselectAP"
-					        android:text="@string/unselectAP_button" />
-	                    
-                    </LinearLayout>
-                     -->
-                    
+                
                     <!-- List selected APs -->
                     
                     <ListView
                         android:id="@+id/listSelectedAP"
                         android:layout_width="200dp"
-                        android:layout_height="fill_parent"
+                        android:layout_height="400dp"
                         android:layout_toRightOf="@+id/listAllAP"
                         android:background="#cccccc"
                          >
@@ -204,6 +191,9 @@
                     
                 </RelativeLayout>
 		        
+                
+               <!--  </LinearLayout>  -->
+                     
                 
                 
     		</FrameLayout>
