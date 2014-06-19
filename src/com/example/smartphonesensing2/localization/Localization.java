@@ -16,6 +16,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.Context;
+import android.graphics.drawable.shapes.PathShape;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -180,11 +181,14 @@ public class Localization extends ActionBarActivity {
 	/* 
 	 * */
 		
-		ToBeSelectedAP.add("Conferentie-TUD_00_1b_90_76_d3_f6");
+		//fetchfilewithfilteredAP
+		ToBeSelectedAP=	fetchFileFilteredAP();
+		
+	/*	ToBeSelectedAP.add("Conferentie-TUD_00_1b_90_76_d3_f6");
 		ToBeSelectedAP.add("TUvisitor_00_1b_90_76_d3_f3 ");
 		ToBeSelectedAP.add("eduroam_00_1b_90_76_d3_f0  ");
 		ToBeSelectedAP.add("tudelft-dastud_00_1b_90_76_ce_14 ");
-		
+		*/
 		
 		
 	     ListView listAvailableAP;
@@ -442,6 +446,9 @@ public class Localization extends ActionBarActivity {
 			Time t = new Time();
 			
 
+			/* Create a new thread in order to communicate with the UI thread on hte Main thread
+			 * disable button while scanning
+			 * */
 			@Override
 			public void run() {
 				
@@ -527,7 +534,9 @@ public class Localization extends ActionBarActivity {
 					}
 					
 					
-					
+					/* Create a new thread in order to communicate with the UI thread on hte Main thread
+					 * enable button when done
+					 * */			
 				   	runOnUiThread(new Runnable () {
 			    		@Override 
 			    		public void run(){
@@ -652,6 +661,7 @@ public class Localization extends ActionBarActivity {
 	public void initialBelief(View view) {
 		String filepath = "/Downloads/cellsdata/";
 		
+		int currentcell=0;
 		
 		// Set of training data. Each training data is associated to one access-point
 //	    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
@@ -692,6 +702,11 @@ public class Localization extends ActionBarActivity {
 		laplaceClassifier = new LaplaceBayesian(filepath);
 		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
 		laplaceClassifier.setInitialBelieve();
+		
+		//currentcell= laplaceClassifier.get
+	
+		showLocation(laplaceClassifier.getCurrentLocation());
+		
 		
 //		TODO: show current location, all cells should be a candidate.
 	}
@@ -900,18 +915,28 @@ public class Localization extends ActionBarActivity {
 	 * Write data of access point to a file
 	 */
 	private void writeToFile(String SSID, String BSSID, int level, int frequency, String capabilities, int content) {
-		try
+			try
 		{
 			TextView cell = (TextView) findViewById(R.id.cell_name);
 			
 			String cell_name = cell.getText().toString();
 			
 			
-			File path = Environment.getExternalStoragePublicDirectory(
+/*			File path = Environment.getExternalStoragePublicDirectory(
 		            Environment.DIRECTORY_DOWNLOADS
 		            );
+*/
+			String folder_name= "1_RawUnselected_AP";
+			File path = new File(filepath+folder_name); //new 
 
-			path.mkdirs();
+			// If the directory does not exist, then make one
+			if(!path.exists()) {
+				if(path.mkdirs())
+					System.out.println("Directory created!");
+				else
+					System.out.println("Failed to create directory!");
+			}
+			
 			
 			
 			File file = new File(path, cell_name+".txt");
@@ -990,11 +1015,19 @@ public class Localization extends ActionBarActivity {
 			String cell_name = filename;
 			
 			
-			File path = Environment.getExternalStoragePublicDirectory(
-		            Environment.DIRECTORY_DOWNLOADS
-		            );
+//			File path = Environment.getExternalStoragePublicDirectory(
+	//	            Environment.DIRECTORY_DOWNLOADS
+	//	            );
 
-			path.mkdirs();
+			File path = new File(filepath); //new 
+
+			// If the directory does not exist, then make one
+			if(!path.exists()) {
+				if(path.mkdirs())
+					System.out.println("Directory created!");
+				else
+					System.out.println("Failed to create directory!");
+			}
 			
 			
 			File file = new File(path, cell_name+".txt");
@@ -1081,4 +1114,60 @@ public class Localization extends ActionBarActivity {
 //	public void unselectAP(View view) {
 //		
 //	}
+	
+	
+	/* This function is called to show the user location on the screen*/
+	public void showLocation(ArrayList<Integer> newCurrentLocation)
+	{
+		TextView currentLocation = (TextView) findViewById(R.id.showLocationView);
+		
+		currentLocation.setText("Cell"+(newCurrentLocation.get(0)+1));
+		
+	}
+	
+	
+	public ArrayList<String> fetchFileFilteredAP(){
+		String folder_name="2_Filter/selection/";
+		String readfile = filepath + folder_name +"selectionNormalRSSI.txt";
+	
+		ArrayList<String> AP_names = new ArrayList<String> ();
+	
+		
+		try{
+			File file = new File(readfile);
+			
+			Scanner reader = new Scanner(file);
+			reader.useDelimiter("\\s*[,\n\r]\\s*");
+			
+			
+			while(reader.hasNextLine())
+			{
+				AP_names.add(reader.nextLine());
+				//average = reader.nextFloat();
+			
+				//System.out.println("APname: " + AP_name + " Average: " +average );	
+				/*add data to a Treemap */
+				//filedata.put(AP_name, average);
+					
+			}
+			
+			
+			reader.close();
+		}	
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+	
+		
+		
+		
+		
+		
+		return AP_names;
+	}
+	
+	
+	
+	
+	
 }

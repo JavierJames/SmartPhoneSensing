@@ -36,6 +36,10 @@ public class Bayesian {
     static int numberOfCells = 17;
 	static int numberOfObservations = 4;
 	
+	
+	//ArrayList to keep localization result for a given sample 
+	ArrayList<Integer> currentLocation = new ArrayList<Integer>();
+	
 
 	//information about classifier accuracy
 	public static float error_percentage;
@@ -92,6 +96,8 @@ public class Bayesian {
 	{
 		this.tds = trainingData;
 	}
+	
+	
 	
 	/*
 	 * This function takes in the new observation sample, and returns the classification type. 
@@ -319,7 +325,7 @@ public class Bayesian {
 		{
 			this.prior[i]= 	1/(float)(numberOfCells); //initial prior is uniform
 			this.posterior[i]= 	1/(float)(numberOfCells); //initial prior is uniform
-			
+			currentLocation.add(i);// at the beginning all rooms is the current location
 		}
 	
 		
@@ -328,6 +334,21 @@ public class Bayesian {
 	}
     
     
+	/* return the current location*/
+	public ArrayList<Integer> getCurrentLocation()
+	{
+		return currentLocation;
+	}
+	
+	/* This function takes in a new list of current locations, and assigns it to the current location global variable. 
+	 * It first resets it.*/
+	public void updataCurrentLocation(ArrayList<Integer> newLocation){
+		
+		currentLocation.clear();//reset data to be blank
+		currentLocation=newLocation; //get new location
+		
+	}
+	
     
 	/*
 	  *@parameter 1 :observation corresponding to a given training data. 
