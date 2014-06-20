@@ -609,6 +609,7 @@ public class Localization extends ActionBarActivity {
 //			ssid[i] = rssiList.get(i).SSID;
 			SSID = rssiList.get(i).SSID;
 			BSSID =  rssiList.get(i).BSSID;
+			
 			level = rssiList.get(i).level;
 			
 			
@@ -617,7 +618,7 @@ public class Localization extends ActionBarActivity {
 				
 				// if the SSID+BSSID matches the name of the chosen AP
 				// then add it to the list
-				if((SSID+(BSSID.replace(':', '_'))).equalsIgnoreCase(chosenAP.get(j))) {
+				if((SSID+"_"+(BSSID.replace(':', '_'))).equalsIgnoreCase(chosenAP.get(j))) {
 					observation.add(j, Integer.valueOf(level));
 				}
 			}
