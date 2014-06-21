@@ -981,7 +981,10 @@ containing a value of this type.
         public static final int abc_textfield_searchview_holo_light=0x7f020054;
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
-        public static final int ic_launcher=0x7f020057;
+        public static final int floor_layout=0x7f020057;
+        public static final int ic_launcher=0x7f020058;
+        public static final int person=0x7f020059;
+        public static final int question_mark=0x7f02005a;
     }
     public static final class id {
         public static final int AnalyzeActivity=0x7f05004e;
@@ -997,8 +1000,8 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050065;
-        public static final int activity=0x7f050062;
+        public static final int action_settings=0x7f050064;
+        public static final int activity=0x7f050061;
         public static final int activityOverviewButton=0x7f050048;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
@@ -1031,7 +1034,7 @@ containing a value of this type.
         public static final int listMode=0x7f050001;
         public static final int listSelectedAP=0x7f050060;
         public static final int list_item=0x7f050029;
-        public static final int localisation=0x7f050063;
+        public static final int localisation=0x7f050062;
         public static final int localisation_initial_belief_button=0x7f050059;
         public static final int localisation_sense_new_AP_button=0x7f05005a;
         public static final int localisation_sense_new_scan_button=0x7f05005b;
@@ -1043,7 +1046,7 @@ containing a value of this type.
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
-        public static final int rowTextView=0x7f050064;
+        public static final int rowTextView=0x7f050063;
         public static final int runButton=0x7f050042;
         public static final int scanCell=0x7f050057;
         public static final int search_badge=0x7f050032;
@@ -1070,7 +1073,6 @@ containing a value of this type.
         public static final int stillButton=0x7f050040;
         public static final int submit_area=0x7f050039;
         public static final int tab1=0x7f050054;
-        public static final int tab3=0x7f050061;
         public static final int tabMode=0x7f050002;
         public static final int tabhost=0x7f05003d;
         public static final int testButton=0x7f050047;
@@ -1142,10 +1144,9 @@ containing a value of this type.
         public static final int fragment_activity_monitoring_test_layout=0x7f03001a;
         public static final int fragment_activity_monitoring_train_layout=0x7f03001b;
         public static final int fragment_localization=0x7f03001c;
-        public static final int fragment_localization2=0x7f03001d;
-        public static final int fragment_main=0x7f03001e;
-        public static final int frament_localization_listview_item=0x7f03001f;
-        public static final int support_simple_spinner_dropdown_item=0x7f030020;
+        public static final int fragment_main=0x7f03001d;
+        public static final int frament_localization_listview_item=0x7f03001e;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001f;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;
