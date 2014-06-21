@@ -102,11 +102,12 @@
     	
     	
    	<!-- AP selection tab -->
+   	
    		<string name="FinalizeSelection_button"> Finalize Selection </string>
    		
    		
-   		<string name="selectAP_button">></string>
-   		<string name="unselectAP_button"> &lt; </string>
+   		<string name="listAllAPHeader">All AP</string>
+   		<string name="listSelectedAPHeader">Selected AP</string>
    		
    		
     
@@ -123,11 +124,6 @@
     <string name="knn_3_z">Ng 3 Z-axis</string>
     -->
     
-    
-    
-    
-    
-    <!-- Location activity -->
     
     
     
