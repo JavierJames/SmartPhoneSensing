@@ -15,12 +15,15 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Path;
 import android.graphics.drawable.shapes.PathShape;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore.Files;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.Time;
 import android.util.Log;
@@ -32,6 +35,7 @@ import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import android.os.CountDownTimer;
 
 import com.example.smartphonesensing2.R;
 import com.example.smartphonesensing2.localization.classification.Bayesian;
@@ -51,10 +55,16 @@ public class Localization extends ActionBarActivity {
 	private final static int TWO_MINUTES = 180000;
 	private final static int THREE_MINUTES = 180000;
 	private final static int FIVE_MINUTES = 300000;
+	private TextView countdown_timer_text; 
+	private final long startTime = 50000;
+	private final long interval = 1000;
+	MalibuCountDownTimer countDownTimer= new MalibuCountDownTimer(startTime, interval);
+	
+	
 	
 	// sample rate at which to sample
 	private final static int SAMPLE_RATE = 1000;
-	private final static int DURATION = FIVE_MINUTES/5; 
+	private final static int DURATION = THREE_MINUTES; 
 	
 	// keep tracking of scanning time
 	private long start, stop; 
@@ -62,16 +72,23 @@ public class Localization extends ActionBarActivity {
 	// keep track of sample number 
 	private int id_sample=0;
 	
+	/*
+	 * Settings for Training Data
+	 *  */
 	
-	private ArrayList<Table> tables = new ArrayList<Table>();
+	int numberOfCells =8; //javierś home 
+	int coverage_percentage= 50;
+	
+	
+	private ArrayList<Table> tables = new ArrayList<Table>(); // check
 	
 	// Tabhost to hold the tab
 	private TabHost tabHost;
 	
 	// Classifiers
-	private NaiveBayesian naiveBayesian;
-	private LaplaceBayesian laplaceClassifier;
-	private ProbabilisticBayesian probabilisticClassifier;
+	private NaiveBayesian naiveBayesian;     // check
+	private LaplaceBayesian laplaceClassifier;   // check
+	private ProbabilisticBayesian probabilisticClassifier;   // check
 	
 	
 
@@ -80,10 +97,10 @@ public class Localization extends ActionBarActivity {
 	private String filepath;
 	
 	// Set of training data. Each training data is associated to one access-point
-    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();
+    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();   // check
     
     // Filter to be applied on the AP, based on average rssi strength over entire platform
-    AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);
+    AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);   // check
     
     // Holds the rssi values of the chosen AP
     ArrayList<Integer> observations = new ArrayList<Integer>();
@@ -106,9 +123,6 @@ public class Localization extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.fragment_localization);
-		
-		
-//		createPMFTable();
 		
 		/* *****************************************
 		 * Set up the User Interface with Tab buttons
@@ -172,8 +186,8 @@ public class Localization extends ActionBarActivity {
 		else if (User==2)
 			folder_base_path =	Environment.getExternalStorageDirectory().toString()+"/Download/";
 		
-		String root_folder_name = "cellsdata/";		//main folder
-	
+		//String root_folder_name = "cellsdata/";		//main folder
+		String root_folder_name = "cellsdata2/";		//main folder for javier home
 		filepath = folder_base_path + root_folder_name;	
 		 
 		
@@ -434,20 +448,29 @@ public class Localization extends ActionBarActivity {
 	 */
 	public void scanCell(View view) {
 		Button b = (Button) view;
+		//TextView timer = (TextView) findViewById(R.id.timer);
 		id_sample = 0;
 		
+		//scanningCell(b, timer);
 		scanningCell(b);
+		
 	}
 	
 	
 	/*
 	 * Scan cell
 	 */
-	private void scanningCell(final Button button) {
+//	private void scanningCell(final Button button, final TextView timer) {
+		private void scanningCell(final Button button) {
+
 
 		Runnable runnable = new Runnable() {
 			Time t = new Time();
+		//	private final long startTime = 50000;
+		//	private final long interval = 1000;
+		//	MalibuCountDownTimer countDownTimer= new MalibuCountDownTimer(startTime, interval);
 			
+			boolean timerHasStarted = false;
 
 			/* Create a new thread in order to communicate with the UI thread on hte Main thread
 			 * disable button while scanning
@@ -458,13 +481,43 @@ public class Localization extends ActionBarActivity {
 			   	runOnUiThread(new Runnable () {
 		    		@Override 
 		    		public void run(){
-		    			button.setEnabled(false);
+		   			button.setEnabled(false);
 		    		}
 		    	});
 
 
 				start = System.currentTimeMillis();
 				stop = System.currentTimeMillis();
+				
+				//countDownTimer.start();
+				
+		/*		//create a new thread to run the timer
+				runOnUiThread(new Runnable () {
+		    		@Override 
+		    		public void run(){
+		    		//	countdown_timer_text.setText(countdown_timer_text.getText() + String.valueOf(startTime));
+		    			//countdown_timer_text.setText("hallo");
+						timer.setText("hello");
+						
+		    			if (!timerHasStarted)
+						{
+							countDownTimer.start();
+							timerHasStarted = true;
+							button.setText("Start");
+						}
+					else
+						{
+
+							countDownTimer.cancel();
+							timerHasStarted = false;
+							button.setText("RESET");
+						}
+
+		    		}
+		    	});
+		 	
+			*/	
+				
 				
 				try {
 
@@ -557,6 +610,208 @@ public class Localization extends ActionBarActivity {
 
 		new Thread(runnable).start();
 	}
+	
+	
+	
+	//when done sampling, and this button is pressed, create histogram of each Access-Points
+	//filter data after
+	@SuppressLint("NewApi") public void finalizeTraining(View view){
+		
+		Button button = (Button) findViewById(R.id.finalizeTraining_button);
+		
+		finalizingRawData(button);
+
+		
+	}
+	
+	
+	/*separate thread for hen finalize Training button is pressed
+	 * used to create histogram of the read raw data
+	 *  */
+	public void finalizingRawData(final Button button){
+		
+		//thread #1
+		Runnable runnable = new Runnable() {
+			
+
+			
+			@Override
+			public void run() {
+				
+						/* Create a new thread in order to communicate with the UI thread on the Main thread
+						 * disable button while scanning
+						 * */
+						//thread #2
+					   	runOnUiThread(new Runnable () {
+				    		@Override 
+				    		public void run(){
+				    			button.setEnabled(false);
+				    		}
+				    	});
+		
+		
+			
+							createRawDataHistogramandFilter();
+							
+							
+							/* Create a new thread in order to communicate with the UI thread on hte Main thread
+							 * enable button when done
+							 * */	
+							//thread #3
+						   	runOnUiThread(new Runnable () {
+					    		@Override 
+					    		public void run(){
+					    			button.setEnabled(true);
+					    		}
+					    	});
+		
+							
+				
+			}//end of run
+		};new Thread(runnable).start();
+
+		
+		
+		
+		
+	}
+	
+	/*create a histogram file from all of the raw data scanned.
+	 * also create a occurrence file */
+	public void createRawDataHistogramandFilter(){
+		
+		/* *********************************************
+		 * Phase 1: Create Histogram and PMF for all Access points
+		 * Phase 2: Filter Access Points 
+		 * ********************************************* */
+		Histogram histogram = null;
+		AccessPointOccurrence occurrency = new AccessPointOccurrence();
+	
+		SelectionCoverage selCvg = new SelectionCoverage(numberOfCells,coverage_percentage,filepath);
+		SelectionAverage selAvg = new SelectionAverage(filepath);
+				
+		//fetch path to the Raw sampled data, saved in .txt format
+		String pathToRawData= "1_RawUnselected_AP/";
+		//Path dir = Paths.get(filepath+pathToRawData);
+		Path dir; //= FileSystems.getDefault().getPath("/users/sally");
+		File directory = new File(filepath+pathToRawData);
+
+		try  {
+			
+			
+			
+			
+			// get all the files from a directory
+			File[] fList = directory.listFiles();
+			for (File file : fList) {
+			   
+				if (file.isFile()) {
+			        //files.add(file);
+			    	
+			    	if(file.getName().startsWith("c", 0) && 
+					file.getName().endsWith(".txt")) {
+			    		histogram = new Histogram();  
+						
+							//step 1: Red raw data
+							//step 2: Create histogram of raw data
+							histogram.generateHistogram(file);
+																		
+							//step 3: compute access-point occurrences 
+							histogram.writeHistogramToFile(occurrency); 
+								
+			    		
+			    	}
+						
+			    	
+			    	
+			    	
+			    }
+			    /*else if (file.isDirectory()) {
+			        listf(file.getAbsolutePath(), files);
+			    }*/
+			    
+			    
+			    
+			}//end of fetching files
+	
+	
+		
+			// Write occurrence of each access-point to a file
+			occurrency.writeOccurrenceToFile(filepath);
+		
+			// step 4: Filter by coverage, > 50%
+			//filter Access-Point by coverage and save results
+			selCvg.generateSelection();
+			selCvg.writeSelectionToFile();
+			
+			// Compute overall average
+			//todo: Can the percentage be given as parameter?
+			selAvg.computeTotalAverage(); 
+			selAvg.writeOverallAverageToFile();
+			
+	
+			
+	
+			
+			
+		}
+		catch(Exception e) {
+			System.out.println("\n\nError: Main.main: \n\n"+e.getMessage());
+		}
+	
+		//step 5: Filter by RSSI average strength
+		TreeMap<String,Float> Data_filterphase1 = new TreeMap<String, Float>();
+
+		AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath); //new
+		
+		Data_filterphase1 = rssi_filter.fetch_AP_and_RSSIavg(); //fetch access points from filter 1
+	    
+		//filter data by rssi strength
+		// all rssi strength that are outside the std deviation are removed
+		rssi_filter.filter_rssi_too_strong_Tree(Data_filterphase1);
+			
+	    
+	   // rssi_filter.display_normalAP();
+	    
+	    // write to file the AP that remained after filtering
+	    rssi_filter.save_filtered_AP();
+	
+		
+	}
+	
+	
+	
+	// CountDownTimer class
+			public class MalibuCountDownTimer extends CountDownTimer
+				{
+
+					public MalibuCountDownTimer(long startTime, long interval)
+						{
+							super(startTime, interval);
+						}
+
+					@Override
+					public void onFinish()
+						{
+						countdown_timer_text.setText("Time's up!");
+						//	timeElapsedView.setText("Time Elapsed: " + String.valueOf(startTime));
+						}
+
+					@Override
+					public void onTick(long millisUntilFinished)
+						{
+						countdown_timer_text.setText("Time remain:" + millisUntilFinished);
+							//timeElapsed = startTime - millisUntilFinished;
+							//timeElapsedView.setText("Time Elapsed: " + String.valueOf(timeElapsed));
+						}
+				}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/*

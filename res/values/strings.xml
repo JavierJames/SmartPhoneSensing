@@ -101,8 +101,12 @@
    	
     	
     	
-   	<!-- AP selection tab -->
+   	    <!-- AP selection tab -->
    		<string name="FinalizeSelection_button"> Finalize Selection </string>
+   		
+   		<!-- Training Data button to create histogram -->
+   		<string name="FinalizeTraining_button"> Finalize Training </string>
+   		
    		
    		
    		<string name="selectAP_button">></string>
