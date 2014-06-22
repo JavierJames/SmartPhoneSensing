@@ -17,12 +17,13 @@ import java.util.TreeSet;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Path;
-import android.graphics.drawable.shapes.PathShape;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
-import android.provider.MediaStore.Files;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.Time;
 import android.util.Log;
@@ -30,11 +31,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
-import android.os.CountDownTimer;
 
 import com.example.smartphonesensing2.R;
 import com.example.smartphonesensing2.localization.classification.Bayesian;
@@ -106,7 +107,9 @@ public class Localization extends ActionBarActivity {
     
     // Filter to be applied on the AP, based on average rssi strength over entire platform
 
+
     AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);   // check
+
 
     
     // Holds the rssi values of the chosen AP
@@ -174,6 +177,8 @@ public class Localization extends ActionBarActivity {
 		tabHost.addTab(listAPTab);
 		
 		
+		// Pass empty arraylist to this showCurrentLocation to make the men of each cell invisible initially
+		showCurrentLocation(new ArrayList<Integer>());
 		
 		
 		/* 
@@ -841,7 +846,7 @@ public class Localization extends ActionBarActivity {
 //				observation.add(-74);
 //				observation.add(-83);
 		
-		// TODO: create treemap for each AP having their name as key and rssi as value 
+		
 		
 		WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		List<ScanResult> rssiList = null;
@@ -902,7 +907,7 @@ public class Localization extends ActionBarActivity {
 				continue;
 			}*/
 			
-			// TODO: sort APs
+			
 
 			// write the list of access-points to a file
 			/*writeToFile(
@@ -966,16 +971,16 @@ public class Localization extends ActionBarActivity {
 		
 		
 		laplaceClassifier = new LaplaceBayesian(filepath);
+<<<<<<< HEAD
 		laplaceClassifier.setNumberOfCells(this.numberOfCells);
 		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
+=======
+//		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
+>>>>>>> d010c0c14f237f53d5f85850ec0062bbe5dc7296
 		laplaceClassifier.setInitialBelieve();
-		
-		//currentcell= laplaceClassifier.get
 	
-		showLocation(laplaceClassifier.getCurrentLocation());
 		
-		
-//		TODO: show current location, all cells should be a candidate.
+		showCurrentLocation(laplaceClassifier.getCurrentLocation());
 	}
 	
 	
@@ -1004,9 +1009,7 @@ public class Localization extends ActionBarActivity {
 	      /*
 	       * End
 	       */
-	      
-		
-		
+	    
 				
 		
 		
@@ -1086,12 +1089,7 @@ public class Localization extends ActionBarActivity {
 		for(int i=0; i<observations.size(); i++)
 		{
 			System.out.println("Observation"+observations.get(i));
-		}
-	    
-	      
-			 
-		
-			      
+		}     
 	} //end SenseNewScan Function
 
 
@@ -1169,14 +1167,6 @@ public class Localization extends ActionBarActivity {
 		listChosenAP.setAdapter(adapterChosenAP);
 	}
 
-
-	/*
-	 * This function shows the current location of the user
-	 */
-	public void showCurrentLocation(View view) {
-		TextView text = (TextView) findViewById(R.id.showLocationView);
-	}
-	
 	
 	/*
 	 * Write data of access point to a file
@@ -1383,20 +1373,94 @@ public class Localization extends ActionBarActivity {
 //	}
 	
 	
-	/* This function is called to show the user location on the screen*/
-	public void showLocation(ArrayList<Integer> newCurrentLocation)
+	/*
+	 * This function is called to show the current user's location on the screen
+	 */
+	private void showCurrentLocation(ArrayList<Integer> newCurrentLocation)
 	{
 		TextView currentLocation = (TextView) findViewById(R.id.showLocationView);
 		currentLocation.setText("");
+		
+		
+		// Fetch each man of each cell
+		// to make them invisible
+		LayerDrawable layer = (LayerDrawable) getResources().getDrawable(R.drawable.fragment_location_image);
+		Drawable cell1 = layer.findDrawableByLayerId(R.id.cell1Item);
+		Drawable cell2 = layer.findDrawableByLayerId(R.id.cell2Item);
+		Drawable cell3 = layer.findDrawableByLayerId(R.id.cell3Item);
+		Drawable cell4 = layer.findDrawableByLayerId(R.id.cell4Item);
+		Drawable cell5 = layer.findDrawableByLayerId(R.id.cell5Item);
+		Drawable cell6 = layer.findDrawableByLayerId(R.id.cell6Item);
+		Drawable cell7 = layer.findDrawableByLayerId(R.id.cell7Item);
+		Drawable cell8 = layer.findDrawableByLayerId(R.id.cell8Item);
+		Drawable cell9 = layer.findDrawableByLayerId(R.id.cell9Item);
+		Drawable cell10 = layer.findDrawableByLayerId(R.id.cell10Item);
+		Drawable cell11 = layer.findDrawableByLayerId(R.id.cell11Item);
+		Drawable cell12 = layer.findDrawableByLayerId(R.id.cell12Item);
+		Drawable cell13 = layer.findDrawableByLayerId(R.id.cell13Item);
+		Drawable cell14 = layer.findDrawableByLayerId(R.id.cell14Item);
+		Drawable cell15 = layer.findDrawableByLayerId(R.id.cell15Item);
+		Drawable cell16 = layer.findDrawableByLayerId(R.id.cell16Item);
+		Drawable cell17 = layer.findDrawableByLayerId(R.id.cell17Item);
+		
+		// Set item invisible
+		cell1.setAlpha(0);
+		cell2.setAlpha(0);
+		cell3.setAlpha(0);
+		cell4.setAlpha(0);
+		cell5.setAlpha(0);
+		cell6.setAlpha(0);
+		cell7.setAlpha(0);
+		cell8.setAlpha(0);
+		cell9.setAlpha(0);
+		cell10.setAlpha(0);
+		cell11.setAlpha(0);
+		cell12.setAlpha(0);
+		cell13.setAlpha(0);
+		cell14.setAlpha(0);
+		cell15.setAlpha(0);
+		cell16.setAlpha(0);
+		cell17.setAlpha(0);
+		
 		
 		for(int i = 0; i < newCurrentLocation.size(); i++) {
 			currentLocation.setText(currentLocation.getText()+"\n"+
 					"Cell "+(newCurrentLocation.get(i)+1)
 					);
+			
+			// check if which cell is in the newCurrentLocation
+			// each cell that is present in the newCurrentLocation
+			// will be depicted in the picture by showing a man on the corresponding cell
+			switch(newCurrentLocation.get(i)+1) {
+			case 1: cell1.setAlpha(255); break;
+			case 2: cell2.setAlpha(255); break;
+			case 3: cell3.setAlpha(255); break;
+			case 4: cell4.setAlpha(255); break;
+			case 5: cell5.setAlpha(255); break;
+			case 6: cell6.setAlpha(255); break;
+			case 7: cell7.setAlpha(255); break;
+			case 8: cell8.setAlpha(255); break;
+			case 9: cell9.setAlpha(255); break;
+			case 10: cell10.setAlpha(255); break;
+			case 11: cell11.setAlpha(255); break;
+			case 12: cell12.setAlpha(255); break;
+			case 13: cell13.setAlpha(255); break;
+			case 14: cell14.setAlpha(255); break;
+			case 15: cell15.setAlpha(255); break;
+			case 16: cell16.setAlpha(255); break;
+			case 17: cell17.setAlpha(255); break;
+			}
+			
 		}
 		
 		
+		// Get imageview to add the new updated image
+		ImageView imageView = (ImageView) findViewById(R.id.showCurrentLocationImage);
+		
+		// Add the updated image
+		imageView.setImageDrawable(layer);
 	}
+	
 	
 	/*This functions fetches the file with the list of AP that have survived the filtering */
 	public ArrayList<String> fetchFileFilteredAP(){

@@ -98,12 +98,15 @@
     	<string name="localisation_sense_new_AP_button">Sense new AP</string>
     	<string name="localisation_sense_new_scan_button">Sense new Scan</string>
     	<string name="showLocationView">Location</string>
+    	<string name="showCurrentLocationImage">Show current location</string>
    	
     	
+
    
    	<!-- AP selection tab -->
    	
 		<string name="FinalizeSelection_button"> Finalize Selection </string>
+
    		
    		<!-- Training Data button to create histogram -->
    		<string name="FinalizeTraining_button"> Finalize Training </string>
