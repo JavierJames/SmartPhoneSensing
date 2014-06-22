@@ -13,7 +13,7 @@
     <item
         android:id="@+id/cell1Item"
         android:top="0dp"
-        android:left="-490dp" >
+        android:left="470dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -24,7 +24,7 @@
     <item
         android:id="@+id/cell2Item"
         android:top="0dp"
-        android:left="-390dp" >
+        android:left="370dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -35,7 +35,7 @@
     <item
         android:id="@+id/cell3Item"
         android:top="0dp"
-        android:left="-290dp" >
+        android:left="260dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -46,7 +46,7 @@
     <item
         android:id="@+id/cell4Item"
         android:top="0dp"
-        android:left="-190dp" >
+        android:left="150dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -57,7 +57,7 @@
     <item
         android:id="@+id/cell5Item"
         android:top="0dp"
-        android:left="-80dp" >
+        android:left="30dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -68,7 +68,7 @@
     <item
         android:id="@+id/cell6Item"
         android:top="0dp"
-        android:left="30dp" >
+        android:left="-80dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -79,7 +79,7 @@
     <item
         android:id="@+id/cell7Item"
         android:top="0dp"
-        android:left="150dp" >
+        android:left="-190dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -90,7 +90,7 @@
     <item
         android:id="@+id/cell8Item"
         android:top="0dp"
-        android:left="260dp" >
+        android:left="-290dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -101,7 +101,7 @@
     <item
         android:id="@+id/cell9Item"
         android:top="0dp"
-        android:left="370dp" >
+        android:left="-390dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -112,7 +112,7 @@
     <item
         android:id="@+id/cell10Item"
         android:top="0dp"
-        android:left="470dp" >
+        android:left="-490dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -122,8 +122,8 @@
     
     <item
         android:id="@+id/cell11Item"
-        android:top="0dp"
-        android:left="20dp" >
+        android:top="130dp"
+        android:left="490dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -133,8 +133,8 @@
     
     <item
         android:id="@+id/cell12Item"
-        android:top="0dp"
-        android:left="20dp" >
+        android:top="130dp"
+        android:left="350dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -144,8 +144,8 @@
     
     <item
         android:id="@+id/cell13Item"
-        android:top="0dp"
-        android:left="20dp" >
+        android:top="130dp"
+        android:left="180dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -155,8 +155,8 @@
     
     <item
         android:id="@+id/cell14Item"
-        android:top="0dp"
-        android:left="20dp" >
+        android:top="130dp"
+        android:left="80dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -166,8 +166,8 @@
     
     <item
         android:id="@+id/cell15Item"
-        android:top="0dp"
-        android:left="20dp" >
+        android:top="-130dp"
+        android:left="250dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -177,8 +177,8 @@
     
     <item
         android:id="@+id/cell16Item"
-        android:top="0dp"
-        android:left="20dp" >
+        android:top="-130dp"
+        android:left="-270dp" >
         
         <bitmap 
             android:src="@drawable/man"
@@ -188,8 +188,8 @@
     
     <item
         android:id="@+id/cell17Item"
-        android:top="0dp"
-        android:left="20dp" >
+        android:top="-130dp"
+        android:left="-370dp" >
         
         <bitmap 
             android:src="@drawable/man"
