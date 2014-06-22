@@ -982,9 +982,11 @@ containing a value of this type.
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
         public static final int floor_layout=0x7f020057;
-        public static final int ic_launcher=0x7f020058;
-        public static final int person=0x7f020059;
-        public static final int question_mark=0x7f02005a;
+        public static final int fragment_location_image=0x7f020058;
+        public static final int ic_launcher=0x7f020059;
+        public static final int man=0x7f02005a;
+        public static final int person=0x7f02005b;
+        public static final int question_mark=0x7f02005c;
     }
     public static final class id {
         public static final int AnalyzeActivity=0x7f05004e;
@@ -1000,8 +1002,8 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050066;
-        public static final int activity=0x7f050063;
+        public static final int action_settings=0x7f050079;
+        public static final int activity=0x7f050064;
         public static final int activityOverviewButton=0x7f050048;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
@@ -1010,6 +1012,23 @@ containing a value of this type.
         public static final int buttonResetTrainData=0x7f050043;
         public static final int buttonViewTestData=0x7f05004b;
         public static final int buttonViewTrainData=0x7f050044;
+        public static final int cell10Item=0x7f050071;
+        public static final int cell11Item=0x7f050072;
+        public static final int cell12Item=0x7f050073;
+        public static final int cell13Item=0x7f050074;
+        public static final int cell14Item=0x7f050075;
+        public static final int cell15Item=0x7f050076;
+        public static final int cell16Item=0x7f050077;
+        public static final int cell17Item=0x7f050078;
+        public static final int cell1Item=0x7f050068;
+        public static final int cell2Item=0x7f050069;
+        public static final int cell3Item=0x7f05006a;
+        public static final int cell4Item=0x7f05006b;
+        public static final int cell5Item=0x7f05006c;
+        public static final int cell6Item=0x7f05006d;
+        public static final int cell7Item=0x7f05006e;
+        public static final int cell8Item=0x7f05006f;
+        public static final int cell9Item=0x7f050070;
         public static final int cell_name=0x7f050056;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
@@ -1023,19 +1042,20 @@ containing a value of this type.
         public static final int end=0x7f050013;
         public static final int expand_activities_button=0x7f050026;
         public static final int expanded_menu=0x7f05002c;
+        public static final int floorLayoutItem=0x7f050067;
         public static final int home=0x7f050014;
         public static final int homeAsUp=0x7f050005;
         public static final int icon=0x7f05002a;
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
-        public static final int listAP_tab=0x7f05005d;
-        public static final int listAllAP=0x7f050061;
-        public static final int listAllAPHeader=0x7f05005e;
+        public static final int listAP_tab=0x7f05005e;
+        public static final int listAllAP=0x7f050062;
+        public static final int listAllAPHeader=0x7f05005f;
         public static final int listMode=0x7f050001;
-        public static final int listSelectedAP=0x7f050062;
-        public static final int listSelectedAPHeader=0x7f050060;
+        public static final int listSelectedAP=0x7f050063;
+        public static final int listSelectedAPHeader=0x7f050061;
         public static final int list_item=0x7f050029;
-        public static final int localisation=0x7f050064;
+        public static final int localisation=0x7f050065;
         public static final int localisation_initial_belief_button=0x7f050059;
         public static final int localisation_sense_new_AP_button=0x7f05005a;
         public static final int localisation_sense_new_scan_button=0x7f05005b;
@@ -1047,7 +1067,7 @@ containing a value of this type.
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
-        public static final int rowTextView=0x7f050065;
+        public static final int rowTextView=0x7f050066;
         public static final int runButton=0x7f050042;
         public static final int scanCell=0x7f050057;
         public static final int search_badge=0x7f050032;
@@ -1062,6 +1082,7 @@ containing a value of this type.
         public static final int search_voice_btn=0x7f05003b;
         public static final int shortcut=0x7f05002e;
         public static final int showCurrentActivity=0x7f050049;
+        public static final int showCurrentLocationImage=0x7f05005d;
         public static final int showCustom=0x7f050007;
         public static final int showHome=0x7f050004;
         public static final int showLocationView=0x7f05005c;
@@ -1070,7 +1091,7 @@ containing a value of this type.
         public static final int showStoredTrainCoordinates=0x7f050045;
         public static final int showTitle=0x7f050006;
         public static final int sitButton=0x7f050055;
-        public static final int space=0x7f05005f;
+        public static final int space=0x7f050060;
         public static final int split_action_bar=0x7f05001e;
         public static final int stillButton=0x7f050040;
         public static final int submit_area=0x7f050039;
@@ -1156,7 +1177,7 @@ containing a value of this type.
     public static final class string {
         /**  AP selection tab 
          */
-        public static final int FinalizeSelection_button=0x7f0a0035;
+        public static final int FinalizeSelection_button=0x7f0a0036;
         /**                  End Activity monitoring                
 					Localisation		          
          */
@@ -1226,8 +1247,8 @@ containing a value of this type.
         public static final int knn_1_x=0x7f0a0023;
         public static final int knn_1_y=0x7f0a0024;
         public static final int knn_1_z=0x7f0a0025;
-        public static final int listAllAPHeader=0x7f0a0036;
-        public static final int listSelectedAPHeader=0x7f0a0037;
+        public static final int listAllAPHeader=0x7f0a0037;
+        public static final int listSelectedAPHeader=0x7f0a0038;
         /**  Testing tab 
          */
         public static final int localisation_initial_belief_button=0x7f0a0031;
@@ -1243,6 +1264,7 @@ containing a value of this type.
          */
         public static final int scanRssi=0x7f0a002c;
         public static final int showCurrentActivity=0x7f0a0021;
+        public static final int showCurrentLocationImage=0x7f0a0035;
         public static final int showLocationView=0x7f0a0034;
         /**  Testing tab 
  TextView: Label for the shown value stored in db 

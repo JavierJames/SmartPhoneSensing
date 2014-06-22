@@ -14,6 +14,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
@@ -35,7 +38,6 @@ import com.example.smartphonesensing2.localization.classification.Bayesian;
 import com.example.smartphonesensing2.localization.classification.LaplaceBayesian;
 import com.example.smartphonesensing2.localization.classification.NaiveBayesian;
 import com.example.smartphonesensing2.localization.classification.ProbabilisticBayesian;
-import com.example.smartphonesensing2.localization.filter.AccessPointRSSIStrength;
 import com.example.smartphonesensing2.localization.histogram.TrainingData;
 import com.example.smartphonesensing2.table.Table;
 
@@ -700,6 +702,9 @@ public class Localization extends ActionBarActivity {
 		
 		
 //		TODO: show current location, all cells should be a candidate.
+		
+		ImageView image = (ImageView) findViewById(R.id.showCurrentLocationImage);
+		image.setVisibility(ImageView.INVISIBLE);
 	}
 	
 	

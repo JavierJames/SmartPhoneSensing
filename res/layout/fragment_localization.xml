@@ -74,7 +74,7 @@
                      
                     <LinearLayout
                     	android:id="@+id/testing_buttons"
-                    	android:layout_width="match_parent"
+                    	android:layout_width="160dp"
                     	android:layout_height="match_parent"
                     	android:orientation="vertical" >
                      
@@ -120,27 +120,31 @@
                     
                     
                     <!-- Picture that depicts the current localisation -->
-                    <!-- 
-                    <layer-list
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="wrap_content" >
+                       
+                       
+                       <!-- 
+                    <layer-list>
                         
-                        <item>
+                        <item
+                            android:drawable="@drawable/ic_launcher" />
+                            
+                             
                             <bitmap 
-                                android:src="@drawable/floor_layout" 
-                                android:gravity="center" />
-                        <item/>
+                                android:src="@drawable/ic_launcher" 
+                                 />
+                         
                         
                     </layer-list>
-                   -->  
+                        -->
                     
-                    <!--  
+                      
                     <ImageView 
-                        android:id="@+id/showImageLocation"
+                        android:id="@+id/showCurrentLocationImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/floor_layout" />
-                    -->
+                        android:contentDescription="@string/showCurrentLocationImage"
+                        android:src="@drawable/fragment_location_image" />
+                    
                     
                     
 		        </LinearLayout>
