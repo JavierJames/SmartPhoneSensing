@@ -1003,9 +1003,7 @@ public class Localization extends ActionBarActivity {
 	      /*
 	       * End
 	       */
-	      
-		
-		
+	    
 				
 		
 		
