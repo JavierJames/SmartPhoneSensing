@@ -986,12 +986,16 @@ public class Localization extends ActionBarActivity {
 	public void senseNewAP(View view) {
 		
 		int cellID = 0; 
+		int ap_index=0;
 		
 		System.out.println("About to classify");
 		int current_cell = 0;
 		
 		int current_cell2 = 0;
 		
+		
+		ArrayList<Integer> current_location = new ArrayList<Integer>();
+			
 		//dummy classifier
 		//LaplaceBayesian lpclassifier = new LaplaceBayesian(null); 
 		
@@ -1025,8 +1029,11 @@ public class Localization extends ActionBarActivity {
 		//Get AP id for the next strongest RSSI value 
 		//call only if button not pressed amount of times of AP
 		if(SenseNewAP_buttonPressCount<observations.size()){
-			cellID = Bayesian.NextStrongestAP(observations);
-			System.out.println("highest rssi value: "+observations.get(cellID));
+			ap_index = Bayesian.NextStrongestAP(observations);
+			System.out.println("highest rssi value: "+observations.get(ap_index));
+			
+			//	cellID = Bayesian.NextStrongestAP(observations);
+	//		System.out.println("highest rssi value: "+observations.get(cellID));
 		}
 		else{
 			System.out.println("No More AccessPoints to fetch rssi values");
@@ -1035,6 +1042,16 @@ public class Localization extends ActionBarActivity {
 		SenseNewAP_buttonPressCount++;
 		
 		
+		if(observations.size()==0){
+			System.out.println("No observation. please chose other AP or re-sample ");
+		}
+		else{
+		//classifier the  single observation with the corresponding training data
+		 		current_location =laplaceClassifier.classifyObservation(observations.get(ap_index), laplaceClassifier.getPersonalTrainingData().get(ap_index));
+		 		//update gui with classification
+		 		laplaceClassifier.updataCurrentLocation(current_location);
+		 		
+		 	//	showLocation(laplaceClassifier.getCurrentLocation());
 		
 		
 		
@@ -1068,12 +1085,13 @@ public class Localization extends ActionBarActivity {
 		/*ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
 		listAllAP.setAdapter(adapterAllAP);*/
 		
-		//current_cell=   naiveBayesian.classifyObservation(observations); 
+		//current_cell=   naiveBayesian.classifyObservation(observations); //crashes on june 21 
 
 	     
-		//current_cell2 = laplaceClassifier.classifyObservation(observations);
+	//	current_cell2 = laplaceClassifier.classifyObservation(observations);
+		}
 		
-		// TODO: show current location
+		showCurrentLocation(laplaceClassifier.getCurrentLocation());
 	}
 	
 	
@@ -1086,10 +1104,10 @@ public class Localization extends ActionBarActivity {
 	    // fetch only the RSSI value for the chosen AP
 	    observations = fetchRSSIChosenAP(chosen_ap_names); 
 	 
-		for(int i=0; i<observations.size(); i++)
-		{
-			System.out.println("Observation"+observations.get(i));
-		}     
+	//	for(int i=0; i<observations.size(); i++)
+	//	{
+	//		System.out.println("Observation"+observations.get(i));
+	//	}     
 	} //end SenseNewScan Function
 
 
@@ -1503,6 +1521,13 @@ public class Localization extends ActionBarActivity {
 	/* function call when finished selection AP, to create the TrainingData*/
 	public void finalizeSelction (View view)
 	{
+		
+		//maybe I should erase all training data before I start.
+		//for all classifier, remove all training data
+		//once this is done . the intialize button must be pressed again to train the classifier
+		tds.clear();
+		
+		
 		ArrayList<String> selectedAPnames = new ArrayList<String>();
 	//	ArrayList<TrainingData> tds = new 	ArrayList<TrainingData>();
 		
@@ -1553,7 +1578,7 @@ public class Localization extends ActionBarActivity {
 	    
 	    
 
-	    // create training data for each AP
+	    // create training data for each chosen AP
 
 	      for(int i = 0; i < selectedAPnames.size(); i++) {
 	           

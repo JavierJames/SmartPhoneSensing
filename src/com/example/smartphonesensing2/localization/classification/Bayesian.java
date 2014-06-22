@@ -673,7 +673,10 @@ public class Bayesian {
 		 * find the next Access-Point with the highest rssi value
 		 * */
 		
-		//???????? The argument is a list of indexes of APs chosen by the user. And not rssi values ??????
+		
+		//@parameter 1: list of rssi values, corresponding to the chosen AP. Index(0) belongs to AP #0 etc
+		//this function takes a list of rssi values and returns the index of the next highest rssi value.
+		//this index corresponds to which training data to take
        public static int NextStrongestAP(ArrayList<Integer> observations2)  
        {
     	   int max_rssi =0;
