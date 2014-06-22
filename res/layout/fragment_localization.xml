@@ -194,7 +194,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent" >
                     
-            <!-- 
+             
                            <Button
 					        android:id="@+id/finalizeSelection_button"
 					        android:layout_width="wrap_content"
@@ -202,7 +202,7 @@
 					        android:onClick="finalizeSelction"
 					        android:text="@string/FinalizeSelection_button" 
 					        android:layout_alignParentBottom="true" />
-                  -->
+                  
                             
                            
 	                 <TextView
