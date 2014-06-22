@@ -47,7 +47,9 @@ public class Bayesian {
 	
 	
 	//ArrayList to keep localization result for a given sample 
-	static ArrayList<Integer> currentLocation = new ArrayList<Integer>();
+	//static ArrayList<Integer> currentLocation = new ArrayList<Integer>();  //good one 
+	public ArrayList<Integer> currentLocation = new ArrayList<Integer>();
+	
 	
 
 	//information about classifier accuracy
@@ -55,9 +57,10 @@ public class Bayesian {
 	public static float accuracy_percentage;
 	
 	
-	public float[] prior =  new float [numberOfCells];	
-	public float [] posterior = new float [numberOfCells];
-
+	//public float[] prior =  new float [numberOfCells];	
+	//public float [] posterior = new float [numberOfCells];
+	public float[] prior ;	
+	public float [] posterior;
 	
 	static int callcount = 0;
 	
@@ -74,11 +77,29 @@ public class Bayesian {
 		this.classificationName=classifierName;
 	
 		 /* initialize buffers */
-		for(int i=0; i<this.posterior.length; i++) this.posterior[i]=(float)0;
-		for(int i=0; i<this.prior.length; i++) this.prior[i]=(float)0;
+		//for(int i=0; i<this.posterior.length; i++) this.posterior[i]=(float)0;
+		//for(int i=0; i<this.prior.length; i++) this.prior[i]=(float)0;
 		
 	}
 
+   	public void setNumberOfCells(int numOfCells){
+   		this.numberOfCells = numOfCells;
+   		
+   		//create the array size correct after number of cells are knowns
+   		prior =  new float [numberOfCells];	
+   		posterior = new float [numberOfCells];
+   		
+   	    /* initialize buffers */
+   		for(int i=0; i<this.posterior.length; i++) this.posterior[i]=(float)0;
+		for(int i=0; i<this.prior.length; i++) this.prior[i]=(float)0;
+		
+   		
+   	}
+   	
+   	public int  getNumberOfCells(){
+   		return this.numberOfCells; 
+   	}
+   	
    	
 	public String getClassiferName()
 	{
@@ -485,7 +506,8 @@ public class Bayesian {
 	{
 		
 		//String [][] array = new String [17+1][100+1] ;
-		float [][] array_float = new float [17+1][100] ;
+		//float [][] array_float = new float [17+1][100] ; //good one
+		float [][] array_float = new float [numberOfCells+1][100] ;
 		
 	//	Table table = new Table("TestTable");
 		int r=0,c=0;

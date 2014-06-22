@@ -8,7 +8,7 @@ public class Table {
 	private int numOfCells=17;
 	
 	// pmf table: row (cell) ranges from 1 to 17 and column (rssi) ranges from 0 to 100
-	private Float [][] table = new Float[17][101];
+	private Float [][] table;
 	
 	
 	/*
@@ -17,6 +17,10 @@ public class Table {
 	public Table(String name, int numofCells) {
 		this.name = name;
 		this.numOfCells = numofCells;
+		
+		//create the table after once the number of cells are known
+		table = new Float[numOfCells][101];
+		
 		//initialize table. necessary to prevent error when doing  floatValue, and a null is present
 	/*	for(int i=0; i <table.length; i++)
 		{

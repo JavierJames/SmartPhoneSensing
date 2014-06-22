@@ -81,7 +81,7 @@ public class Localization extends ActionBarActivity {
 	 * Settings for Training Data
 	 *  */
 	
-	int numberOfCells =1; //javier's home 
+	int numberOfCells =8; //javier's home 
 	int coverage_percentage= 50;
 	
 	
@@ -959,12 +959,14 @@ public class Localization extends ActionBarActivity {
 	    }*/
 		
 		
-//		naiveBayesian = new NaiveBayesian(filepath); //create classifier 
-//		naiveBayesian.trainClassifier(tds); //train classifier 	   
-//		naiveBayesian.setInitialBelieve();    //set the initial believe to uniform
+		naiveBayesian = new NaiveBayesian(filepath); //create classifier 
+		naiveBayesian.setNumberOfCells(this.numberOfCells);
+		naiveBayesian.trainClassifier(tds); //train classifier 	   
+		naiveBayesian.setInitialBelieve();    //set the initial believe to uniform
 		
 		
 		laplaceClassifier = new LaplaceBayesian(filepath);
+		laplaceClassifier.setNumberOfCells(this.numberOfCells);
 		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
 		laplaceClassifier.setInitialBelieve();
 		
@@ -1024,8 +1026,8 @@ public class Localization extends ActionBarActivity {
 		//Get AP id for the next strongest RSSI value 
 		//call only if button not pressed amount of times of AP
 		if(SenseNewAP_buttonPressCount<observations.size()){
-		cellID = Bayesian.NextStrongestAP(observations);
-		System.out.println("highest rssi value: "+observations.get(cellID));
+			cellID = Bayesian.NextStrongestAP(observations);
+			System.out.println("highest rssi value: "+observations.get(cellID));
 		}
 		else{
 			System.out.println("No More AccessPoints to fetch rssi values");
