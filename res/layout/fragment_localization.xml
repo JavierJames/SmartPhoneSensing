@@ -132,12 +132,19 @@
 					        android:text="@string/localisation_sense_new_scan_button" />
 	                    
 	                    
-	                    <TextView
-				        	android:id="@+id/showLocationView"
-				        	android:layout_width="wrap_content"
-				        	android:layout_height="wrap_content"
-				        	android:text="@string/showLocationView" />
+	                    <ScrollView 
+				            android:layout_width="wrap_content"
+	        				android:layout_height="wrap_content" >
+	                    
+		                    <TextView
+					        	android:id="@+id/showLocationView"
+					        	android:layout_width="wrap_content"
+					        	android:layout_height="wrap_content"
+					        	android:text="@string/showLocationView" />
+		                    
+	                    </ScrollView>
                     
+	                    
                     </LinearLayout>
                     
                     
@@ -169,6 +176,7 @@
 		        
                 
                 <!-- List of AP tab -->
+                
                <!--      
                 <LinearLayout
                 	android:id="@+id/listAP_TabMain"
@@ -177,12 +185,16 @@
                 	android:orientation="vertical" >
                   -->
                   
+                  
+                 
+                  
+                  
                 <RelativeLayout
                     android:id="@+id/listAP_tab"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent" >
                     
-            
+            <!-- 
                            <Button
 					        android:id="@+id/finalizeSelection_button"
 					        android:layout_width="wrap_content"
@@ -190,6 +202,30 @@
 					        android:onClick="finalizeSelction"
 					        android:text="@string/FinalizeSelection_button" 
 					        android:layout_alignParentBottom="true" />
+                  -->
+                            
+                           
+	                 <TextView
+			        	android:id="@+id/listAllAPHeader"
+			        	android:layout_width="100dp"
+                        android:layout_height="20dp"
+			        	android:text="@string/listAllAPHeader" />
+	                  
+	                 
+	                  <View 
+                        android:id="@+id/space"
+                        android:layout_width="150dp"
+                        android:layout_height="400dp"
+                        android:layout_toRightOf="@+id/listAllAPHeader"
+                        />
+	                 
+	                  
+	                 <TextView
+			        	android:id="@+id/listSelectedAPHeader"
+			        	android:layout_width="100dp"
+                        android:layout_height="20dp"
+                        android:layout_toRightOf="@+id/space"
+			        	android:text="@string/listSelectedAPHeader" />
 	            
                     
                     <!-- List all APs -->
@@ -201,23 +237,33 @@
                         android:layout_width="200dp"
                         android:layout_height="400dp"
                         android:background="#cecece"
+                        android:layout_below="@+id/listAllAPHeader"
+                        android:layout_alignLeft="@+id/listAllAPHeader"
                         >
                     </ListView>
                     
-                    
+                  <!--   
+                    <View 
+                        android:id="@+id/space"
+                        android:layout_width="50dp"
+                        android:layout_height="400dp"
+                        android:layout_toRightOf="@+id/listAllAP"
+                        />
                 
+                 -->
+                 
                     <!-- List selected APs -->
                     
                     <ListView
                         android:id="@+id/listSelectedAP"
                         android:layout_width="200dp"
                         android:layout_height="400dp"
-                        android:layout_toRightOf="@+id/listAllAP"
-                        android:background="#cccccc"
+                        android:background="#cecece"
+                        android:layout_below="@+id/listSelectedAPHeader"
+                        android:layout_alignLeft="@+id/listSelectedAPHeader"
                          >
                     </ListView>
-                    
-                    
+                   
                 </RelativeLayout>
 		        
                 

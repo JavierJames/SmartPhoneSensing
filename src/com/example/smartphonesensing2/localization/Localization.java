@@ -6,19 +6,20 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+<<<<<<< HEAD
 import android.graphics.Path;
 import android.graphics.drawable.shapes.PathShape;
+=======
+>>>>>>> 38cc3a44e3a02bfabdfd5c6836ea4fcbd6034ad9
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -42,11 +43,7 @@ import com.example.smartphonesensing2.localization.classification.Bayesian;
 import com.example.smartphonesensing2.localization.classification.LaplaceBayesian;
 import com.example.smartphonesensing2.localization.classification.NaiveBayesian;
 import com.example.smartphonesensing2.localization.classification.ProbabilisticBayesian;
-import com.example.smartphonesensing2.localization.filter.AccessPointOccurrence;
 import com.example.smartphonesensing2.localization.filter.AccessPointRSSIStrength;
-import com.example.smartphonesensing2.localization.filter.SelectionAverage;
-import com.example.smartphonesensing2.localization.filter.SelectionCoverage;
-import com.example.smartphonesensing2.localization.histogram.Histogram;
 import com.example.smartphonesensing2.localization.histogram.TrainingData;
 import com.example.smartphonesensing2.table.Table;
 
@@ -100,7 +97,11 @@ public class Localization extends ActionBarActivity {
     ArrayList<TrainingData> tds = new ArrayList<TrainingData>();   // check
     
     // Filter to be applied on the AP, based on average rssi strength over entire platform
+<<<<<<< HEAD
     AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);   // check
+=======
+//    AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);
+>>>>>>> 38cc3a44e3a02bfabdfd5c6836ea4fcbd6034ad9
     
     // Holds the rssi values of the chosen AP
     ArrayList<Integer> observations = new ArrayList<Integer>();
@@ -253,7 +254,7 @@ public class Localization extends ActionBarActivity {
 			listChosenAp.setAdapter(adapterChosenAP);
 			
 			
-			// Add click listener to each item
+			// Add click listener to each item in the list of all AP
 			listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 				@Override
@@ -265,6 +266,7 @@ public class Localization extends ActionBarActivity {
 			});
 			
 			
+			// Add click listener to each item in the list of selected AP
 			listChosenAp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 	
 				@Override
@@ -275,12 +277,6 @@ public class Localization extends ActionBarActivity {
 				}
 				
 			});
-			
-	
-	  
-		
-		
-		
 	} //end onCreate
 	
 
@@ -918,7 +914,7 @@ public class Localization extends ActionBarActivity {
 	 * i.e. it assigns an uniform probability to each cell
 	 */
 	public void initialBelief(View view) {
-		String filepath = "/Downloads/cellsdata/";
+//		String filepath = "/Downloads/cellsdata/";
 		
 		int currentcell=0;
 		
@@ -952,9 +948,9 @@ public class Localization extends ActionBarActivity {
 	    }*/
 		
 		
-		naiveBayesian = new NaiveBayesian(filepath); //create classifier 
-		naiveBayesian.trainClassifier(tds); //train classifier 	   
-		naiveBayesian.setInitialBelieve();    //set the initial believe to uniform
+//		naiveBayesian = new NaiveBayesian(filepath); //create classifier 
+//		naiveBayesian.trainClassifier(tds); //train classifier 	   
+//		naiveBayesian.setInitialBelieve();    //set the initial believe to uniform
 		
 		
 		laplaceClassifier = new LaplaceBayesian(filepath);
@@ -1378,8 +1374,14 @@ public class Localization extends ActionBarActivity {
 	public void showLocation(ArrayList<Integer> newCurrentLocation)
 	{
 		TextView currentLocation = (TextView) findViewById(R.id.showLocationView);
+		currentLocation.setText("");
 		
-		currentLocation.setText("Cell"+(newCurrentLocation.get(0)+1));
+		for(int i = 0; i < newCurrentLocation.size(); i++) {
+			currentLocation.setText(currentLocation.getText()+"\n"+
+					"Cell "+(newCurrentLocation.get(i)+1)
+					);
+		}
+		
 		
 	}
 	

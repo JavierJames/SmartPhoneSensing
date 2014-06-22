@@ -101,7 +101,12 @@
    	
     	
     	
+<<<<<<< HEAD
    	    <!-- AP selection tab -->
+=======
+   	<!-- AP selection tab -->
+   	
+>>>>>>> 38cc3a44e3a02bfabdfd5c6836ea4fcbd6034ad9
    		<string name="FinalizeSelection_button"> Finalize Selection </string>
    		
    		<!-- Training Data button to create histogram -->
@@ -109,8 +114,8 @@
    		
    		
    		
-   		<string name="selectAP_button">></string>
-   		<string name="unselectAP_button"> &lt; </string>
+   		<string name="listAllAPHeader">All AP</string>
+   		<string name="listSelectedAPHeader">Selected AP</string>
    		
    		
     
@@ -127,11 +132,6 @@
     <string name="knn_3_z">Ng 3 Z-axis</string>
     -->
     
-    
-    
-    
-    
-    <!-- Location activity -->
     
     
     
