@@ -1,4 +1,4 @@
-bin/
+bin/*
 .project
 .metadata
 .gradle
@@ -12,5 +12,4 @@ local.properties
 .externalToolBuilders/
 .cproject 
 .buildpath
-gen/
-gen\
+gen/*
