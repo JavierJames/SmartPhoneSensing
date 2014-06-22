@@ -48,14 +48,13 @@ import com.example.smartphonesensing2.localization.classification.Bayesian;
 import com.example.smartphonesensing2.localization.classification.LaplaceBayesian;
 import com.example.smartphonesensing2.localization.classification.NaiveBayesian;
 import com.example.smartphonesensing2.localization.classification.ProbabilisticBayesian;
-<<<<<<< HEAD
-=======
+
 import com.example.smartphonesensing2.localization.filter.AccessPointOccurrence;
 import com.example.smartphonesensing2.localization.filter.AccessPointRSSIStrength;
 import com.example.smartphonesensing2.localization.filter.SelectionAverage;
 import com.example.smartphonesensing2.localization.filter.SelectionCoverage;
 import com.example.smartphonesensing2.localization.histogram.Histogram;
->>>>>>> c349fec493a2bf875a9178102775099d2da11074
+
 import com.example.smartphonesensing2.localization.histogram.TrainingData;
 import com.example.smartphonesensing2.table.Table;
 
@@ -116,11 +115,9 @@ public class Localization extends ActionBarActivity {
     
     // Filter to be applied on the AP, based on average rssi strength over entire platform
 
-<<<<<<< HEAD
-//    AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);
-=======
+
     AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);   // check
->>>>>>> c349fec493a2bf875a9178102775099d2da11074
+
 
     
     // Holds the rssi values of the chosen AP
