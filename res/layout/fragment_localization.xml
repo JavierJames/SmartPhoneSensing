@@ -45,14 +45,14 @@
                     android:orientation="vertical" >
                     
                 
-                
+                 
                 
                 <LinearLayout
                     android:id="@+id/training2_tab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
-        
+         
         
 				    <EditText
 			        	android:id="@+id/cell_name"
@@ -80,7 +80,7 @@
                           --> 
 			    </LinearLayout>
 			    
-                
+                 
                     <Button
 				        android:id="@+id/finalizeTraining_button"
 				        android:layout_width="wrap_content"
@@ -149,22 +149,6 @@
                     
                     
                     <!-- Picture that depicts the current localisation -->
-                       
-                       
-                       <!-- 
-                    <layer-list>
-                        
-                        <item
-                            android:drawable="@drawable/ic_launcher" />
-                            
-                             
-                            <bitmap 
-                                android:src="@drawable/ic_launcher" 
-                                 />
-                         
-                        
-                    </layer-list>
-                        -->
                     
                       
                     <ImageView 
