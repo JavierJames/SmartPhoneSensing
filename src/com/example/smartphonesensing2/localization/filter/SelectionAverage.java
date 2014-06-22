@@ -90,7 +90,8 @@ public class SelectionAverage {
 		//Path dir = Paths.get(filepath+"/histogram");
 //		Path dir = Paths.get(filepath+"1_RawUnselected_AP/histogram/");
 		
-		String dir = Environment.getDataDirectory()+filepath+"1_RawUnselected_AP/histogram/";
+		//String dir = Environment.getDataDirectory()+filepath+"1_RawUnselected_AP/histogram/";
+		String dir =filepath+"1_RawUnselected_AP/histogram/";
 		
 		File f = new File(dir);
 		
@@ -98,7 +99,7 @@ public class SelectionAverage {
 		File[] dirs = f.listFiles();
 		
 		String filename;
-		
+		String temp;
 		try /*(DirectoryStream<Path> dirs = Files.newDirectoryStream(dir))*/ {
 			
 			// Iterate over each subdir (cell) in the main dir
@@ -119,16 +120,24 @@ public class SelectionAverage {
 					if(filename.equalsIgnoreCase(access_point)) {
 						
 						// Read the file
-						reader = new Scanner(file.getAbsolutePath());
+						//reader = new Scanner(file.getAbsolutePath());
+						reader = new Scanner(file);
 						
 						// The values are comma separated
 						reader.useDelimiter("\\s*[,\n\r]\\s*");
 						
 						// Iterate over each token
 						while(reader.hasNext()) {
-							rssi = reader.nextInt();
+							/*rssi = reader.nextInt(); // crashes
 							freq = reader.nextInt();
 							pmf = reader.nextFloat();
+							*/
+							temp=reader.next();
+							rssi = Integer.valueOf(temp); 
+							temp=reader.next();
+							freq = Integer.valueOf(temp); 
+							temp=reader.next();
+							pmf = Float.valueOf(temp);
 							
 							// Compute the total rssi and freq
 							compute(rssi, freq);

@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+<<<<<<< HEAD
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -22,6 +24,10 @@ import android.graphics.drawable.Drawable;
 import android.graphics.Path;
 import android.graphics.drawable.shapes.PathShape;
 
+=======
+import android.graphics.Path;
+import android.graphics.drawable.shapes.PathShape;
+>>>>>>> c349fec493a2bf875a9178102775099d2da11074
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -46,36 +52,50 @@ import com.example.smartphonesensing2.localization.classification.Bayesian;
 import com.example.smartphonesensing2.localization.classification.LaplaceBayesian;
 import com.example.smartphonesensing2.localization.classification.NaiveBayesian;
 import com.example.smartphonesensing2.localization.classification.ProbabilisticBayesian;
+<<<<<<< HEAD
+=======
+import com.example.smartphonesensing2.localization.filter.AccessPointOccurrence;
+import com.example.smartphonesensing2.localization.filter.AccessPointRSSIStrength;
+import com.example.smartphonesensing2.localization.filter.SelectionAverage;
+import com.example.smartphonesensing2.localization.filter.SelectionCoverage;
+import com.example.smartphonesensing2.localization.histogram.Histogram;
+>>>>>>> c349fec493a2bf875a9178102775099d2da11074
 import com.example.smartphonesensing2.localization.histogram.TrainingData;
 import com.example.smartphonesensing2.table.Table;
 
 public class Localization extends ActionBarActivity {
 
+	/* settings for sampling data */
 	private final static int TWO_MINUTES = 180000;
 	private final static int THREE_MINUTES = 180000;
 	private final static int FIVE_MINUTES = 300000;
-	private TextView countdown_timer_text; 
-	private final long startTime = 50000;
-	private final long interval = 1000;
-	MalibuCountDownTimer countDownTimer= new MalibuCountDownTimer(startTime, interval);
-	
-	
-	
+
 	// sample rate at which to sample
 	private final static int SAMPLE_RATE = 1000;
 	private final static int DURATION = THREE_MINUTES; 
-	
+
+	private final long startTime = 50000;
+	private final long interval = 1000;
+
 	// keep tracking of scanning time
 	private long start, stop; 
-		
+
 	// keep track of sample number 
 	private int id_sample=0;
+
+	
+	// count down timer for scanning cell
+	private TextView countdown_timer_text; 
+	MalibuCountDownTimer countDownTimer= new MalibuCountDownTimer(startTime, interval);
+	
+	
+		
 	
 	/*
 	 * Settings for Training Data
 	 *  */
 	
-	int numberOfCells =8; //javierś home 
+	int numberOfCells =1; //javier's home 
 	int coverage_percentage= 50;
 	
 	
@@ -96,17 +116,21 @@ public class Localization extends ActionBarActivity {
 	private String filepath;
 	
 	// Set of training data. Each training data is associated to one access-point
-    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();   // check
+    ArrayList<TrainingData> tds = new ArrayList<TrainingData>();   // checked
     
     // Filter to be applied on the AP, based on average rssi strength over entire platform
 
+<<<<<<< HEAD
 //    AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);
+=======
+    AccessPointRSSIStrength rssi_filter= new AccessPointRSSIStrength(filepath);   // check
+>>>>>>> c349fec493a2bf875a9178102775099d2da11074
 
     
     // Holds the rssi values of the chosen AP
     ArrayList<Integer> observations = new ArrayList<Integer>();
 
-    //keep track of how many times Button SenseNewAP has been pressed, prevent overpressing
+    //keep track of how many times Button SenseNewAP has been pressed, prevent over-pressing
     private int SenseNewAP_buttonPressCount=0;
 	
     /*AP selection */
@@ -197,7 +221,8 @@ public class Localization extends ActionBarActivity {
 	 * */
 		
 		//fetchfilewithfilteredAP
-		ToBeSelectedAP=	fetchFileFilteredAP();
+		//these AP are the available ones for selection to be used for the Training Data
+		ToBeSelectedAP=	fetchFileFilteredAP(); //check 
 		
 		/* 1st. Conferentie-TUD_00_1b_90_76_d3_f6   
            2nd  TUvisitor_00_1b_90_76_d3_f3            
@@ -212,11 +237,10 @@ public class Localization extends ActionBarActivity {
 		ToBeSelectedAP.add("tudelft-dastud_00_1b_90_76_ce_14 ");
 		*/
 		
-		
+		/*set up view to display and read available AP  */
 	     ListView listAvailableAP;
 	     ArrayAdapter<String> adapter_listAvailableAP;
 	     
-	    
 	     listAvailableAP = (ListView) findViewById(R.id.listAllAP);
 	    
 	     adapter_listAvailableAP= new ArrayAdapter<String>(this, R.layout.frament_localization_listview_item, ToBeSelectedAP);
@@ -369,7 +393,7 @@ public class Localization extends ActionBarActivity {
 		    	
 		    	// Creates a new table if it does not exist yet
 		    	if(table == null) {
-		    		table = new Table(accesspoint);
+		    		table = new Table(accesspoint, numberOfCells);
 		    	}
 		    	
 		    	// Read file
@@ -615,14 +639,18 @@ public class Localization extends ActionBarActivity {
 		
 		Button button = (Button) findViewById(R.id.finalizeTraining_button);
 		
+		//create histogram
 		finalizingRawData(button);
 
+		//create occurrences 
 		
 	}
 	
 	
 	/*separate thread for hen finalize Training button is pressed
 	 * used to create histogram of the read raw data
+	 * When button is pressed, a histogram and occurrence file is created from all files in raw data folder
+	 * 
 	 *  */
 	public void finalizingRawData(final Button button){
 		
@@ -646,7 +674,8 @@ public class Localization extends ActionBarActivity {
 				    	});
 		
 		
-			
+					   		//create histogram from all files in folder
+					   		//filter
 							createRawDataHistogramandFilter();
 							
 							
@@ -673,7 +702,7 @@ public class Localization extends ActionBarActivity {
 	}
 	
 	/*create a histogram file from all of the raw data scanned.
-	 * also create a occurrence file */
+	 * also create a occurrence file and filter*/
 	public void createRawDataHistogramandFilter(){
 		
 		/* *********************************************
@@ -1388,7 +1417,7 @@ public class Localization extends ActionBarActivity {
 		
 	}
 	
-	
+	/*This functions fetches the file with the list of AP that have survived the filtering */
 	public ArrayList<String> fetchFileFilteredAP(){
 		String folder_name="2_Filter/selection/";
 		String readfile = filepath + folder_name +"selectionNormalRSSI.txt";
@@ -1402,10 +1431,10 @@ public class Localization extends ActionBarActivity {
 			Scanner reader = new Scanner(file);
 			reader.useDelimiter("\\s*[,\n\r]\\s*");
 			
-			
+			//read the entire text file 
 			while(reader.hasNextLine())
 			{
-				AP_names.add(reader.nextLine());
+				AP_names.add(reader.nextLine()); //read line and move to next line
 				//average = reader.nextFloat();
 			
 				//System.out.println("APname: " + AP_name + " Average: " +average );	
@@ -1421,13 +1450,10 @@ public class Localization extends ActionBarActivity {
 			System.out.println(e.getMessage());
 		}
 	
-		
-		
-		
-		
-		
+			
 		return AP_names;
 	}
+
 	
 	/* function call when finished selection AP, to create the TrainingData*/
 	public void finalizeSelction (View view)
@@ -1488,7 +1514,7 @@ public class Localization extends ActionBarActivity {
 	           
 	           name = selectedAPnames.get(i);
 	           
-	      		td = new TrainingData(name, filepath);
+	      		td = new TrainingData(name, filepath, numberOfCells);
 	      
 	     	 	td.createPMFTable();
 	      		td.createHistogramTable();
