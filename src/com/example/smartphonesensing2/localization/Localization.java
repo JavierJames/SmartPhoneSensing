@@ -971,12 +971,8 @@ public class Localization extends ActionBarActivity {
 		
 		
 		laplaceClassifier = new LaplaceBayesian(filepath);
-<<<<<<< HEAD
 		laplaceClassifier.setNumberOfCells(this.numberOfCells);
 		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
-=======
-//		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
->>>>>>> d010c0c14f237f53d5f85850ec0062bbe5dc7296
 		laplaceClassifier.setInitialBelieve();
 	
 		
