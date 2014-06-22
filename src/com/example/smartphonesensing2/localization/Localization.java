@@ -1034,6 +1034,10 @@ public class Localization extends ActionBarActivity {
 		
 		SenseNewAP_buttonPressCount++;
 		
+		
+		
+		
+		
 		//add only one integer to the arraylist for now
 		//ArrayList<Integer> test = new ArrayList<Integer>();
 		//test.add(observations.get(cellID));
