@@ -16,7 +16,7 @@ import java.util.TreeSet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-<<<<<<< HEAD
+
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -24,10 +24,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.Path;
 import android.graphics.drawable.shapes.PathShape;
 
-=======
-import android.graphics.Path;
-import android.graphics.drawable.shapes.PathShape;
->>>>>>> c349fec493a2bf875a9178102775099d2da11074
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
