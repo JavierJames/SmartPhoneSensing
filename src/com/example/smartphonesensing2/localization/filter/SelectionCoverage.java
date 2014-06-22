@@ -26,6 +26,7 @@ public class SelectionCoverage {
 		this.numOfCells=17;
 	}
 	
+		
 	public SelectionCoverage(int numOfCells, int coverage_percentage, String filepath){
 		this.numOfCells=numOfCells;
 		this.coverage_percentage=coverage_percentage;
@@ -129,7 +130,7 @@ public class SelectionCoverage {
 	
 	
 	/* 
-	 * Return the coverage percetage
+	 * Return the coverage percentage
 	 * */
 	public double getCoveragePercentage(){
 		return this.coverage_percentage/100;

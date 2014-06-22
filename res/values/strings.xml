@@ -100,14 +100,10 @@
     	<string name="showLocationView">Location</string>
    	
     	
-    	
-<<<<<<< HEAD
-   	    <!-- AP selection tab -->
-=======
+   
    	<!-- AP selection tab -->
    	
->>>>>>> 38cc3a44e3a02bfabdfd5c6836ea4fcbd6034ad9
-   		<string name="FinalizeSelection_button"> Finalize Selection </string>
+		<string name="FinalizeSelection_button"> Finalize Selection </string>
    		
    		<!-- Training Data button to create histogram -->
    		<string name="FinalizeTraining_button"> Finalize Training </string>

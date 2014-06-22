@@ -13,6 +13,8 @@ public class TrainingData {
 	String filepath;
 	Table pmfTable;
 	Table histogramTable;
+	int numOfCells = 17;
+	
 	
 //	private ArrayList<Table> tables = new ArrayList<Table>();
 	
@@ -22,9 +24,10 @@ public class TrainingData {
 	 * @param name: access-point name
 	 * @param filepath: path to the main directory
 	 */
-	public TrainingData(String name, String filepath) {
+	public TrainingData(String name, String filepath, int numOfCells ) {
 		this.access_point_name = name;
 		this.filepath = filepath;
+		this.numOfCells = numOfCells;
 	}
 	
 	
@@ -123,7 +126,7 @@ public class TrainingData {
 			    	
 			    	// Creates a new table if it does not exist yet
 			    	if(pmfTable == null) {
-			    		pmfTable = new Table(access_point_name);
+			    		pmfTable = new Table(access_point_name, this.numOfCells);
 			    	}
 			    	
 			    	// Read file
@@ -263,7 +266,7 @@ public class TrainingData {
 			    	
 			    	// Creates a new table if it does not exist yet
 			    	if(histogramTable == null) {
-			    		histogramTable = new Table(access_point_name);
+			    		histogramTable = new Table(access_point_name, this.numOfCells);
 			    	}
 			    	
 			    	// Read file
@@ -318,7 +321,7 @@ public class TrainingData {
 		
 	   	// Creates a new table if it does not exist yet
     	if(histogramTable == null) {
-    		histogramTable = new Table(access_point_name);
+    		histogramTable = new Table(access_point_name,this.numOfCells);
     	}
     	
 		
@@ -336,12 +339,12 @@ public class TrainingData {
 		
 
 	
-	/* This functions takes the cell OMF, given as an array and puts it the Histogram Table */
+	/* This functions takes the cell PMF, given as an array and puts it the Histogram Table */
 	public void putPMFArrayIntoTable(Float [] cellDistribution, int cell) {
 
 	   	// Creates a new table if it does not exist yet
     	if(pmfTable == null) {
-    		pmfTable = new Table(access_point_name);
+    		pmfTable = new Table(access_point_name, this.numOfCells);
     	}
     	
 		

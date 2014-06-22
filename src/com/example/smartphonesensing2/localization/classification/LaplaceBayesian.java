@@ -63,6 +63,9 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 		Float []cell_histogram;
 		Float [] cell_pmf;
 		
+		//get the row count of the histogram/pmf table of the oringal training data, which reflects the number of cells
+		int numbofCells=tds.get(0).getPMF().getTable().length ;
+		
 		//for each training data, update the cell distribution data
 		for(int t=0; t<tds.size(); t++)
 		{	
@@ -72,7 +75,7 @@ public class LaplaceBayesian extends Bayesian implements ClassifierAPI{
 			table_histogram=tds.get(t).getHistogram().getTable();
 		
 			//create a new training data 
-			TrainingData td = new TrainingData(ap_name, filepath);
+			TrainingData td = new TrainingData(ap_name, filepath, numbofCells);
 						
 			//for each cell correct the Histogram and PMF Table
 			for(int c=0; c<table_histogram.length; c++)      

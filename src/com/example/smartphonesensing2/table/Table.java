@@ -5,6 +5,7 @@ import android.util.Log;
 public class Table {
 	//name is equal to access point
 	private String name;
+	private int numOfCells=17;
 	
 	// pmf table: row (cell) ranges from 1 to 17 and column (rssi) ranges from 0 to 100
 	private Float [][] table = new Float[17][101];
@@ -13,9 +14,9 @@ public class Table {
 	/*
 	 * Constructor
 	 */
-	public Table(String name) {
+	public Table(String name, int numofCells) {
 		this.name = name;
-		
+		this.numOfCells = numofCells;
 		//initialize table. necessary to prevent error when doing  floatValue, and a null is present
 	/*	for(int i=0; i <table.length; i++)
 		{
