@@ -841,7 +841,13 @@ public class Localization extends ActionBarActivity {
 	 */
 	private ArrayList<Integer> fetchRSSIChosenAP(ArrayList<String> chosenAP) {
 		// List of RSSI of each chosen AP
-				ArrayList<Integer> observation = new ArrayList<Integer>();
+				ArrayList<Integer> observation = new ArrayList<Integer>(10);
+		
+				
+				//initialize observation array
+				for(int i=0; i<chosenAP.size(); i++){
+					observation.add(-255);
+				}
 				
 		
 		//hardcode for testing
@@ -897,6 +903,7 @@ public class Localization extends ActionBarActivity {
 				// then add it to the list
 				if((SSID+"_"+(BSSID.replace(':', '_'))).equalsIgnoreCase(chosenAP.get(j))) {
 					observation.add(j, Integer.valueOf(level));
+					observation.remove(j+1);
 				}
 			}
 			
@@ -1033,11 +1040,6 @@ public class Localization extends ActionBarActivity {
 //		ArrayList<String> chosenAP = new ArrayList<String>();
 		
 		
-		for(int i=0; i<observations.size(); i++)
-		{
-			System.out.println("Value  "+observations.get(i));
-		}
-		
 		//Get AP id for the next strongest RSSI value 
 		//call only if button not pressed amount of times of AP
 		if(SenseNewAP_buttonPressCount<observations.size()){
@@ -1056,12 +1058,15 @@ public class Localization extends ActionBarActivity {
 		
 		SenseNewAP_buttonPressCount++;
 		
-		int debug_size = observations.size();
+		
 		
 		if(observations.size()==0){
 			System.out.println("No observation. please chose other AP or re-sample ");
 		}
 		else{
+			//do not classify ap with no rssi 
+			if(observations.get(ap_index) != null){
+			
 		//classifier the  single observation with the corresponding training data
 		 		current_location =laplaceClassifier.classifyObservation(observations.get(ap_index), laplaceClassifier.getPersonalTrainingData().get(ap_index));
 		 		//update gui with classification
@@ -1069,45 +1074,10 @@ public class Localization extends ActionBarActivity {
 		 		
 		 	//	showLocation(laplaceClassifier.getCurrentLocation());
 		
-		
-		
-		//add only one integer to the arraylist for now
-		//ArrayList<Integer> test = new ArrayList<Integer>();
-		//test.add(observations.get(cellID));
-		
-		//classify observation based on this AP training data.
-		// Create the adapter to translate the array of strings to list items
-		/*ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
-				this,
-				R.layout.frament_localization_listview_item,
-				allAP
-				);*/
-		
-		//cellID=lpclassifier.classifyObservation(test);
-		
-		//System.out.println("highest rssi value: "+observations.get(cellID));
-		
-		
-		//call necessary functions 
-		// Create the adapter to translate the array of strings to list items
-		/*ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
-				this,
-				R.layout.frament_localization_listview_item,
-				chosenAP
-				);*/
-		
-		
-		// Add adapter to listview
-		/*ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
-		listAllAP.setAdapter(adapterAllAP);*/
-		
-		//current_cell=   naiveBayesian.classifyObservation(observations); //crashes on june 21 
-
-	     
-	//	current_cell2 = laplaceClassifier.classifyObservation(observations);
-		}
+				}
 		
 		showCurrentLocation(laplaceClassifier.getCurrentLocation());
+	  }
 	}
 	
 	
@@ -1116,6 +1086,7 @@ public class Localization extends ActionBarActivity {
 	 */
 	public void senseNewScan(View view) {
 		
+		laplaceClassifier.resetparameters();
 		
 		TextView t = (TextView) findViewById(R.id.showLocationView);
 	    

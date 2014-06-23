@@ -311,7 +311,7 @@ public class Bayesian {
   			/* set uniform distribution for prior */
   			for(int i=0; i<numbers.length; i++)
   			{
-  				listofIndexes.add(i+1);
+  				listofIndexes.add(i);
   				//currentLocation.add(i);// at the beginning all rooms is the current location
   			}
   		  return listofIndexes;  
@@ -618,7 +618,9 @@ public class Bayesian {
 	    	System.out.println("\n rssi sample:" + ap_observation.intValue());
 	  
 	    	//check if rssi value is within rssi range
-	    	if(ap_observation>0 || ap_observation<pmfTable.getTable().length )
+	    //	if(ap_observation>0 || ap_observation<pmfTable.getTable().length )
+	    	if(   ap_observation > -(pmfTable.getTable()[0].length) &&  ap_observation < 0 )
+	    	    
 	    	{
 	   		
 	    		/* fetch the probability for each cell having that rssi value for that AP.  P(e1|H) */
@@ -665,6 +667,13 @@ public class Bayesian {
 	        }
 	        */
 			return max_rssi;
+			
+		}
+		
+		public void resetparameters() {
+			// TODO Auto-generated method stub
+			
+			nextMaxInded=0;
 			
 		}
 		
