@@ -16,6 +16,7 @@ import java.util.TreeSet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -291,7 +292,16 @@ public class Localization extends ActionBarActivity {
 	} //end onCreate
 	
 
-	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// ignore orientation change
+		if(newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE ||
+				newConfig.orientation != Configuration.ORIENTATION_PORTRAIT) {
+			super.onConfigurationChanged(newConfig);
+		}
+		
+		
+	}
 	
 	
 	
@@ -974,7 +984,9 @@ public class Localization extends ActionBarActivity {
 		laplaceClassifier.setNumberOfCells(this.numberOfCells);
 		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
 		laplaceClassifier.setInitialBelieve();
-	
+		
+		Button b = (Button) findViewById(R.id.localisation_sense_new_scan_button);
+		b.setEnabled(true);
 		
 		showCurrentLocation(laplaceClassifier.getCurrentLocation());
 	}
@@ -1036,11 +1048,15 @@ public class Localization extends ActionBarActivity {
 	//		System.out.println("highest rssi value: "+observations.get(cellID));
 		}
 		else{
+			Button b = (Button) view;
+			b.setEnabled(false);
 			System.out.println("No More AccessPoints to fetch rssi values");
+			
 		}
 		
 		SenseNewAP_buttonPressCount++;
 		
+		int debug_size = observations.size();
 		
 		if(observations.size()==0){
 			System.out.println("No observation. please chose other AP or re-sample ");
@@ -1101,8 +1117,27 @@ public class Localization extends ActionBarActivity {
 	public void senseNewScan(View view) {
 		
 		
-	    // fetch only the RSSI value for the chosen AP
-	    observations = fetchRSSIChosenAP(chosen_ap_names); 
+		TextView t = (TextView) findViewById(R.id.showLocationView);
+	    
+	    if(chosen_ap_names.size() > 0) {
+	    	
+	    	// fetch only the RSSI value for the chosen AP
+		    observations = fetchRSSIChosenAP(chosen_ap_names);
+		    SenseNewAP_buttonPressCount = 0;
+	    	
+		    if(observations.size() > 0) {
+		    	Button b = (Button) findViewById(R.id.localisation_sense_new_AP_button);
+			    b.setEnabled(true);
+		    }
+		    
+		    t.setText("Scanned "+observations.size()+" AP");
+	    }
+	    else {
+	    	
+	    	t.setText("No AP Selected!");
+	    }
+	    
+	    
 	 
 	//	for(int i=0; i<observations.size(); i++)
 	//	{

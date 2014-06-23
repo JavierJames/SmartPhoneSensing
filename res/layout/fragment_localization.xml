@@ -121,6 +121,7 @@
 					        android:layout_width="wrap_content"
 					        android:layout_height="wrap_content"
 					        android:onClick="senseNewAP"
+					        android:enabled="false"
 					        android:text="@string/localisation_sense_new_AP_button" />
 	                    
 	                    
@@ -129,6 +130,7 @@
 					        android:layout_width="wrap_content"
 					        android:layout_height="wrap_content"
 					        android:onClick="senseNewScan"
+					        android:enabled="false"
 					        android:text="@string/localisation_sense_new_scan_button" />
 	                    
 	                    

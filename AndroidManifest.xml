@@ -31,7 +31,9 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="com.example.smartphonesensing2.localization.Localization"></activity>
+        
+        <activity android:name="com.example.smartphonesensing2.localization.Localization" 
+            android:configChanges="keyboardHidden|orientation|screenSize"></activity>
         <activity android:name="com.example.smartphonesensing2.activity_monitoring.ActivityMonitoring"></activity>
         <activity android:name="com.example.smartphonesensing2.activity_monitoring.TestActivity"></activity>
         <activity android:name="com.example.smartphonesensing2.activity_monitoring.TrainActivity"></activity>
