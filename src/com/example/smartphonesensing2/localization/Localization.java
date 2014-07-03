@@ -83,7 +83,7 @@ public class Localization extends ActionBarActivity {
 	 * Settings for Training Data
 	 *  */
 	
-	int numberOfCells =8; //javier's home 
+	int numberOfCells =17; //javier's home 
 	int coverage_percentage= 50;
 	
 	
@@ -199,8 +199,8 @@ public class Localization extends ActionBarActivity {
 		else if (User==2)
 			folder_base_path =	Environment.getExternalStorageDirectory().toString()+"/Download/";
 		
-		//String root_folder_name = "cellsdata/";		//main folder
-		String root_folder_name = "cellsdata2/";		//main folder for javier home
+		String root_folder_name = "cellsdata/";		//main folder
+		//String root_folder_name = "cellsdata2/";		//main folder for javier home
 		filepath = folder_base_path + root_folder_name;	
 		 
 		
