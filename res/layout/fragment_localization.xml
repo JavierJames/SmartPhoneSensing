@@ -176,7 +176,7 @@
                   -->
                   
                   
-                 
+             <!--     
                   
                   
                 <RelativeLayout
@@ -218,7 +218,7 @@
 			        	android:text="@string/listSelectedAPHeader" />
 	            
                     
-                    <!-- List all APs -->
+                    List all APs
                     
                     
                     
@@ -232,7 +232,7 @@
                         >
                     </ListView>
                     
-                  <!--   
+                    
                     <View 
                         android:id="@+id/space"
                         android:layout_width="50dp"
@@ -240,9 +240,9 @@
                         android:layout_toRightOf="@+id/listAllAP"
                         />
                 
-                 -->
+                
                  
-                    <!-- List selected APs -->
+                    List selected APs
                     
                     <ListView
                         android:id="@+id/listSelectedAP"
@@ -254,7 +254,7 @@
                          >
                     </ListView>
                    
-                </RelativeLayout>
+                </RelativeLayout> -->
 		        
                 
                <!--  </LinearLayout>  -->

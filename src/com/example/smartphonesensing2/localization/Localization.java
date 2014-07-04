@@ -148,7 +148,7 @@ public class Localization extends ActionBarActivity {
 		// Create the tabs
 		TabSpec trainTab = tabHost.newTabSpec("Training");
 		TabSpec testTab = tabHost.newTabSpec("Testing");
-		TabSpec listAPTab = tabHost.newTabSpec("Select AP");
+//		TabSpec listAPTab = tabHost.newTabSpec("Select AP");
 
 
 		// Set Activity that will be opened when Training Tab is selected
@@ -168,14 +168,14 @@ public class Localization extends ActionBarActivity {
 		// Set Activity that will be opened when Select AP Tab is selected
 		// Set the tabname
 		
-		listAPTab.setContent(R.id.listAP_tab);
-		listAPTab.setIndicator("Select AP");
+		/*listAPTab.setContent(R.id.listAP_tab);
+		listAPTab.setIndicator("Select AP");*/
 
 
 		// Add tabs to the tabhost
 		tabHost.addTab(trainTab);
 		tabHost.addTab(testTab);
-		tabHost.addTab(listAPTab);
+//		tabHost.addTab(listAPTab);
 		
 		
 		// Pass empty arraylist to this showCurrentLocation to make the men of each cell invisible initially
@@ -212,6 +212,9 @@ public class Localization extends ActionBarActivity {
 		//these AP are the available ones for selection to be used for the Training Data
 		ToBeSelectedAP=	fetchFileFilteredAP(); //check 
 		
+		// Create the training data for each AP that passed the filter.
+		createTrainingData();
+		
 		/* 1st. Conferentie-TUD_00_1b_90_76_d3_f6   
            2nd  TUvisitor_00_1b_90_76_d3_f3            
            3rd eduroam_00_1b_90_76_d3_f0                 
@@ -229,45 +232,45 @@ public class Localization extends ActionBarActivity {
 	     ListView listAvailableAP;
 	     ArrayAdapter<String> adapter_listAvailableAP;
 	     
-	     listAvailableAP = (ListView) findViewById(R.id.listAllAP);
+//	     listAvailableAP = (ListView) findViewById(R.id.listAllAP);
 	    
 	     adapter_listAvailableAP= new ArrayAdapter<String>(this, R.layout.frament_localization_listview_item, ToBeSelectedAP);
 	     
-	     listAvailableAP.setAdapter(adapter_listAvailableAP);
+//	     listAvailableAP.setAdapter(adapter_listAvailableAP);
 	     
 	     
 	     	     
 	 
 			
 			// Create the adapter to translate the array of strings to list items
-			ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
+			/*ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
 					this,
 					R.layout.frament_localization_listview_item, ToBeSelectedAP   //not good, just for debugging purposes
 					//allAP
 					);
-			
+			*/
 			
 			// Create the adapter to translate the array of strings to list items
-			ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
+			/*ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
 					this,
 					R.layout.frament_localization_listview_item,
 					chosen_ap_names
 					);
-			
+			*/
 			//Get listView Object of all AP from xml file 
 			// Add adapter to listview
-			ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
-			listAllAP.setAdapter(adapterAllAP);
+//			ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
+//			listAllAP.setAdapter(adapterAllAP);
 			
 			
 			//Get listView Object of all selected AP from xml file 
 			// Add adapter to listview
-			ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
-			listChosenAp.setAdapter(adapterChosenAP);
+//			ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
+//			listChosenAp.setAdapter(adapterChosenAP);
 			
 			
 			// Add click listener to each item in the list of all AP
-			listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			/*listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
@@ -275,11 +278,11 @@ public class Localization extends ActionBarActivity {
 					
 					chooseAP(viewClicked);
 				}
-			});
+			});*/
 			
 			
 			// Add click listener to each item in the list of selected AP
-			listChosenAp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			/*listChosenAp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 	
 				@Override
 				public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
@@ -288,7 +291,7 @@ public class Localization extends ActionBarActivity {
 					unChooseAP(viewClicked);
 				}
 				
-			});
+			});*/
 	} //end onCreate
 	
 
@@ -1128,31 +1131,31 @@ public class Localization extends ActionBarActivity {
 		
 		
 		// Fetch the listSelectedAP to add the clicked item
-		ListView listChosenAP = (ListView) findViewById(R.id.listSelectedAP);
+//		ListView listChosenAP = (ListView) findViewById(R.id.listSelectedAP);
 		
 		// Get the adapter of the chosen list
-		ArrayAdapter<String> adapterChosenAP = (ArrayAdapter<String>) listChosenAP.getAdapter();
+//		ArrayAdapter<String> adapterChosenAP = (ArrayAdapter<String>) listChosenAP.getAdapter();
 		
 		
 		// add the chosen AP to the adapter
-		adapterChosenAP.add(chosenItem.getText().toString());
+//		adapterChosenAP.add(chosenItem.getText().toString());
 		
 		// Add the adapter back to the listview
-		listChosenAP.setAdapter(adapterChosenAP);
+//		listChosenAP.setAdapter(adapterChosenAP);
 		
 		
 		
 		// remove item from listAllAP
-		ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
+//		ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
 		
 		// Get the adapter of the all list
-		ArrayAdapter<String> adapterAllAP = (ArrayAdapter<String>) listAllAP.getAdapter();
+//		ArrayAdapter<String> adapterAllAP = (ArrayAdapter<String>) listAllAP.getAdapter();
 		
 		// Remove the chosen AP from the adapter
-		adapterAllAP.remove(chosenItem.getText().toString());
+//		adapterAllAP.remove(chosenItem.getText().toString());
 		
 		// Add the adapter back to the listview
-		listAllAP.setAdapter(adapterAllAP);
+//		listAllAP.setAdapter(adapterAllAP);
 	}
 	
 	
@@ -1163,32 +1166,32 @@ public class Localization extends ActionBarActivity {
 
 
 		// Fetch the listAllAP to add the clicked item
-		ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
+//		ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
 
 		// Get the adapter of the chosen list
-		@SuppressWarnings("unchecked")
-		ArrayAdapter<String> adapterAllAP = (ArrayAdapter<String>) listAllAP.getAdapter();
+//		@SuppressWarnings("unchecked")
+//		ArrayAdapter<String> adapterAllAP = (ArrayAdapter<String>) listAllAP.getAdapter();
 
 
 		// add the chosen AP to the adapter
-		adapterAllAP.add(chosenItem.getText().toString());
+//		adapterAllAP.add(chosenItem.getText().toString());
 
 		// Add the adapter back to the listview
-		listAllAP.setAdapter(adapterAllAP);
+//		listAllAP.setAdapter(adapterAllAP);
 
 
 
 		// remove item from listChosenAP
-		ListView listChosenAP = (ListView) findViewById(R.id.listSelectedAP);
+//		ListView listChosenAP = (ListView) findViewById(R.id.listSelectedAP);
 
 		// Get the adapter of the chosen list
-		ArrayAdapter<String> adapterChosenAP = (ArrayAdapter<String>) listChosenAP.getAdapter();
+//		ArrayAdapter<String> adapterChosenAP = (ArrayAdapter<String>) listChosenAP.getAdapter();
 
 		// Remove the chosen AP from the adapter
-		adapterChosenAP.remove(chosenItem.getText().toString());
+//		adapterChosenAP.remove(chosenItem.getText().toString());
 
 		// Add the adapter back to the listview
-		listChosenAP.setAdapter(adapterChosenAP);
+//		listChosenAP.setAdapter(adapterChosenAP);
 	}
 
 	
@@ -1524,6 +1527,36 @@ public class Localization extends ActionBarActivity {
 	}
 
 	
+	/*
+	 * This function creates the training data for each AP that passed the filter
+	 */
+	public void createTrainingData() {
+		tds.clear();
+		
+		
+		ArrayList<String> selectedAPnames = new ArrayList<String>();
+		
+		// new training data
+	    TrainingData td;
+	    
+	    // new access-point name to be associated with the training data
+	    String name = null;
+	    
+	    
+	 // Create a training data for each AP that passed the filter
+	    for(int i = 0; i < ToBeSelectedAP.size(); i++) {
+	           
+	           name = ToBeSelectedAP.get(i);
+	           
+	      		td = new TrainingData(name, filepath, numberOfCells);
+	      
+	     	 	td.createPMFTable();
+	      		td.createHistogramTable();
+	      		
+	      		tds.add(td);
+	      }
+	}
+	
 	/* function call when finished selection AP, to create the TrainingData*/
 	public void finalizeSelction (View view)
 	{
@@ -1540,20 +1573,20 @@ public class Localization extends ActionBarActivity {
 		//fetch the names of AP
 		
 		// remove item from listAllAP
-		ListView listSelectedAP = (ListView) findViewById(R.id.listSelectedAP);
+//		ListView listSelectedAP = (ListView) findViewById(R.id.listSelectedAP);
 		//TextView listSelectedAPText = (TextView) view;
 		
 	    // Get the adapter of the chosen list
-				@SuppressWarnings("unchecked")
+//				@SuppressWarnings("unchecked")
 			//	ArrayAdapter<String> adapterAllAP = (ArrayAdapter<String>) listAllAP.getAdapter();
 
-		ArrayAdapter<String> adapterSelectedAP = (ArrayAdapter<String>) listSelectedAP.getAdapter();
+//		ArrayAdapter<String> adapterSelectedAP = (ArrayAdapter<String>) listSelectedAP.getAdapter();
 		
 			// get the list of strings from adapter
-			for(int i=0; i<adapterSelectedAP.getCount(); i++)
+			/*for(int i=0; i<adapterSelectedAP.getCount(); i++)
 			{
 				selectedAPnames.add(adapterSelectedAP.getItem(i));
-			}
+			}*/
 				
 		
 		//selectedAPnames.add(adapterSelectedAP.toString());
@@ -1562,7 +1595,7 @@ public class Localization extends ActionBarActivity {
 		
 		
 		// Add the adapter back to the listview
-		listSelectedAP.setAdapter(adapterSelectedAP);
+//		listSelectedAP.setAdapter(adapterSelectedAP);
 		
 		
 		
@@ -1585,7 +1618,7 @@ public class Localization extends ActionBarActivity {
 	    
 
 	    // create training data for each chosen AP
-
+/*
 	      for(int i = 0; i < selectedAPnames.size(); i++) {
 	           
 	           name = selectedAPnames.get(i);
@@ -1596,18 +1629,21 @@ public class Localization extends ActionBarActivity {
 	      		td.createHistogramTable();
 	      		
 	      		tds.add(td);
+	      }*/
+	    
+	    
+	    // Create a training data for each AP that passed the filter
+	    for(int i = 0; i < ToBeSelectedAP.size(); i++) {
+	           
+	           name = ToBeSelectedAP.get(i);
+	           
+	      		td = new TrainingData(name, filepath, numberOfCells);
+	      
+	     	 	td.createPMFTable();
+	      		td.createHistogramTable();
+	      		
+	      		tds.add(td);
 	      }
-
-		
-		
-		
-		
-		
-		
-		
+	    
 	}
-	
-	
-	
-	
 }
