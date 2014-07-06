@@ -28,7 +28,7 @@ public class Bayesian {
 	public String classificationName="";
 	
 	
-	static int nextMaxInded;
+	static int nextMaxRssiIndex=0;
 	
 	
     // Set of training data. Each training data is associated to one access-point
@@ -264,33 +264,33 @@ public class Bayesian {
     	}  
     	  
     /*This functions reads a lit of numbers and returns the the indexes of the highest number */
+    public  ArrayList<Integer> getMaxValueandClassify2(float[] posterior){  
 
-    public  ArrayList<Integer> getMaxValueandClassify2(float[] numbers){  
-  	  float maxValue = numbers[0];
-  	  float cellid = 0;
   	  int maxIndex = 0;
   	  int maxIndex2 = 0;
   	  int tempIndex=0;
   	  
+  	  //variable to save the indexes of calculated current position
   	  ArrayList<Integer> listofIndexes = new  ArrayList<Integer>(); 
-  	ArrayList<Float> maxValues = new  ArrayList<Float>(); 
+  	  
+  	  //variable to save the maximum values appeared in each sense step
+  	  ArrayList<Float> maxValues = new  ArrayList<Float>(); 
   /*	
-	  List data = Arrays.asList(numbers); // !!!!
+	  List data = Arrays.asList(posterior); // !!!!
 	  ArrayList data2 = new ArrayList<Integer>(); // !!!!
 	  List data3 = new ArrayList(); // !!!!
 	  
-	  Collections.addAll(data2, numbers);
-	  Collections.addAll(data3, numbers);
+	  Collections.addAll(data2, posterior);
+	  Collections.addAll(data3, posterior);
 	*/    
 	  
 		   
-  	  float []results = new float [2];
+  	//  float []results = new float [2];
   	
-  	  
-	   float [] temp = new float [numbers.length];
-	  	System.arraycopy(numbers, 0, temp,0 , numbers.length);
-	  
-	  	Arrays.sort(temp);
+  	    // sort the posterior for  a given sense step to find maximum 
+	    float [] temp = new float [posterior.length];
+	  	System.arraycopy(posterior, 0, temp,0 , posterior.length);
+	   	Arrays.sort(temp);
 	  	
   	  
 	  	float first = temp[temp.length-1]; // get highest number 
@@ -303,13 +303,13 @@ public class Bayesian {
 		
   	  /*check if unknown results
   	   * all or more than two numbers are equivalent to max value */
-  	  if(unknownLocation(numbers))
+  	  if(unknownLocation(posterior))
   	  {
   		
   		  //set the arraylist of current cells to default
   		
   			/* set uniform distribution for prior */
-  			for(int i=0; i<numbers.length; i++)
+  			for(int i=0; i<posterior.length; i++)
   			{
   				listofIndexes.add(i);
   				//currentLocation.add(i);// at the beginning all rooms is the current location
@@ -372,9 +372,9 @@ public class Bayesian {
   		  valuetoFetch=maxValues.get(i);
   		  
   		  //fetch the original index of that current max value
-  		  for(int j=0; j<numbers.length; j++)
+  		  for(int j=0; j<posterior.length; j++)
   		  {
-  			  if(numbers[j] == valuetoFetch)
+  			  if(posterior[j] == valuetoFetch)
   			  {
   				  valueIndex = j;
   				listofIndexes.add(valueIndex);
@@ -394,7 +394,7 @@ public class Bayesian {
      /* This function checks to see if the posterior has a good result*/
      public static boolean unknownLocation(float [] posterior)
      {
-    	   int passBoundary =2; //if more than 2 cells are the same then unknown location
+    	   int passBoundary =2; //if more than 2 cells have the same posterior probability then unknown location
     	   int count=0;
     	   
     	   float [] temp = new float [posterior.length];
@@ -412,7 +412,9 @@ public class Bayesian {
 			float tempvalue;
 			
 			
-			 if (posterior.length == 0) {
+			// no cells are present, the location is known, => no where 
+			// if one cell is present, the location is also none.=> the only cell present
+			 if (posterior.length == 0 || posterior.length == 1 ) {
 			        return false;
 			    }
 			 
@@ -451,7 +453,7 @@ public class Bayesian {
 			    	
 			*/    	
 
-					 /* check more than two cells are the same to max value */
+			 	/* check more than two cells are the same to max value */
 				for(int i = 0; i < posterior.length && !flag2; i++)
 				{
 				  if (posterior[i] == first ) count++;
@@ -606,7 +608,7 @@ public class Bayesian {
 	/*
 	  *@parameter 1 :observation corresponding to a given training data. 
 	  *@parameter 2: Training data pmf 
-	  *Functionality is to apply the sense model. So for a given observation it fetches the probabilty of being in each individual cell and having that rssi value.
+	  *Functionality is to apply the sense model. So for a given observation it fetches the probability of being in each individual cell and having that rssi value.
 	  * 
 	  * */
 	    public static float [] senseOneAP(Integer ap_observation, Table pmfTable)
@@ -618,9 +620,7 @@ public class Bayesian {
 	    	System.out.println("\n rssi sample:" + ap_observation.intValue());
 	  
 	    	//check if rssi value is within rssi range
-	    //	if(ap_observation>0 || ap_observation<pmfTable.getTable().length )
-	    	if(   ap_observation > -(pmfTable.getTable()[0].length) &&  ap_observation < 0 )
-	    	    
+	    	if(   ap_observation > -(pmfTable.getTable()[0].length) &&  ap_observation < 0 )	    	    
 	    	{
 	   		
 	    		/* fetch the probability for each cell having that rssi value for that AP.  P(e1|H) */
@@ -646,6 +646,8 @@ public class Bayesian {
     
     /* @parameter 1: a list of rssi value for a given sample
      * Find the next strongest rssi value 
+     * this function keeps track of the index of the last calculated highest rssi value
+     * This index in reseted once sense new scan button is pressed, that calls the resetparameters() 
      * */
 		public static int findNextMaxRssi(ArrayList<Integer> observations2)
 		{
@@ -657,23 +659,20 @@ public class Bayesian {
 			//sort array in ascending order
 	        Arrays.sort(temp);
 	       
-	       // if(nextMaxInded<observations2.size()){
 	        //take last index and then continue taking that to the left
-	        max_rssi=temp[temp.length -1-nextMaxInded++].intValue();
-	       /* }
-	        else{
-	        	System.out.println("No More AccessPoints to fetch rssi values");
-	        //	return (Integer) null;
-	        }
-	        */
+	        max_rssi=temp[temp.length -1-nextMaxRssiIndex++].intValue();
+	      
 			return max_rssi;
 			
 		}
 		
+		/* this function resets the index of the next highest rssi value to the default array possition
+		 * which is to the extreme right. That is once place in a array sorted from small to big in value*/
 		public void resetparameters() {
 			// TODO Auto-generated method stub
 			
-			nextMaxInded=0;
+		
+			nextMaxRssiIndex=0;
 			
 		}
 		

@@ -72,10 +72,7 @@ public class Localization extends ActionBarActivity {
 	private int id_sample=0;
 
 	
-	// count down timer for scanning cell
-	private TextView countdown_timer_text; 
-	MalibuCountDownTimer countDownTimer= new MalibuCountDownTimer(startTime, interval);
-	
+
 	
 		
 	
@@ -200,33 +197,22 @@ public class Localization extends ActionBarActivity {
 			folder_base_path =	Environment.getExternalStorageDirectory().toString()+"/Download/";
 		
 		//String root_folder_name = "cellsdata/";		//main folder
-		String root_folder_name = "cellsdata2/";		//main folder for javier home
+
+	   //String root_folder_name = "cellsdata2/";		//main folder for javier home
+	String root_folder_name = "cellsdata_Day/";		//main folder collected data during the day
+
 		filepath = folder_base_path + root_folder_name;	
-		 
-		
 		
 	/* 
 	 * */
 		
 		//fetchfilewithfilteredAP
 		//these AP are the available ones for selection to be used for the Training Data
-		ToBeSelectedAP=	fetchFileFilteredAP(); //check 
+		//these were the access points that came out the filtering 
+		ToBeSelectedAP=	fetchFileFilteredAP(); //check  // need to be optimized. call after the data has been filtered
 		
 		// Create the training data for each AP that passed the filter.
 		createTrainingData();
-		
-		/* 1st. Conferentie-TUD_00_1b_90_76_d3_f6   
-           2nd  TUvisitor_00_1b_90_76_d3_f3            
-           3rd eduroam_00_1b_90_76_d3_f0                 
-           4th tudelft-dastud_00_1b_90_76_ce_14       
-
-		 * */
-		
-	/*	ToBeSelectedAP.add("Conferentie-TUD_00_1b_90_76_d3_f6");
-		ToBeSelectedAP.add("TUvisitor_00_1b_90_76_d3_f3 ");
-		ToBeSelectedAP.add("eduroam_00_1b_90_76_d3_f0  ");
-		ToBeSelectedAP.add("tudelft-dastud_00_1b_90_76_ce_14 ");
-		*/
 		
 		/*set up view to display and read available AP  */
 	     ListView listAvailableAP;
@@ -238,10 +224,7 @@ public class Localization extends ActionBarActivity {
 	     
 //	     listAvailableAP.setAdapter(adapter_listAvailableAP);
 	     
-	     
-	     	     
-	 
-			
+	 			
 			// Create the adapter to translate the array of strings to list items
 			/*ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
 					this,
@@ -635,6 +618,7 @@ public class Localization extends ActionBarActivity {
 	
 	//when done sampling, and this button is pressed, create histogram of each Access-Points
 	//filter data after
+	//create files with these information
 	@SuppressLint("NewApi") public void finalizeTraining(View view){
 		
 		Button button = (Button) findViewById(R.id.finalizeTraining_button);
@@ -805,67 +789,29 @@ public class Localization extends ActionBarActivity {
 	}
 	
 	
-	
-	// CountDownTimer class
-			public class MalibuCountDownTimer extends CountDownTimer
-				{
 
-					public MalibuCountDownTimer(long startTime, long interval)
-						{
-							super(startTime, interval);
-						}
-
-					@Override
-					public void onFinish()
-						{
-						countdown_timer_text.setText("Time's up!");
-						//	timeElapsedView.setText("Time Elapsed: " + String.valueOf(startTime));
-						}
-
-					@Override
-					public void onTick(long millisUntilFinished)
-						{
-						countdown_timer_text.setText("Time remain:" + millisUntilFinished);
-							//timeElapsed = startTime - millisUntilFinished;
-							//timeElapsedView.setText("Time Elapsed: " + String.valueOf(timeElapsed));
-						}
-				}
 	
 	
 	
 	
 	
-	
-	
-	
-	
-	/*
-	 * Fetch list of AP with their corresponding rssi values
+	/*@parameter1: list of chosen AP
+	 * Fetch list  AP's rssi value corresponding to the chosen AP 
 	 */
 	private ArrayList<Integer> fetchRSSIChosenAP(ArrayList<String> chosenAP) {
 		// List of RSSI of each chosen AP
-				ArrayList<Integer> observation = new ArrayList<Integer>(10);
-		
+				ArrayList<Integer> observation = new ArrayList<Integer>(10); 
+				/*
+				 * bug that its only 10, while we select more than 10 AP
+				 * ArrayList<Integer> observation = new ArrayList<Integer>(chosenAP.size()); //bug that its only 10, while we select more than 10 AP
+				 */
+				
 				
 				//initialize observation array
 				for(int i=0; i<chosenAP.size(); i++){
 					observation.add(-255);
 				}
 				
-		
-		//hardcode for testing
-		/*		1st Conferentie-TUD_00_1b_90_76_d3_f6      -73;
-				2nd  TUvisitor_00_1b_90_76_d3_f3            -72;
-				3rd  eduroam_00_1b_90_76_d3_f0                 -74; 
-				[4th]: tudelft-dastud_00_1b_90_76_ce_14       -83;
-*/
-		
-//				observation.add(-73);
-//				observation.add(-72);
-//				observation.add(-74);
-//				observation.add(-83);
-		
-		
 		
 		WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		List<ScanResult> rssiList = null;
@@ -983,18 +929,19 @@ public class Localization extends ActionBarActivity {
 	    	tds.add(td);
 	    }*/
 		
-		
+		/*
 		naiveBayesian = new NaiveBayesian(filepath); //create classifier 
 		naiveBayesian.setNumberOfCells(this.numberOfCells);
 		naiveBayesian.trainClassifier(tds); //train classifier 	   
 		naiveBayesian.setInitialBelieve();    //set the initial believe to uniform
-		
+		*/
 		
 		laplaceClassifier = new LaplaceBayesian(filepath);
 		laplaceClassifier.setNumberOfCells(this.numberOfCells);
 		laplaceClassifier.trainClassifier(tds); //train classifier by updating training data. correction done automatically 
 		laplaceClassifier.setInitialBelieve();
 		
+		//allow fetching new rssi sample scan for chosen APs
 		Button b = (Button) findViewById(R.id.localisation_sense_new_scan_button);
 		b.setEnabled(true);
 		
@@ -1002,103 +949,31 @@ public class Localization extends ActionBarActivity {
 	}
 	
 	
-	/*
-	 * This function fetches the next AP, from the list of chosen AP, with the highest RSSI value
-	 */
-	public void senseNewAP(View view) {
-		
-		int cellID = 0; 
-		int ap_index=0;
-		
-		System.out.println("About to classify");
-		int current_cell = 0;
-		
-		int current_cell2 = 0;
-		
-		
-		ArrayList<Integer> current_location = new ArrayList<Integer>();
-			
-		//dummy classifier
-		//LaplaceBayesian lpclassifier = new LaplaceBayesian(null); 
-		
-		
-		//get the list of observations that belongs to the chosen AP
-	//	ArrayList<Integer> observations = new ArrayList<Integer>();
-
-
-	/*	System.out.println("Observations size: "+observations.size());
-	      
-	      /*
-	       * End
-	       */
-	    
-				
-		
-		
-		
-		// list of APs in arraylist to be added in the ArrayAdapter
-//		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
-		
-		// list of chosen APs in arraylist to be added in the ArrayAdapter
-//		ArrayList<String> chosenAP = new ArrayList<String>();
-		
-		
-		//Get AP id for the next strongest RSSI value 
-		//call only if button not pressed amount of times of AP
-		if(SenseNewAP_buttonPressCount<observations.size()){
-			ap_index = Bayesian.NextStrongestAP(observations);
-			System.out.println("highest rssi value: "+observations.get(ap_index));
-			
-			//	cellID = Bayesian.NextStrongestAP(observations);
-	//		System.out.println("highest rssi value: "+observations.get(cellID));
-		}
-		else{
-			Button b = (Button) view;
-			b.setEnabled(false);
-			System.out.println("No More AccessPoints to fetch rssi values");
-			
-		}
-		
-		SenseNewAP_buttonPressCount++;
-		
-		
-		
-		if(observations.size()==0){
-			System.out.println("No observation. please chose other AP or re-sample ");
-		}
-		else{
-			//do not classify ap with no rssi 
-			if(observations.get(ap_index) != null){
-			
-		//classifier the  single observation with the corresponding training data
-		 		current_location =laplaceClassifier.classifyObservation(observations.get(ap_index), laplaceClassifier.getPersonalTrainingData().get(ap_index));
-		 		//update gui with classification
-		 		laplaceClassifier.updataCurrentLocation(current_location);
-		 		
-		 	//	showLocation(laplaceClassifier.getCurrentLocation());
-		
-				}
-		
-		showCurrentLocation(laplaceClassifier.getCurrentLocation());
-	  }
-	}
-	
 	
 	/*
 	 * This functions fetches rssi values for the list of chosen AP, selected by the user
 	 */
 	public void senseNewScan(View view) {
 		
+		//reset the index of next strongest AP, thus having highest rssi value from a given sample
 		laplaceClassifier.resetparameters();
+		//should not I reset also one time the posterior? or should this be left alone for initial believe
+		
 		
 		TextView t = (TextView) findViewById(R.id.showLocationView);
-	    
+		
+		SenseNewAP_buttonPressCount = 0;
+    	
+		//chosen AP exist
+		//at this point it consist of a training data
 	    if(chosen_ap_names.size() > 0) {
 	    	
 	    	// fetch only the RSSI value for the chosen AP
+	    	// observations are fetch with a matching index with that of its corresponding AP
 		    observations = fetchRSSIChosenAP(chosen_ap_names);
-		    SenseNewAP_buttonPressCount = 0;
+		    //SenseNewAP_buttonPressCount = 0;
 	    	
+		    /* allow fetching ap rssi only if at least one access point was selected */
 		    if(observations.size() > 0) {
 		    	Button b = (Button) findViewById(R.id.localisation_sense_new_AP_button);
 			    b.setEnabled(true);
@@ -1120,6 +995,91 @@ public class Localization extends ActionBarActivity {
 	} //end SenseNewScan Function
 
 
+	
+	/*For a given Sample ( one rssi wifi scan for all of the chosen AP )
+	 * This function fetches the next AP, from the list of chosen AP, with the highest RSSI value
+	 *This button should only be pressed as much as they are selected AP
+	 */
+	public void senseNewAP(View view) {
+		
+		int ap_index=0;
+		
+		//System.out.println("About to classify");
+		
+		//variable to save list  of current locations
+		ArrayList<Integer> current_location = new ArrayList<Integer>();
+			
+		// list of APs in arraylist to be added in the ArrayAdapter
+//		ArrayList<String> allAP = new ArrayList<String>(Arrays.asList(fetchListAP()));
+		
+		// list of chosen APs in arraylist to be added in the ArrayAdapter
+//		ArrayList<String> chosenAP = new ArrayList<String>();
+		
+		
+		/* first make sure a sample was done */
+		// classify only if a sample was done 
+		if(observations.size()==0){
+			System.out.println("No observation sample. please choose other AP or re-sample ");
+		}
+		else{
+		
+			/* secondly ensure that there is still more AP left to fetch samples for */
+			
+			//Get AP id for the next strongest RSSI value 
+			//call only if button not pressed amount of times of AP
+			if(SenseNewAP_buttonPressCount<observations.size()){
+				
+				SenseNewAP_buttonPressCount++; // -- double check this. the button needs to be disable one time after 4 count  
+			
+				/* fetch next highest rssi  */
+				ap_index = Bayesian.NextStrongestAP(observations); // -- make sure this resets correctly
+				System.out.println("highest rssi value: "+observations.get(ap_index));
+				
+				
+				//	cellID = Bayesian.NextStrongestAP(observations);
+		//		System.out.println("highest rssi value: "+observations.get(cellID));
+
+			    	/* ensure next strongest AP has a rssi value 
+			    	 * if yes, classify this rssi value */ 
+					if(observations.get(ap_index) != null){
+					
+						//classifier the  single observation with the corresponding training data
+				 		current_location =laplaceClassifier.classifyObservation(observations.get(ap_index), laplaceClassifier.getPersonalTrainingData().get(ap_index));
+				 	
+				 		//update gui with classification
+				 		laplaceClassifier.updataCurrentLocation(current_location);
+				 		
+			
+						}
+				
+				showCurrentLocation(laplaceClassifier.getCurrentLocation());
+	   }
+			
+			
+			
+			//disable the button immediately once the button has been pressed observations.size() times
+			if(SenseNewAP_buttonPressCount>=observations.size()){
+				Button b = (Button) view;
+				b.setEnabled(false);
+				System.out.println("No More AccessPoints to fetch rssi values");
+				
+			}
+			
+			//SenseNewAP_buttonPressCount++; 
+			
+		}
+
+	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
 	/*
 	 * This function passes the chosen AP from the all list and passe
 	 */

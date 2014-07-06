@@ -318,7 +318,7 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	
 	/*
 	 * This method tests the app for the activities: still, walk, run.
-	 * While pressed the accelerometer coordinates is being saved in a new data based, 
+	 * While pressed the accelerometer coordinates is being saved in a new data base, 
 	 * to be processed later 
 	 */
 	public void testActivity(View view) {
@@ -351,7 +351,7 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	
 	
 	/*
-	 * This method samples the input and matches them with the content in the database.
+	 * This method samples the input and matches them with the content in the training database.
 	 * The matching is done with the KNN algorithm.
 	 */
 	private void testApp() {
@@ -383,7 +383,9 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 			}
 
 			
-			// This function shows the current activity
+			/* This function shows the current activity 
+			 * By comparing a new sample with training data, using KNN algorithm 
+			 * */
 			private void showCurrentActivity() {
 				
 				TextView showCurrentActivity = (TextView) findViewById(R.id.showCurrentActivity);
@@ -391,14 +393,16 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 
 				getData();
 				
+				//???
 				ArrayBuff [] singleTestingDataset = new ArrayBuff[1];
 				singleTestingDataset[0] = new ArrayBuff(0, mlastX, mlastY, mlastZ, "");
 				
+					
 				
-//				store data in internal memory for debugging
+				//	store data in internal memory for debugging
 				
 				Knn_API knn = new Knn_API(K, trainingDataset, singleTestingDataset);
-				activities = knn.get_activities();
+				activities = knn.get_activities(); //?? shouldn't it be one?
 				
 				if(activities[0] != null && (activities[0]).length() > 0) {
 					showCurrentActivity.setText(activities[0]);
