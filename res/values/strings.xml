@@ -43,6 +43,7 @@
     	<string name="stillButton">Start still</string>
     	<string name="walkButton">Start walking</string>
     	<string name="runButton">Start running</string>
+    	<string name="jumpButton">Start jumping</string>
     
     
     <!-- Testing tab -->

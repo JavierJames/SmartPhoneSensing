@@ -149,6 +149,92 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	
 	
 	/*
+	 * This method trains the app for the walking activity
+	 */
+	public void trainWalkActivity(View view) {
+		Button b = (Button) view;
+		
+		if(b.getText().equals("Start walking")){
+			// When this button is pressed to start the variable activity
+			// is set to "walk" and the text shown on the button is changed to
+			// "Stop walking"
+			
+			train = true;
+			activity = "walk";
+			b.setText("Stop walking");
+			
+			trainApp();
+		}
+		else {
+			// When this button is pressed to stop the variable activity
+			// is set to "none" and the text shown on the button is changed to
+			// "Start walking"
+			
+			train = false;
+			activity = "none";
+			b.setText("Start walking");
+		}
+	}
+	
+	
+	/*
+	 * This method trains the app for the running activity
+	 */
+	public void trainRunActivity(View view) {
+		Button b = (Button) view;
+		
+		if(b.getText().equals("Start running")){
+			// When this button is pressed to start the variable activity
+			// is set to "run" and the text shown in the button is changed to
+			// "Stop running"
+			
+			train = true;
+			activity = "run";
+			b.setText("Stop running");
+			trainApp();
+		}
+		else {
+			// When this button is pressed to stop the variable activity
+			// is set to "none" and the text shown on the button is changed to
+			// "Start running"
+			
+			train = false;
+			activity = "none";
+			b.setText("Start running");
+		}
+	}
+	
+	
+	/*
+	 * This method trains the app for the jumping activity
+	 * With jumping is meant jumping on the same spot, thus not jumping in a particular direction
+	 */
+	public void trainJumpActivity(View view) {
+		Button b = (Button) view;
+		
+		if(b.getText().equals("Start jumping")){
+			// When this button is pressed to start the variable activity
+			// is set to "run" and the text shown in the button is changed to
+			// "Stop running"
+			
+			train = true;
+			activity = "jump";
+			b.setText("Stop jumping");
+			trainApp();
+		}
+		else {
+			// When this button is pressed to stop the variable activity
+			// is set to "none" and the text shown on the button is changed to
+			// "Start running"
+			
+			train = false;
+			activity = "none";
+			b.setText("Start jumping");
+		}
+	}
+	
+	
+	/*
 	 * This method samples the input and stores them in the database.
 	 */
 	private void trainApp() {
@@ -227,63 +313,6 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 		}
 		
 		
-	}
-	
-	
-	/*
-	 * This method trains the app for the walking activity
-	 */
-	public void trainWalkActivity(View view) {
-		Button b = (Button) view;
-		
-		if(b.getText().equals("Start walking")){
-			// When this button is pressed to start the variable activity
-			// is set to "walk" and the text shown on the button is changed to
-			// "Stop walking"
-			
-			train = true;
-			activity = "walk";
-			b.setText("Stop walking");
-			
-			trainApp();
-		}
-		else {
-			// When this button is pressed to stop the variable activity
-			// is set to "none" and the text shown on the button is changed to
-			// "Start walking"
-			
-			train = false;
-			activity = "none";
-			b.setText("Start walking");
-		}
-	}
-	
-	
-	/*
-	 * This method trains the app for the running activity
-	 */
-	public void trainRunActivity(View view) {
-		Button b = (Button) view;
-		
-		if(b.getText().equals("Start running")){
-			// When this button is pressed to start the variable activity
-			// is set to "run" and the text shown in the button is changed to
-			// "Stop running"
-			
-			train = true;
-			activity = "run";
-			b.setText("Stop running");
-			trainApp();
-		}
-		else {
-			// When this button is pressed to stop the variable activity
-			// is set to "none" and the text shown on the button is changed to
-			// "Start running"
-			
-			train = false;
-			activity = "none";
-			b.setText("Start running");
-		}
 	}
 	
 	

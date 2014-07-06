@@ -69,6 +69,15 @@
 			            android:text="@string/runButton" />
 			        
 			        
+			        <!-- Jump Button -->
+			        <Button
+			            android:id="@+id/runJump"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:onClick="trainJumpActivity"
+			            android:text="@string/jumpButton" />
+			        
+			        
 			        <!-- This section is only for debug purposes -->
 			        
 				        
