@@ -12,10 +12,20 @@
 
     
     <TextView
+       	android:id="@+id/overviewActivityTitle"
+       	android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:textStyle="bold"
+       	android:textSize="35sp"
+       	android:textAlignment="center"
+       	android:text="@string/overviewActivityTitle" />
+    
+    
+    <TextView
        	android:id="@+id/overviewActivity"
        	android:layout_width="wrap_content"
        	android:layout_height="wrap_content"
-       	android:text="@string/overviewStill" />
+       	android:text="@string/overviewActivity" />
     
     
         <!-- 

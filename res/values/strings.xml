@@ -66,6 +66,8 @@
     	<!-- Overview -->
 	    	<string name="activityOverviewButton">Overview</string>
 	    
+	    	<string name="overviewActivityTitle">Overview</string>
+	    	<string name="overviewActivity"></string>
 	    	<string name="overviewStill">Still:</string>
 	    	<string name="overviewWalk">Walk:</string>
 	    	<string name="overviewRun">Run:</string>

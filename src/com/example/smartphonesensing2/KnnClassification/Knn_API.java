@@ -17,7 +17,7 @@ public class Knn_API {
     public Knn_API(int K,  ArrayBuff[] TrainingData, ArrayBuff[] TestingData){
     
     	this.K = K;
-    	this.num_activities = 3; 
+    	this.num_activities = 4; 
         this.TrainingDataSize = TrainingData.length;
         TrainingData2=TrainingData;
     	this.TestingDataSize = TestingData.length ;
@@ -152,6 +152,7 @@ public class Knn_API {
 				activity_counter[0].setActivity("run");
 				activity_counter[1].setActivity("still");
 				activity_counter[2].setActivity("walk");
+				activity_counter[3].setActivity("jump");
 				
 				/*search through array , for each activity, and count */
 				for(int j=0; j<activity_counter.length; j++){
