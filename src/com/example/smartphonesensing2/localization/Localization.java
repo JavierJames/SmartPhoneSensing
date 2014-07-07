@@ -2,6 +2,7 @@ package com.example.smartphonesensing2.localization;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -47,6 +48,7 @@ import com.example.smartphonesensing2.localization.filter.AccessPointOccurrence;
 import com.example.smartphonesensing2.localization.filter.AccessPointRSSIStrength;
 import com.example.smartphonesensing2.localization.filter.SelectionAverage;
 import com.example.smartphonesensing2.localization.filter.SelectionCoverage;
+import com.example.smartphonesensing2.localization.histogram.AccessPoint;
 import com.example.smartphonesensing2.localization.histogram.Histogram;
 import com.example.smartphonesensing2.localization.histogram.TrainingData;
 import com.example.smartphonesensing2.table.Table;
@@ -80,7 +82,7 @@ public class Localization extends ActionBarActivity {
 	 * Settings for Training Data
 	 *  */
 	
-	int numberOfCells =8; //javier's home 
+	int numberOfCells =17; //javier's home 
 	int coverage_percentage= 50;
 	
 	
@@ -182,11 +184,15 @@ public class Localization extends ActionBarActivity {
 		/* 
 		 * Set base Path where files should be fetched and stored
 		 * */
-		int User=2;  //0 = Javier pc, 1=Luis pc, 2=all phones,
+		int User=2;  //0 = Javier pc, 1=Luis pc, 2=all phones
+		int RawDataType=2;  //0 = day raw data, 1=evening raw data, 2= day+evening merged raw data
+		
 		
 		
 		String folder_base_path = null;
 		
+		
+		/*Settings to know where the main pat  */
 		if(User==0){
 			folder_base_path = "/home/swifferayubu/Dropbox/Test/";
 			//folder_base_path = "/home/swifferayubu/Dropbox/Doc/";
@@ -196,31 +202,73 @@ public class Localization extends ActionBarActivity {
 		else if (User==2)
 			folder_base_path =	Environment.getExternalStorageDirectory().toString()+"/Download/";
 		
-		//String root_folder_name = "cellsdata/";		//main folder
-
-	   //String root_folder_name = "cellsdata2/";		//main folder for javier home
-	String root_folder_name = "cellsdata_Day/";		//main folder collected data during the day
+		
+		
+		
+		String root_folder_name=null;
+		
+		if(RawDataType==0){
+			root_folder_name = "cellsdata_Day/";
+			   //String root_folder_name = "cellsdata2/";		//main folder for javier home
+		}
+		else if (RawDataType==1)
+			root_folder_name = "cellsdata_Evening/";
+		else if (RawDataType==2){
+			root_folder_name = "cellsdata_Merged/";
+		//	
+			
+			//merge day and evening raw data 
+			
+			
+		}
 
 		filepath = folder_base_path + root_folder_name;	
+		
+		//list of paths to merged together
+		ArrayList <String> pathsToMerged=new ArrayList<String>(); 
+		//ArrayList <File> pathsToMerged1=new ArrayList<File>(); 
+		
+		
+		
+		
+		pathsToMerged.add(folder_base_path+"cellsdata_Day/");
+		pathsToMerged.add(folder_base_path+"cellsdata_Evening/");
+		
+		
+		//merge files only merge option was selected and files not merged already
+		
+		//if(RawDataType==2) MergeRawData(folder_base_path+"cellsdata_Day/", folder_base_path+"cellsdata_Evening/");
+		File path = new File(filepath);
+		if(RawDataType==2 && !path.exists())
+			try {
+				MergeRawData(pathsToMerged);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
 	/* 
 	 * */
 		
-		//fetchfilewithfilteredAP
+		//fetch file with filtered AP
 		//these AP are the available ones for selection to be used for the Training Data
 		//these were the access points that came out the filtering 
-		ToBeSelectedAP=	fetchFileFilteredAP(); //check  // need to be optimized. call after the data has been filtered
+		//ToBeSelectedAP=	fetchFileFilteredAP(); //check  // need to be optimized. call after the data has been filtered
+		chosen_ap_names=	fetchFileFilteredAP();
+		
 		
 		// Create the training data for each AP that passed the filter.
 		createTrainingData();
 		
+		
+		
 		/*set up view to display and read available AP  */
-	     ListView listAvailableAP;
-	     ArrayAdapter<String> adapter_listAvailableAP;
+	    // ListView listAvailableAP;
+	 //    ArrayAdapter<String> adapter_listAvailableAP;
 	     
 //	     listAvailableAP = (ListView) findViewById(R.id.listAllAP);
 	    
-	     adapter_listAvailableAP= new ArrayAdapter<String>(this, R.layout.frament_localization_listview_item, ToBeSelectedAP);
+	 //    adapter_listAvailableAP= new ArrayAdapter<String>(this, R.layout.frament_localization_listview_item, ToBeSelectedAP);
 	     
 //	     listAvailableAP.setAdapter(adapter_listAvailableAP);
 	     
@@ -791,10 +839,6 @@ public class Localization extends ActionBarActivity {
 	
 
 	
-	
-	
-	
-	
 	/*@parameter1: list of chosen AP
 	 * Fetch list  AP's rssi value corresponding to the chosen AP 
 	 */
@@ -1331,7 +1375,7 @@ public class Localization extends ActionBarActivity {
 	    SortedSet<Map.Entry<K,V>> sortedEntries = new TreeSet<Map.Entry<K,V>>(new Comparator<Map.Entry<K,V>>() {
 	        	
 	            @Override 
-	            public int compare(Map.Entry<K,V> e1, Map.Entry<K,V> e2) {
+	            public int compare	(Map.Entry<K,V> e1, Map.Entry<K,V> e2) {
 	                return e1.getValue().compareTo(e2.getValue());
 	            }
 	        }
@@ -1504,9 +1548,9 @@ public class Localization extends ActionBarActivity {
 	    
 	    
 	 // Create a training data for each AP that passed the filter
-	    for(int i = 0; i < ToBeSelectedAP.size(); i++) {
+	    for(int i = 0; i < chosen_ap_names.size(); i++) {
 	           
-	           name = ToBeSelectedAP.get(i);
+	           name = chosen_ap_names.get(i);
 	           
 	      		td = new TrainingData(name, filepath, numberOfCells);
 	      
@@ -1593,9 +1637,9 @@ public class Localization extends ActionBarActivity {
 	    
 	    
 	    // Create a training data for each AP that passed the filter
-	    for(int i = 0; i < ToBeSelectedAP.size(); i++) {
+	    for(int i = 0; i < chosen_ap_names.size(); i++) {
 	           
-	           name = ToBeSelectedAP.get(i);
+	           name = chosen_ap_names.get(i);
 	           
 	      		td = new TrainingData(name, filepath, numberOfCells);
 	      
@@ -1606,4 +1650,173 @@ public class Localization extends ActionBarActivity {
 	      }
 	    
 	}
+
+
+	/* @parameter1: textfile path of some rawdata
+	 * @parameter2: textfile path of a next set of  rawdata
+	 * This functions takes two files containing raw rssi samples and merge them into one file */
+	public void MergeRawData(final ArrayList<String>pathsToMerge) throws IOException{
+		
+		//get a pointer to each file 
+		String folder_name= "1_RawUnselected_AP/";
+
+
+		//Create merged folder incase it is not created
+		String mergedFolder= filepath+folder_name;
+		String mergedFile = "";
+		File mergepath = new File(mergedFolder);
+
+		// If the directory does not exist, then make one
+		if(!mergepath.exists()) {
+			if(mergepath.mkdirs())
+				System.out.println("Directory created!");
+			else
+				System.out.println("Failed to create directory!");
+		}			
+	
+		
+		
+		
+		//set destination path of the merge data
+		//it is the string variable filepath
+		
+		for(int i=0; i<pathsToMerge.size(); i++)
+		{
+//			
+//			File dir= new File(pathRawData1+folder_name);
+//			File dir_list[] = dir.listFiles();
+//				
+			
+			//get pointer to file path with raw data
+			//File dir= new File(pathsToMerge.get(i)+folder_name);
+			File srcPath = new File(pathsToMerge.get(i)+folder_name);
+			File srcPath_list[] = srcPath.listFiles();
+				
+		
+			
+			//copy each file contents, for the given filepath, to the destination merged folder
+			for (File file : srcPath_list){
+				
+				if (file.isFile()) {
+			   	
+			    	if(file.getName().startsWith("c", 0) && 
+					file.getName().endsWith(".txt")) {
+			    		
+			    		//copyfile(file,mergedFolder+file.getName());
+			    		copyfile(file,new File(mergedFolder+file.getName()));
+			    		
+			    	}
+			    }
+
+			
+			
+			
+		}
+		
+		
+		
+	
+
+
+				}
+		
+		//for each file, go through each cellfile found and put it a next file 
+		
+		
+		//write to file 
+		//FileWriter writer = new FileWriter(file, true);
+	}
+
+	
+	 private static void copyfile(File srcFile, File dstFile) throws IOException{
+         //try{
+             
+              File cell;
+              
+              String lineSentence=null;
+              FileWriter writer = new FileWriter(dstFile, true);
+  			  
+              try {
+      			// Read in the cell file
+      		//	cell = srcFile.getName();
+      			Scanner reader = new Scanner(srcFile);
+      			reader.useDelimiter("\\s*[,\n\r]\\s*");
+      			
+      			String ssid = "";
+      			String bssid = "";
+      			int level = 1;
+      			String trash = "";
+      			
+      			boolean skip_first_line = true;
+      			String debug = "";
+      			String debug_p = "";
+      			int debug_i = 0;
+      			
+      			// Check if there is a next line in the file
+      			//while(reader.hasNext()) {
+      			while(reader.hasNextLine()) {
+          				
+      				// The first line of each file is just the header, no values in there
+      				if(skip_first_line) {
+      					
+      					skip_first_line = false;
+      					
+      					lineSentence=reader.nextLine();
+     					writer.append(lineSentence);
+//      					writer.append("bla bla ");
+      					writer.append("\n\n");
+      					
+//      					
+//      					for(int i = 0; i < 7; i++) {
+//      						reader.next();
+//      					}
+      					
+      					continue;
+      				}
+      					
+      				lineSentence= reader.nextLine();
+      				writer.append(lineSentence);
+      				writer.append("\n\n");
+      				// If there is a next line than iterate over its columns (tokens)
+      			/*	for(int i = 0; i < 7; i++) {
+      					
+      					// note: if i > 3 then break
+      					
+      					
+      					// Retrieve only the required data
+      					switch(i) {
+      					case 1: ssid = reader.next(); break; // Retrieves the ssid
+      					case 2: bssid = reader.next(); break; // Retrieves the rssid
+      					case 3: level = reader.nextInt(); break; // Retrieves the level
+      					default: trash = reader.next(); // Otherwise just skip to the next token
+      					}
+      					
+      					if(i == 0){
+      						debug = trash;
+      					}
+      					
+      				}*/
+      				
+//      				if(!debug.equalsIgnoreCase(debug_p) && debug_i <= 100) {
+//      					System.out.println("SampleId: "+debug);
+//      					debug_p = debug;
+//      				}
+      				
+      			}
+      			
+      			reader.close();
+      			writer.close();
+      			
+      		}
+      		catch(FileNotFoundException fnfe) {
+      			System.out.println("\n\nHistogram.readCell:\n\n"+ fnfe.getMessage());
+      		}
+              
+              
+              
+              
+              
+                }
+	
+	
 }
