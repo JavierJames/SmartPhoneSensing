@@ -74,8 +74,9 @@ public class Localization extends ActionBarActivity {
 	private int id_sample=0;
 
 	
-
-	
+	/* During merging of two files, keep track when to skip the header*/
+	static boolean firstFile = true;
+		
 		
 	
 	/*
@@ -218,35 +219,47 @@ public class Localization extends ActionBarActivity {
 		//	
 			
 			//merge day and evening raw data 
-			
-			
 		}
 
 		filepath = folder_base_path + root_folder_name;	
 		
-		//list of paths to merged together
-		ArrayList <String> pathsToMerged=new ArrayList<String>(); 
-		//ArrayList <File> pathsToMerged1=new ArrayList<File>(); 
-		
-		
-		
-		
-		pathsToMerged.add(folder_base_path+"cellsdata_Day/");
-		pathsToMerged.add(folder_base_path+"cellsdata_Evening/");
-		
-		
+		File path = new File(filepath+"1_RawUnselected_AP/histogram");
+				
+		if(RawDataType==0 || RawDataType==1){
+			
+			//create directory, histogram, and occurrences and filter data if not done before
+			if(  !path.exists())
+				//create and histogram + create and save occurrence + filter data
+				Histogram_filterData();
+			
+		}
+			
 		//merge files only merge option was selected and files not merged already
 		
-		//if(RawDataType==2) MergeRawData(folder_base_path+"cellsdata_Day/", folder_base_path+"cellsdata_Evening/");
-		File path = new File(filepath);
-		if(RawDataType==2 && !path.exists())
-			try {
-				MergeRawData(pathsToMerged);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if(RawDataType==2){
+			
 		
+			//save the paths to merge together
+			ArrayList <String> pathsToMerged=new ArrayList<String>(); 
+			
+			pathsToMerged.add(folder_base_path+"cellsdata_Day/");
+			pathsToMerged.add(folder_base_path+"cellsdata_Evening/");
+			
+			//create directory, histogram, and occurrences and filter data if not done before
+			if(  !path.exists())
+				try {
+				
+					MergeRawData(pathsToMerged);
+				
+					//create and histogram + create and save occurrence + filter data
+					Histogram_filterData();				
+					
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
 	/* 
 	 * */
 		
@@ -325,6 +338,29 @@ public class Localization extends ActionBarActivity {
 			});*/
 	} //end onCreate
 	
+
+	private void Histogram_filterData() {
+		// TODO Auto-generated method stub
+		
+
+		//thread #1
+		Runnable runnable = new Runnable() {
+		
+			public void run() {
+				
+					  		//create histogram and occurrences from all files in folder,then filter
+					   		
+							createRawDataHistogramandFilter();
+							
+							
+							//filter
+							
+				
+			}//end of run
+		};new Thread(runnable).start();
+		
+	}
+
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -1686,6 +1722,9 @@ public class Localization extends ActionBarActivity {
 //			File dir= new File(pathRawData1+folder_name);
 //			File dir_list[] = dir.listFiles();
 //				
+			//ensure copying of the header onle once, for the first file
+			if(i>0) firstFile=false;
+			else if(i==0) firstFile=true;
 			
 			//get pointer to file path with raw data
 			//File dir= new File(pathsToMerge.get(i)+folder_name);
@@ -1736,6 +1775,7 @@ public class Localization extends ActionBarActivity {
               String lineSentence=null;
               FileWriter writer = new FileWriter(dstFile, true);
   			  
+             
               try {
       			// Read in the cell file
       		//	cell = srcFile.getName();
@@ -1747,7 +1787,14 @@ public class Localization extends ActionBarActivity {
       			int level = 1;
       			String trash = "";
       			
-      			boolean skip_first_line = true;
+      			boolean firstLine=true;
+         		boolean skip_first_line = true;
+      			
+      			//read the header title only for the first file being copied
+      			if(firstFile) skip_first_line=false;
+      			else skip_first_line=true;
+      			
+      			
       			String debug = "";
       			String debug_p = "";
       			int debug_i = 0;
@@ -1757,9 +1804,27 @@ public class Localization extends ActionBarActivity {
       			while(reader.hasNextLine()) {
           				
       				// The first line of each file is just the header, no values in there
-      				if(skip_first_line) {
+      				if(skip_first_line && firstLine) {
+      					firstLine=false;
+      					skip_first_line = true;
       					
-      					skip_first_line = false;
+      					lineSentence=reader.nextLine();
+     				//	writer.append(lineSentence);
+//      					writer.append("bla bla ");
+      				//	writer.append("\n\n");
+      					
+//      					
+//      					for(int i = 0; i < 7; i++) {
+//      						reader.next();
+//      					}
+      					
+      					continue;
+      				}
+      					    				
+      				if(!skip_first_line && firstLine) {
+      					
+      					firstLine=false;
+      					skip_first_line = true;
       					
       					lineSentence=reader.nextLine();
      					writer.append(lineSentence);
