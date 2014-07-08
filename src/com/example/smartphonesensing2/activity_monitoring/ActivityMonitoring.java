@@ -3,6 +3,7 @@ package com.example.smartphonesensing2.activity_monitoring;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -64,11 +65,26 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	// Array of training data for the classification
 	private ArrayBuff[] trainingDataset, testingDataset;
 	
+	// Split the training data into train data and test data
+	private ArrayList<ArrayBuff> splittedTestDataset = new ArrayList<ArrayBuff>();
+	private ArrayList<ArrayBuff> splittedTrainDataset = new ArrayList<ArrayBuff>();
+	
 	// Array of classified activities
 	private String[] activities;
 	
 	// set accuracy of amount of neighbours
 	int K = 5;
+	
+	// index:
+	// 0 is still
+	// 1 is walk
+	// 2 is run
+	// 3 is jump
+	int [] confusion_still = new int[4];
+	int [] confusion_walk = new int[4];
+	int [] confusion_run = new int[4];
+	int [] confusion_jump = new int[4];
+
 	
 	
 	@Override
@@ -364,13 +380,13 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 						storeTestDataCoordinates();
 //						showCurrentActivity();
 						
-						
-						runOnUiThread(new Runnable () {
-				    		@Override 
-				    		public void run(){
-				    			showCurrentActivity();
-				    		}
-				    	});
+//						
+//						runOnUiThread(new Runnable () {
+//				    		@Override 
+//				    		public void run(){
+//				    			showCurrentActivity();
+//				    		}
+//				    	});
 						
 						Thread.sleep(SAMPLE_RATE);
 					}
@@ -449,20 +465,207 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	
 	
 	/*
-	 * 
+	 * Shows the overview of the performed activities and also the confusion matrix
 	 */
 	public void showActivityOverview(View view) {
 		
 		analyzeData(view);
 		
+		// splits the training data into two sets: 1) train data, 2) test data
+		// which will be used to generate the confusion matrix
+		splitTrainingData();
+		
+		// create confusion matrix
+		createConfusionMatrix();
+		
 		Intent intent = new Intent(getApplicationContext(), ActivityMonitoringOverview.class);
 		
 		intent.putExtra("activities", activities);
+		
+		// send all confusions to the next page
+		intent.putExtra("confusion_still", confusion_still);
+		intent.putExtra("confusion_walk", confusion_walk);
+		intent.putExtra("confusion_run", confusion_run);
+		intent.putExtra("confusion_jump", confusion_jump);
 		
 		startActivity(intent);
 	}
 	
 	
+	/*
+	 * This function computes the confusion matrix
+	 */
+	private void createConfusionMatrix() {
+		
+		Knn_API knn;
+//		activities = knn.get_activities();
+		
+		// input activity
+		String activity_in = "";
+		
+		// output: input activity classified
+		String activity_out = "";
+		
+		// TrainSet must be converted to array
+		ArrayBuff [] trainSet = new ArrayBuff[splittedTrainDataset.size()];
+		trainSet = (splittedTrainDataset.toArray(trainSet));
+		
+		// contains only one test data at the time
+		ArrayBuff [] testItem = new ArrayBuff[1];
+		
+		// classify each test data
+		for(int i = 0; i < splittedTestDataset.size(); i++) {
+			
+			testItem[0] = splittedTestDataset.get(i); 
+			
+			// classify test data
+			knn = new Knn_API(K, trainSet, testItem);
+			
+			activity_in = splittedTestDataset.get(i).getActivity();
+			activity_out = knn.get_activities()[0];
+			
+			
+			if(activity_in.equalsIgnoreCase("still")) { // input still
+				if(activity_out.equalsIgnoreCase("still")) { // output still
+					confusion_still[0]++;
+				}
+				else if(activity_out.equalsIgnoreCase("walk")) { // output walk
+					confusion_still[1]++;
+				}
+				else if(activity_out.equalsIgnoreCase("run")) { // output run
+					confusion_still[2]++;
+				}
+				else if(activity_out.equalsIgnoreCase("jump")) { // output jump
+					confusion_still[3]++;
+				}
+			}
+			else if(activity_in.equalsIgnoreCase("walk")) { // input walk
+				if(activity_out.equalsIgnoreCase("still")) { // output still
+					confusion_walk[0]++;
+				}
+				else if(activity_out.equalsIgnoreCase("walk")) { // output walk
+					confusion_walk[1]++;
+				}
+				else if(activity_out.equalsIgnoreCase("run")) { // output run
+					confusion_walk[2]++;
+				}
+				else if(activity_out.equalsIgnoreCase("jump")) { // output jump
+					confusion_walk[3]++;
+				}
+			}
+			else if(activity_in.equalsIgnoreCase("run")) { // input run
+				if(activity_out.equalsIgnoreCase("still")) { // output still
+					confusion_run[0]++;
+				}
+				else if(activity_out.equalsIgnoreCase("walk")) { // output walk
+					confusion_run[1]++;
+				}
+				else if(activity_out.equalsIgnoreCase("run")) { // output run
+					confusion_run[2]++;
+				}
+				else if(activity_out.equalsIgnoreCase("jump")) { // output jump
+					confusion_run[3]++;
+				}
+			}
+			else if(activity_in.equalsIgnoreCase("jump")) { // input jump
+				if(activity_out.equalsIgnoreCase("still")) { // output still
+					confusion_jump[0]++;
+				}
+				else if(activity_out.equalsIgnoreCase("walk")) { // output walk
+					confusion_jump[1]++;
+				}
+				else if(activity_out.equalsIgnoreCase("run")) { // output run
+					confusion_jump[2]++;
+				}
+				else if(activity_out.equalsIgnoreCase("jump")) { // output jump
+					confusion_jump[3]++;
+				}
+			}
+		}
+	}
+
+
+	/*
+	 * Split the training data into train data and test data
+	 * to generate the confusion matrix
+	 */
+	private void splitTrainingData() {
+		// TODO split training data
+		
+		ArrayList<ArrayBuff> trainingDatasetStill = new ArrayList<ArrayBuff>();
+		ArrayList<ArrayBuff> trainingDatasetWalk = new ArrayList<ArrayBuff>();
+		ArrayList<ArrayBuff> trainingDatasetRun = new ArrayList<ArrayBuff>();
+		ArrayList<ArrayBuff> trainingDatasetJump = new ArrayList<ArrayBuff>();
+		
+		
+		// put each activity in its own array
+		for(int i = 0; i < trainingDataset.length; i++) {
+			if(trainingDataset[i].getActivity().equalsIgnoreCase("still")) {
+				trainingDatasetStill.add(trainingDataset[i]);
+			}
+			else if(trainingDataset[i].getActivity().equalsIgnoreCase("walk")) {
+				trainingDatasetWalk.add(trainingDataset[i]);
+			}
+			else if(trainingDataset[i].getActivity().equalsIgnoreCase("run")) {
+				trainingDatasetRun.add(trainingDataset[i]);
+			}
+			else if(trainingDataset[i].getActivity().equalsIgnoreCase("jump")) {
+				trainingDatasetJump.add(trainingDataset[i]);
+			}
+		}
+		
+		
+		// 5% percentage of each activity, so that 20% of the whole training data is extracted. 
+//		int trainingDatasetStill_percentage = (int)(trainingDatasetStill.size() * 0.05);
+//		int trainingDatasetWalk_percentage = (int)(trainingDatasetWalk.size() * 0.05);
+//		int trainingDatasetRun_percentage = (int)(trainingDatasetRun.size() * 0.05);
+//		int trainingDatasetJump_percentage = (int)(trainingDatasetJump.size() * 0.05);
+		
+		
+		//// Debug
+		
+		int trainingDatasetStill_percentage = 5;
+		int trainingDatasetWalk_percentage = 5;
+		int trainingDatasetRun_percentage = 5;
+		int trainingDatasetJump_percentage = 5;
+		
+		//// End Debug
+		
+		
+		// split 5% of the still training data
+		for(int i = 0; i < trainingDatasetStill_percentage; i++) {
+			splittedTestDataset.add(trainingDatasetStill.get(i));
+		}
+		
+		
+		// split 5% of the walk training data
+		for(int i = 0; i < trainingDatasetWalk_percentage; i++) {
+			splittedTestDataset.add(trainingDatasetWalk.get(i));
+		}
+		
+		
+		// split 5% of the run training data
+		for(int i = 0; i < trainingDatasetRun_percentage; i++) {
+			splittedTestDataset.add(trainingDatasetRun.get(i));
+		}
+		
+		
+		// split 5% of the jump training data
+		for(int i = 0; i < trainingDatasetJump_percentage; i++) {
+			splittedTestDataset.add(trainingDatasetJump.get(i));
+		}
+		
+		
+		// Remove the splitted test data from the train data set
+		// The remain train data should be roughly 80%
+		for(int i = 0; i < trainingDataset.length; i++) {
+			if(!splittedTestDataset.contains(trainingDataset[i])) {
+				splittedTrainDataset.add(trainingDataset[i]);
+			}
+		}
+	}
+
+
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 		// TODO Auto-generated method stub
@@ -678,40 +881,10 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	 * This function analyses data
 	 */
 	public void analyzeData(View view) {
-//		Button b = (Button) view;
-		
-		
-		
-//		if(b.getText().equals("Analyze")){
-			
-					
-//			test = true;
-//			activity = "test";
-//			TextView showStoredTestCoordinates = (TextView) findViewById(R.id.showStoredTestCoordinates);
-//			showStoredTestCoordinates.setText("");
+		getData();
 
-			getData();
-			
-//			store data in internal memory for debugging
-			
-			Knn_API knn = new Knn_API(K,trainingDataset, testingDataset);
-			activities = knn.get_activities();
-			
-			/*for(int i = 0; i < activities.length; i++) {
-				showStoredTestCoordinates.setText(showStoredTestCoordinates.getText()+ "\n"+
-						activities[i]
-						);
-			}*/
-
-//		}
-//		else {
-//			
-//			test = false;
-//			activity = "none";
-//			b.setText("Analyze");
-//			
-//			
-//		}
+		Knn_API knn = new Knn_API(K,trainingDataset, testingDataset);
+		activities = knn.get_activities();
 	}
 	
 	
@@ -720,9 +893,6 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 	 * in the arrays trainingDataset and testingDataset, respectively
 	 */
 	private void getData() {
-		// TODO Auto-generated method stub
-		
-
 		SQLiteDatabase db = trainingTable.getReadableDatabase();
 
 		String[] trainingData = {

@@ -64,14 +64,44 @@
     	
     	
     	<!-- Overview -->
+	    	
 	    	<string name="activityOverviewButton">Overview</string>
 	    
 	    	<string name="overviewActivityTitle">Overview</string>
 	    	<string name="overviewActivity"></string>
-	    	<string name="overviewStill">Still:</string>
-	    	<string name="overviewWalk">Walk:</string>
-	    	<string name="overviewRun">Run:</string>
-    
+	    	<string name="confusionMatrixTitle">Confusion Matrix</string>
+	    	
+	    	
+    	<!-- Table -->
+    		<string name="emptyHeaderCorner"></string>
+    		<string name="headerStill">Still</string>
+    		<string name="headerWalk">Walk</string>
+    		<string name="headerRun">Run</string>
+    		<string name="headerJump">Jump</string>
+    		
+    		<string name="rowHeaderStill">Still</string>
+    		<string name="stillvsStill"></string>
+    		<string name="stillvsWalk"></string>
+    		<string name="stillvsRun"></string>
+    		<string name="stillvsJump"></string>
+    		
+    		<string name="rowHeaderWalk">Walk</string>
+    		<string name="walkvsStill"></string>
+    		<string name="walkvsWalk"></string>
+    		<string name="walkvsRun"></string>
+    		<string name="walkvsJump"></string>
+    		
+    		<string name="rowHeaderRun">Run</string>
+    		<string name="runvsStill"></string>
+    		<string name="runvsWalk"></string>
+    		<string name="runvsRun"></string>
+    		<string name="runvsJump"></string>
+    		
+    		<string name="rowHeaderJump">Jump</string>
+    		<string name="jumpvsStill"></string>
+    		<string name="jumpvsWalk"></string>
+    		<string name="jumpvsRun"></string>
+    		<string name="jumpvsJump"></string>
 	
     <!--                 End Activity monitoring                -->
     

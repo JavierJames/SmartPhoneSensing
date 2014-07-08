@@ -18,6 +18,12 @@ public class ActivityMonitoringOverview extends ActionBarActivity {
 	// Array of classified activities
 	private String[] activities;
 	
+	// confusion of each activity
+	private int[] confusion_still;
+	private int[] confusion_walk;
+	private int[] confusion_run;
+	private int[] confusion_jump;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,10 +33,99 @@ public class ActivityMonitoringOverview extends ActionBarActivity {
 		
 		activities = extras.getStringArray("activities");
 		
+		confusion_still = extras.getIntArray("confusion_still");
+		confusion_walk = extras.getIntArray("confusion_walk");
+		confusion_run = extras.getIntArray("confusion_run");
+		confusion_jump = extras.getIntArray("confusion_jump");
+		
 		calculateActivity();
+		
+		createConfusionMatrix();
 	}
 	
 	
+	/*
+	 * This method creates the confusion matrix
+	 */
+	private void createConfusionMatrix() {
+		TextView stillvsStill = (TextView) findViewById(R.id.stillvsStill);
+		TextView stillvsWalk = (TextView) findViewById(R.id.stillvsWalk);
+		TextView stillvsRun = (TextView) findViewById(R.id.stillvsRun);
+		TextView stillvsJump = (TextView) findViewById(R.id.stillvsJump);
+		
+		TextView walkvsStill = (TextView) findViewById(R.id.walkvsStill);
+		TextView walkvsWalk = (TextView) findViewById(R.id.walkvsWalk);
+		TextView walkvsRun = (TextView) findViewById(R.id.walkvsRun);
+		TextView walkvsJump = (TextView) findViewById(R.id.walkvsJump);
+		
+		TextView runvsStill = (TextView) findViewById(R.id.runvsStill);
+		TextView runvsWalk = (TextView) findViewById(R.id.runvsWalk);
+		TextView runvsRun = (TextView) findViewById(R.id.runvsRun);
+		TextView runvsJump = (TextView) findViewById(R.id.runvsJump);
+		
+		TextView jumpvsStill = (TextView) findViewById(R.id.jumpvsStill);
+		TextView jumpvsWalk = (TextView) findViewById(R.id.jumpvsWalk);
+		TextView jumpvsRun = (TextView) findViewById(R.id.jumpvsRun);
+		TextView jumpvsJump = (TextView) findViewById(R.id.jumpvsJump);
+		
+		int total_still = 0;
+		int total_walk = 0;
+		int total_run = 0;
+		int total_jump = 0;
+		
+		
+		// There are 4 fixed activities: still, walk, run, jump
+		for(int i = 0; i < 4; i++) {
+			total_still += confusion_still[i];
+			total_walk += confusion_walk[i];
+			total_run += confusion_run[i];
+			total_jump += confusion_jump[i];
+		}
+		
+		// calculate percentage
+		float stillvsStill_percentage = (float) (confusion_still[0]) / total_still;
+		float stillvsWalk_percentage = (float) (confusion_still[1]) / total_still;
+		float stillvsRun_percentage = (float) (confusion_still[2]) / total_still;
+		float stillvsJump_percentage = (float) (confusion_still[3]) / total_still;
+		
+		float walkvsStill_percentage = (float) (confusion_walk[0]) / total_walk;
+		float walkvsWalk_percentage = (float) (confusion_walk[1]) / total_walk;
+		float walkvsRun_percentage = (float) (confusion_walk[2]) / total_walk;
+		float walkvsJump_percentage = (float) (confusion_walk[3]) / total_walk;
+		
+		float runvsStill_percentage = (float)(confusion_run[0]) / total_run;
+		float runvsWalk_percentage = (float) (confusion_run[1]) / total_run;
+		float runvsRun_percentage = (float) (confusion_run[2]) / total_run;
+		float runvsJump_percentage = (float) (confusion_run[3]) / total_run;
+		
+		float jumpvsStill_percentage = (float) (confusion_jump[0]) / total_jump;
+		float jumpvsWalk_percentage = (float) (confusion_jump[1]) / total_jump;
+		float jumpvsRun_percentage = (float) (confusion_jump[2]) / total_jump;
+		float jumpvsJump_percentage = (float) (confusion_jump[3]) / total_jump;
+		
+		
+		stillvsStill.setText(Float.toString(stillvsStill_percentage));
+		stillvsWalk.setText(Float.toString(stillvsWalk_percentage));
+		stillvsRun.setText(Float.toString(stillvsRun_percentage));
+		stillvsJump.setText(Float.toString(stillvsJump_percentage));
+		
+		walkvsStill.setText(Float.toString(walkvsStill_percentage));
+		walkvsWalk.setText(Float.toString(walkvsWalk_percentage));
+		walkvsRun.setText(Float.toString(walkvsRun_percentage));
+		walkvsJump.setText(Float.toString(walkvsJump_percentage));
+		
+		runvsStill.setText(Float.toString(runvsStill_percentage));
+		runvsWalk.setText(Float.toString(runvsWalk_percentage));
+		runvsRun.setText(Float.toString(runvsRun_percentage));
+		runvsJump.setText(Float.toString(runvsJump_percentage));
+		
+		jumpvsStill.setText(Float.toString(jumpvsStill_percentage));
+		jumpvsWalk.setText(Float.toString(jumpvsWalk_percentage));
+		jumpvsRun.setText(Float.toString(jumpvsRun_percentage));
+		jumpvsJump.setText(Float.toString(jumpvsJump_percentage));
+	}
+
+
 	/*
 	 * This function calculates the percentage of activity
 	 * 
