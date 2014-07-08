@@ -28,26 +28,282 @@
        	android:text="@string/overviewActivity" />
     
     
-        <!-- 
-        <TextView
-        	android:id="@+id/overviewStill"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/overviewStill" />
+    <TextView
+       	android:id="@+id/confusionMatrixTitle"
+       	android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:textStyle="bold"
+       	android:textSize="35sp"
+       	android:textAlignment="center"
+       	android:text="@string/confusionMatrixTitle" />
+    
+    
+    
+    <TableLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
         
         
-        <TextView
-        	android:id="@+id/overviewWalk"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/overviewWalk" />
+        <!-- Header of the table -->
+        <TableRow >
+            
+            <!-- header empty left corner -->
+            <TextView
+		       	android:id="@+id/emptyHeaderCorner"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/emptyHeaderCorner" />
+            
+            
+            <!-- header still -->
+            <TextView
+		       	android:id="@+id/headerStill"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/headerStill" />
+            
+            
+            <!-- header walk -->
+            <TextView
+		       	android:id="@+id/headerWalk"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/headerWalk" />
+            
+            
+            <!-- header run -->
+            <TextView
+		       	android:id="@+id/headerRun"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/headerRun" />
+            
+            
+            <!-- header jump -->
+            <TextView
+		       	android:id="@+id/headerJump"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/headerJump" />
+            
+        </TableRow>
         
         
-        <TextView
-        	android:id="@+id/overViewRun"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:text="@string/overviewRun" />
- -->
+        
+        
+        <!-- 1st Row: still -->
+        <TableRow >
+            
+            <!-- rowheader still -->
+            <TextView
+		       	android:id="@+id/rowHeaderStill"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/rowHeaderStill" />
+            
+            
+            <!-- cell still vs still -->
+            <TextView
+		       	android:id="@+id/stillvsStill"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/stillvsStill" />
+            
+            
+            <!-- cell still vs walk -->
+            <TextView
+		       	android:id="@+id/stillvsWalk"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/stillvsWalk" />
+            
+            
+            <!-- cell still vs run -->
+            <TextView
+		       	android:id="@+id/stillvsRun"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/stillvsRun" />
+            
+            
+            <!-- cell still vs jump -->
+            <TextView
+		       	android:id="@+id/stillvsJump"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/stillvsJump" />
+        </TableRow>
+        
+        
+        
+        
+        <!-- 2nd Row: walk -->
+        <TableRow >
+            
+            <!-- rowheader walk -->
+            <TextView
+		       	android:id="@+id/rowHeaderWalk"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/rowHeaderWalk" />
+            
+            
+            <!-- cell walk vs still -->
+            <TextView
+		       	android:id="@+id/walkvsStill"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/walkvsStill" />
+            
+            
+            <!-- cell walk vs walk -->
+            <TextView
+		       	android:id="@+id/walkvsWalk"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/walkvsWalk" />
+            
+            
+            <!-- cell walk vs run -->
+            <TextView
+		       	android:id="@+id/walkvsRun"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/walkvsRun" />
+            
+            
+            <!-- cell walk vs jump -->
+            <TextView
+		       	android:id="@+id/walkvsJump"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/walkvsJump" />
+            
+        </TableRow>
+        
+        
+        
+        
+        <!-- 3rd Row: run -->
+        <TableRow >
+            
+            <!-- rowheader run -->
+            <TextView
+		       	android:id="@+id/rowHeaderRun"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/rowHeaderRun" />
+            
+            
+            <!-- cell run vs still -->
+            <TextView
+		       	android:id="@+id/runvsStill"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/runvsStill" />
+            
+            
+            <!-- cell run vs walk -->
+            <TextView
+		       	android:id="@+id/runvsWalk"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/runvsWalk" />
+            
+            
+            <!-- cell run vs run -->
+            <TextView
+		       	android:id="@+id/runvsRun"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/runvsRun" />
+            
+            
+            <!-- cell run vs jump -->
+            <TextView
+		       	android:id="@+id/runvsJump"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/runvsJump" />
+            
+        </TableRow>
+        
+        
+        
+        
+        <!-- 4th Row: jump -->
+        <TableRow >
+            
+            <!-- rowheader jump -->
+            <TextView
+		       	android:id="@+id/rowHeaderJump"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/rowHeaderJump" />
+            
+            
+            <!-- cell jump vs still -->
+            <TextView
+		       	android:id="@+id/jumpvsStill"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/jumpvsStill" />
+            
+            
+            <!-- cell jump vs walk -->
+            <TextView
+		       	android:id="@+id/jumpvsWalk"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/jumpvsWalk" />
+            
+            
+            <!-- cell jump vs run -->
+            <TextView
+		       	android:id="@+id/jumpvsRun"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/jumpvsRun" />
+            
+            
+            <!-- cell jump vs jump -->
+            <TextView
+		       	android:id="@+id/jumpvsJump"
+		       	android:layout_width="wrap_content"
+		       	android:layout_height="wrap_content"
+		       	android:padding="3dp"
+		       	android:text="@string/jumpvsJump" />
+            
+        </TableRow>
+        
+        
+    </TableLayout>
+    
+    
+    
         
 </LinearLayout>
