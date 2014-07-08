@@ -616,19 +616,19 @@ public class ActivityMonitoring extends ActionBarActivity implements SensorEvent
 		
 		
 		// 5% percentage of each activity, so that 20% of the whole training data is extracted. 
-//		int trainingDatasetStill_percentage = (int)(trainingDatasetStill.size() * 0.05);
-//		int trainingDatasetWalk_percentage = (int)(trainingDatasetWalk.size() * 0.05);
-//		int trainingDatasetRun_percentage = (int)(trainingDatasetRun.size() * 0.05);
-//		int trainingDatasetJump_percentage = (int)(trainingDatasetJump.size() * 0.05);
+		int trainingDatasetStill_percentage = (int)(trainingDatasetStill.size() * 0.05);
+		int trainingDatasetWalk_percentage = (int)(trainingDatasetWalk.size() * 0.05);
+		int trainingDatasetRun_percentage = (int)(trainingDatasetRun.size() * 0.05);
+		int trainingDatasetJump_percentage = (int)(trainingDatasetJump.size() * 0.05);
 		
 		
 		//// Debug
 		
-		int trainingDatasetStill_percentage = 5;
+/*		int trainingDatasetStill_percentage = 5;
 		int trainingDatasetWalk_percentage = 5;
 		int trainingDatasetRun_percentage = 5;
 		int trainingDatasetJump_percentage = 5;
-		
+	*/	
 		//// End Debug
 		
 		
