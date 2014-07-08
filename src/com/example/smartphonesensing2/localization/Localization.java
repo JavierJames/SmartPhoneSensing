@@ -223,7 +223,7 @@ public class Localization extends ActionBarActivity {
 
 		filepath = folder_base_path + root_folder_name;	
 		
-		File path = new File(filepath+"1_RawUnselected_AP/histogram");
+		File path = new File(filepath+"1_RawUnselected_AP/histogram/");
 				
 		if(RawDataType==0 || RawDataType==1){
 			
@@ -247,17 +247,18 @@ public class Localization extends ActionBarActivity {
 			
 			//create directory, histogram, and occurrences and filter data if not done before
 			if(  !path.exists())
-				try {
+			{
+		//		try {
 				
-					MergeRawData(pathsToMerged);
+					//MergeRawData(pathsToMerged);
 				
 					//create and histogram + create and save occurrence + filter data
 					Histogram_filterData();				
 					
 					
-				} catch (IOException e) {
+			//	} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+				//	e.printStackTrace();
 				}
 		}
 	/* 
@@ -266,7 +267,6 @@ public class Localization extends ActionBarActivity {
 		//fetch file with filtered AP
 		//these AP are the available ones for selection to be used for the Training Data
 		//these were the access points that came out the filtering 
-		//ToBeSelectedAP=	fetchFileFilteredAP(); //check  // need to be optimized. call after the data has been filtered
 		chosen_ap_names=	fetchFileFilteredAP();
 		
 		
@@ -274,69 +274,7 @@ public class Localization extends ActionBarActivity {
 		createTrainingData();
 		
 		
-		
-		/*set up view to display and read available AP  */
-	    // ListView listAvailableAP;
-	 //    ArrayAdapter<String> adapter_listAvailableAP;
-	     
-//	     listAvailableAP = (ListView) findViewById(R.id.listAllAP);
-	    
-	 //    adapter_listAvailableAP= new ArrayAdapter<String>(this, R.layout.frament_localization_listview_item, ToBeSelectedAP);
-	     
-//	     listAvailableAP.setAdapter(adapter_listAvailableAP);
-	     
-	 			
-			// Create the adapter to translate the array of strings to list items
-			/*ArrayAdapter<String> adapterAllAP = new ArrayAdapter<String>(
-					this,
-					R.layout.frament_localization_listview_item, ToBeSelectedAP   //not good, just for debugging purposes
-					//allAP
-					);
-			*/
-			
-			// Create the adapter to translate the array of strings to list items
-			/*ArrayAdapter<String> adapterChosenAP = new ArrayAdapter<String>(
-					this,
-					R.layout.frament_localization_listview_item,
-					chosen_ap_names
-					);
-			*/
-			//Get listView Object of all AP from xml file 
-			// Add adapter to listview
-//			ListView listAllAP = (ListView) findViewById(R.id.listAllAP);
-//			listAllAP.setAdapter(adapterAllAP);
-			
-			
-			//Get listView Object of all selected AP from xml file 
-			// Add adapter to listview
-//			ListView listChosenAp = (ListView) findViewById(R.id.listSelectedAP);
-//			listChosenAp.setAdapter(adapterChosenAP);
-			
-			
-			// Add click listener to each item in the list of all AP
-			/*listAllAP.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
-						long id) {
-					
-					chooseAP(viewClicked);
-				}
-			});*/
-			
-			
-			// Add click listener to each item in the list of selected AP
-			/*listChosenAp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-	
-				@Override
-				public void onItemClick(AdapterView<?> parent, View viewClicked, int position,
-						long id) {
-					
-					unChooseAP(viewClicked);
-				}
-				
-			});*/
-	} //end onCreate
+   } //end onCreate
 	
 
 	private void Histogram_filterData() {
@@ -344,20 +282,17 @@ public class Localization extends ActionBarActivity {
 		
 
 		//thread #1
-		Runnable runnable = new Runnable() {
+//		Runnable runnable = new Runnable() {
 		
-			public void run() {
+//			public void run() {
 				
 					  		//create histogram and occurrences from all files in folder,then filter
 					   		
 							createRawDataHistogramandFilter();
 							
-							
-							//filter
-							
 				
-			}//end of run
-		};new Thread(runnable).start();
+//			}//end of run
+//		};new Thread(runnable).start();
 		
 	}
 
@@ -1718,10 +1653,7 @@ public class Localization extends ActionBarActivity {
 		
 		for(int i=0; i<pathsToMerge.size(); i++)
 		{
-//			
-//			File dir= new File(pathRawData1+folder_name);
-//			File dir_list[] = dir.listFiles();
-//				
+				
 			//ensure copying of the header onle once, for the first file
 			if(i>0) firstFile=false;
 			else if(i==0) firstFile=true;
@@ -1754,16 +1686,8 @@ public class Localization extends ActionBarActivity {
 		
 		
 		
-	
-
-
 				}
 		
-		//for each file, go through each cellfile found and put it a next file 
-		
-		
-		//write to file 
-		//FileWriter writer = new FileWriter(file, true);
 	}
 
 	
@@ -1809,15 +1733,7 @@ public class Localization extends ActionBarActivity {
       					skip_first_line = true;
       					
       					lineSentence=reader.nextLine();
-     				//	writer.append(lineSentence);
-//      					writer.append("bla bla ");
-      				//	writer.append("\n\n");
-      					
-//      					
-//      					for(int i = 0; i < 7; i++) {
-//      						reader.next();
-//      					}
-      					
+ 		
       					continue;
       				}
       					    				
@@ -1828,46 +1744,15 @@ public class Localization extends ActionBarActivity {
       					
       					lineSentence=reader.nextLine();
      					writer.append(lineSentence);
-//      					writer.append("bla bla ");
-      					writer.append("\n\n");
-      					
-//      					
-//      					for(int i = 0; i < 7; i++) {
-//      						reader.next();
-//      					}
-      					
+     					writer.append("\n\n");
+      		
       					continue;
       				}
       					
       				lineSentence= reader.nextLine();
       				writer.append(lineSentence);
       				writer.append("\n\n");
-      				// If there is a next line than iterate over its columns (tokens)
-      			/*	for(int i = 0; i < 7; i++) {
-      					
-      					// note: if i > 3 then break
-      					
-      					
-      					// Retrieve only the required data
-      					switch(i) {
-      					case 1: ssid = reader.next(); break; // Retrieves the ssid
-      					case 2: bssid = reader.next(); break; // Retrieves the rssid
-      					case 3: level = reader.nextInt(); break; // Retrieves the level
-      					default: trash = reader.next(); // Otherwise just skip to the next token
-      					}
-      					
-      					if(i == 0){
-      						debug = trash;
-      					}
-      					
-      				}*/
-      				
-//      				if(!debug.equalsIgnoreCase(debug_p) && debug_i <= 100) {
-//      					System.out.println("SampleId: "+debug);
-//      					debug_p = debug;
-//      				}
-      				
-      			}
+      				}
       			
       			reader.close();
       			writer.close();

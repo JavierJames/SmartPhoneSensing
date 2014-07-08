@@ -49,11 +49,7 @@ public class Histogram {
 					skip_first_line = false;
 					
 					reader.nextLine();
-//					
-//					for(int i = 0; i < 7; i++) {
-//						reader.next();
-//					}
-					
+
 					continue;
 				}
 					
@@ -62,9 +58,7 @@ public class Histogram {
 				// If there is a next line than iterate over its columns (tokens)
 				for(int i = 0; i < 7; i++) {
 					
-					// note: if i > 3 then break
-					
-					
+			
 					// Retrieve only the required data
 					switch(i) {
 					case 1: ssid = reader.next(); break; // Retrieves the ssid
