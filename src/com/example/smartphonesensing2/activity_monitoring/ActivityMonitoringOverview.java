@@ -104,25 +104,25 @@ public class ActivityMonitoringOverview extends ActionBarActivity {
 		float jumpvsJump_percentage = (float) (confusion_jump[3]) / total_jump;
 		
 		
-		stillvsStill.setText(Float.toString(stillvsStill_percentage));
-		stillvsWalk.setText(Float.toString(stillvsWalk_percentage));
-		stillvsRun.setText(Float.toString(stillvsRun_percentage));
-		stillvsJump.setText(Float.toString(stillvsJump_percentage));
+		stillvsStill.setText(String.format("%.2f", stillvsStill_percentage));
+		stillvsWalk.setText(String.format("%.2f", stillvsWalk_percentage));
+		stillvsRun.setText(String.format("%.2f", stillvsRun_percentage));
+		stillvsJump.setText(String.format("%.2f", stillvsJump_percentage));
 		
-		walkvsStill.setText(Float.toString(walkvsStill_percentage));
-		walkvsWalk.setText(Float.toString(walkvsWalk_percentage));
-		walkvsRun.setText(Float.toString(walkvsRun_percentage));
-		walkvsJump.setText(Float.toString(walkvsJump_percentage));
+		walkvsStill.setText(String.format("%.2f", walkvsStill_percentage));
+		walkvsWalk.setText(String.format("%.2f", walkvsWalk_percentage));
+		walkvsRun.setText(String.format("%.2f", walkvsRun_percentage));
+		walkvsJump.setText(String.format("%.2f", walkvsJump_percentage));
 		
-		runvsStill.setText(Float.toString(runvsStill_percentage));
-		runvsWalk.setText(Float.toString(runvsWalk_percentage));
-		runvsRun.setText(Float.toString(runvsRun_percentage));
-		runvsJump.setText(Float.toString(runvsJump_percentage));
+		runvsStill.setText(String.format("%.2f", runvsStill_percentage));
+		runvsWalk.setText(String.format("%.2f", runvsWalk_percentage));
+		runvsRun.setText(String.format("%.2f", runvsRun_percentage));
+		runvsJump.setText(String.format("%.2f", runvsJump_percentage));
 		
-		jumpvsStill.setText(Float.toString(jumpvsStill_percentage));
-		jumpvsWalk.setText(Float.toString(jumpvsWalk_percentage));
-		jumpvsRun.setText(Float.toString(jumpvsRun_percentage));
-		jumpvsJump.setText(Float.toString(jumpvsJump_percentage));
+		jumpvsStill.setText(String.format("%.2f", jumpvsStill_percentage));
+		jumpvsWalk.setText(String.format("%.2f", jumpvsWalk_percentage));
+		jumpvsRun.setText(String.format("%.2f", jumpvsRun_percentage));
+		jumpvsJump.setText(String.format("%.2f", jumpvsJump_percentage));
 	}
 
 
